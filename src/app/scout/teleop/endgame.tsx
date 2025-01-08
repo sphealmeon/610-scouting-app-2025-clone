@@ -12,17 +12,27 @@ export default function EndGame({ handlePageChange }: { handlePageChange: (state
             <div className="flex flex-col gap-20 w-full max-w-md flex-grow items-center justify-center">
                 <label className="flex items-center gap-4">
                     <input type="checkbox" className="cursor-pointer w-6 h-6" />
-                    <span className="text-4xl">Park</span>
+                    <span className="text-3xl">Park</span>
                 </label>
 
                 <label className="flex items-center gap-4">
                     <input type="checkbox" className="cursor-pointer w-6 h-6" />
-                    <span className="text-4xl">Low Cage</span>
+                    <span className="text-3xl">Shallow Cage</span>
                 </label>
 
                 <label className="flex items-center gap-4">
                     <input type="checkbox" className="cursor-pointer w-6 h-6" />
-                    <span className="text-4xl">Deep Cage</span>
+                    <span className="text-3xl">Missed Shallow Cage</span>
+                </label>
+
+                <label className="flex items-center gap-4">
+                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <span className="text-3xl">Deep Cage</span>
+                </label>
+
+                <label className="flex items-center gap-4">
+                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <span className="text-3xl">Missed Deep Cage</span>
                 </label>
             </div>
         </div>
