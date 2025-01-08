@@ -71,9 +71,3 @@ body {
   }
 }
 
-/* Getting rid of scrolling  */
-
-body {
-  margin: 0;
-  overflow: hidden;
-}
