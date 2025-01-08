@@ -4,8 +4,8 @@ import React from "react";
 
 export default function PickupCoral({ handlePageChange }: { handlePageChange: (state: string) => void }) {
   return (
-    <div className="flex flex-col justify-start items-start min-h-screen p-6">
-      <h1 className="font-sans text-xl mb-4">Scoring - Coral</h1>
+    <div className="flex flex-col items-center justify-start items-start min-h-screen p-6">
+      <h1 className="font-sans text-2xl mb-4">Scoring - Coral</h1>
 
       {/* Wrapper for Rows */}
       <div className="flex flex-col gap-4 w-full flex-grow">

@@ -5,10 +5,12 @@ import PickupCoral from "./pickupcoral";
 import PickupAlgae from "./pickupalgae";
 import AlgaeScoring from "./algaescoring";
 import CoralScoring from "./coralscoring";
+import EndGame from "./endgame";
 
 export default function App() {
   const [leftPageState, setLeftPageState] = useState("pickupCoral");
   const [middlePageState, setMiddlePageState] = useState("pickupAlgae");
+  const [rightPageState, setRightPageState] = useState("endGame");
 
   const handleLeftPageChange = (state: string) => {
     setLeftPageState(state);
@@ -16,6 +18,10 @@ export default function App() {
 
   const handleMiddlePageChange = (state: string) => {
     setMiddlePageState(state);
+  };
+
+  const handleRightPageChange = (state: string) => {
+    setRightPageState(state);
   };
 
   return (
@@ -38,9 +44,10 @@ export default function App() {
         )}
       </div>
 
-      <div className="flex w-1/3 p-4">
-        {/* Placeholder */}
+      <div className="flex flex-col w-1/3 border-r p-4">
+        {rightPageState === "endGame" && (
+          <EndGame handlePageChange={handleRightPageChange} />
+        )}
       </div>
-    </div>
-  );
+  </div>);
 }
