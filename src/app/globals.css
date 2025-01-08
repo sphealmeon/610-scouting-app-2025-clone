@@ -70,3 +70,10 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Getting rid of scrolling  */
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
