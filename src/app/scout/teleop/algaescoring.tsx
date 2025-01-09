@@ -10,13 +10,13 @@ export default function AlgaeScoring({ handlePageChange }: { handlePageChange: (
       <div className="flex flex-col gap-4 w-full flex-grow">
         <div className="flex gap-4 w-full flex-grow">
           <div
-            className="bg-green-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer "
             onClick={() => handlePageChange("pickupAlgae")}
           >
             Processor Made
           </div>
           <div
-            className="bg-red-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => handlePageChange("pickupAlgae")}
           >
             Processor Missed
@@ -25,13 +25,13 @@ export default function AlgaeScoring({ handlePageChange }: { handlePageChange: (
 
         <div className="flex gap-4 w-full flex-grow">
           <div
-            className="bg-green-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => handlePageChange("pickupAlgae")}
           >
             Net Made
           </div>
           <div
-            className="bg-red-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => handlePageChange("pickupAlgae")}
           >
             Net Missed
@@ -40,7 +40,7 @@ export default function AlgaeScoring({ handlePageChange }: { handlePageChange: (
 
         {/* Dropped Field Button */}
         <div
-          className="bg-blue-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+          className="bg-blue-400 hover:bg-blue-500 text-white text-3xl font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
           onClick={() => handlePageChange("pickupAlgae")}
         >
           Dropped - Field

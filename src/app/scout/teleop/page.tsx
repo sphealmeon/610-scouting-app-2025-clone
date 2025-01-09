@@ -6,6 +6,7 @@ import PickupAlgae from "./pickupalgae";
 import AlgaeScoring from "./algaescoring";
 import CoralScoring from "./coralscoring";
 import EndGame from "./endgame";
+import DarkModeToggle from "@/app/darkmode";
 
 export default function App() {
   const [leftPageState, setLeftPageState] = useState("pickupCoral");
@@ -34,7 +35,6 @@ export default function App() {
           <PickupCoral handlePageChange={handleLeftPageChange} />
         )}
       </div>
-
       <div className="flex flex-col w-1/3 border-r p-4">
         {middlePageState === "pickupAlgae" && (
           <PickupAlgae handlePageChange={handleMiddlePageChange} />
@@ -46,8 +46,9 @@ export default function App() {
 
       <div className="flex flex-col w-1/3 border-r p-4">
         {rightPageState === "endGame" && (
-          <EndGame handlePageChange={handleRightPageChange} />
+          <EndGame/>
         )}
+
       </div>
   </div>);
 }

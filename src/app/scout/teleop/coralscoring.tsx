@@ -12,13 +12,13 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
         {/* L4 Section */}
         <div className="flex gap-4 w-full flex-grow">
           <div
-            className="bg-green-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => handlePageChange("pickupCoral")}
           >
             L4 Made
           </div>
           <div
-            className="bg-red-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => handlePageChange("pickupCoral")}
           >
             L4 Missed
@@ -28,13 +28,13 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
         {/* L3 Section */}
         <div className="flex gap-4 w-full flex-grow">
           <div
-            className="bg-green-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => handlePageChange("pickupCoral")}
           >
             L3 Made
           </div>
           <div
-            className="bg-red-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => handlePageChange("pickupCoral")}
           >
             L3 Missed
@@ -44,13 +44,13 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
         {/* L2 Section */}
         <div className="flex gap-4 w-full flex-grow">
           <div
-            className="bg-green-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => handlePageChange("pickupCoral")}
           >
             L2 Made
           </div>
           <div
-            className="bg-red-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => handlePageChange("pickupCoral")}
           >
             L2 Missed
@@ -60,13 +60,13 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
         {/* L1 Section */}
         <div className="flex gap-4 w-full flex-grow">
           <div
-            className="bg-green-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => handlePageChange("pickupCoral")}
           >
             L1 Made
           </div>
           <div
-            className="bg-red-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+            className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => handlePageChange("pickupCoral")}
           >
             L1 Missed
@@ -75,7 +75,7 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
 
         {/* Dropped - Field Section */}
         <div
-          className="bg-blue-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+          className="bg-blue-400 hover:bg-blue-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
           onClick={() => handlePageChange("pickupCoral")}
         >
           Dropped - Field
