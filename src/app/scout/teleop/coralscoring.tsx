@@ -6,8 +6,6 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
   return (
     <div className="flex flex-col items-center justify-start items-start min-h-screen p-6">
       <h1 className="font-sans text-2xl mb-4">Scoring - Coral</h1>
-
-      {/* Wrapper for Rows */}
       <div className="flex flex-col gap-4 w-full flex-grow">
         {/* L4 Section */}
         <div className="flex gap-4 w-full flex-grow">
@@ -75,7 +73,7 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
 
         {/* Dropped - Field Section */}
         <div
-          className="bg-blue-400 hover:bg-blue-400 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
+          className="bg-blue-400 hover:bg-blue-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
           onClick={() => handlePageChange("pickupCoral")}
         >
           Dropped - Field

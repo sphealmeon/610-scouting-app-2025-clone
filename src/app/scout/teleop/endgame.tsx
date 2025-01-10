@@ -1,13 +1,11 @@
 'use client';
 
-import DarkModeToggle from "@/app/darkmode";
 import { Button } from "@/components/ui/button";
 import React from "react";
 
 export default function EndGame() {
     return (
         <div className="flex flex-col items-center min-h-screen p-6">
-            <DarkModeToggle/>
             {/* Title Section */}
             <h1 className="font-sans text-2xl">Endgame</h1>
             

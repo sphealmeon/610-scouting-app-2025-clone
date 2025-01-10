@@ -27,6 +27,8 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen overflow-hidden">
+      <DarkModeToggle/>
+
       <div className="flex flex-col w-1/3 border-r p-4">
         {leftPageState === "reefScoring" && (
           <CoralScoring handlePageChange={handleLeftPageChange} />
