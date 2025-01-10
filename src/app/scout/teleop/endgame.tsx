@@ -2,6 +2,7 @@
 
 import DarkModeToggle from "@/app/darkmode";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import React from "react";
 
 export default function EndGame() {
@@ -14,38 +15,40 @@ export default function EndGame() {
             {/* Checkbox Section */}
             <div className="flex flex-col gap-10 w-full flex-grow justify-start p-6">
                 <label className="flex items-center gap-4">
-                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <Checkbox className="cursor-pointer" />
                     <span className="text-3xl">Park</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <Checkbox className="cursor-pointer" />
                     <span className="text-3xl">Shallow Cage</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <Checkbox className="cursor-pointer" />
                     <span className="text-3xl">Missed Shallow Cage</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <Checkbox className="cursor-pointer" />
                     <span className="text-3xl">Deep Cage</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <Checkbox className="cursor-pointer" />
                     <span className="text-3xl">Missed Deep Cage</span>
                 </label>
             </div>
+
+            {/* Buttons Section */}
             <div className="mt-auto flex flex-col gap-4 w-full">
-                    <Button className="h-20 bg-blue-400 hover:bg-blue-500 text-white font-bold text-3xl">
-                        Match Review
-                    </Button>
-                    <Button className="h-20 bg-green-400 hover:bg-green-500 text-white font-bold text-3xl">
-                        Back To Auto
-                    </Button>
-                </div>  
+                <Button className="h-20 bg-blue-400 hover:bg-blue-500 text-white font-bold text-3xl">
+                    Match Review
+                </Button>
+                <Button className="h-20 bg-green-400 hover:bg-green-500 text-white font-bold text-3xl">
+                    Back To Auto
+                </Button>
+            </div>  
         </div>
     );
 }

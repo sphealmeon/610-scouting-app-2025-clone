@@ -6,6 +6,7 @@ export const ScoutingData: Data = {
         team: 0,
         match: 0,
         position: "",
+        scoutName: "",
     },
     auto: {
         leave: 0,
@@ -26,7 +27,7 @@ export const ScoutingData: Data = {
         l4Scored: 0,
         l3Scored: 0,
         l2Scored: 0,
-        l1scored: 0,
+        l1Scored: 0,
         l4Dropped: 0,
         l3Dropped: 0,
         l2Dropped: 0,
@@ -36,7 +37,6 @@ export const ScoutingData: Data = {
         bargeScored: 0,
         bargeDropped: 0,
         algaeRemoved: 0,
-        pickupLocation: "",
         isCoop: 0,
         park: 0,
         shallow: 0,
@@ -53,6 +53,7 @@ export const resetData = () => {
     ScoutingData.start.team = 0;
     ScoutingData.start.match = 0;
     ScoutingData.start.position = "";
+    ScoutingData.start.scoutName = "";
 
     ScoutingData.auto.leave = 0;
     ScoutingData.auto.coral = 0;
@@ -71,7 +72,7 @@ export const resetData = () => {
     ScoutingData.teleop.l4Scored = 0;
     ScoutingData.teleop.l3Scored = 0;
     ScoutingData.teleop.l2Scored = 0;
-    ScoutingData.teleop.l1scored = 0;
+    ScoutingData.teleop.l1Scored = 0;
     ScoutingData.teleop.l4Dropped = 0;
     ScoutingData.teleop.l3Dropped = 0;
     ScoutingData.teleop.l2Dropped = 0;
@@ -81,7 +82,6 @@ export const resetData = () => {
     ScoutingData.teleop.bargeScored = 0;
     ScoutingData.teleop.bargeDropped = 0;
     ScoutingData.teleop.algaeRemoved = 0;
-    ScoutingData.teleop.pickupLocation = "";
     ScoutingData.teleop.isCoop = 0;
     ScoutingData.teleop.park = 0;
     ScoutingData.teleop.shallow = 0;
