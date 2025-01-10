@@ -19,7 +19,7 @@ export const ScoutingData: Data = {
         l1: 0,
         processor: 0,
         barge: 0,
-    };
+    },
     teleop: {
         floorPickup: 0,
         sourcePickup: 0,
