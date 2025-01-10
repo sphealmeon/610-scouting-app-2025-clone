@@ -42,7 +42,7 @@ export interface Data{
         missedClimb: number;
         general: string;
         reason: string;
-        explaination: string;
+        explanation: string;
     };
 }
 
