@@ -1,11 +1,17 @@
 'use client';
 
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ScoutingData } from "./data";
-import React from "react";
 
 export default function EndGame() {
+    // State for checkboxes
+    const [parkChecked, setParkChecked] = useState(false);
+    const [shallowChecked, setShallowChecked] = useState(false);
+    const [missedShallowChecked, setMissedShallowChecked] = useState(false);
+    const [deepChecked, setDeepChecked] = useState(false);
+    const [missedDeepChecked, setMissedDeepChecked] = useState(false);
+
     return (
         <div className="flex flex-col items-center min-h-screen p-6">
             {/* Title Section */}
@@ -14,47 +20,57 @@ export default function EndGame() {
             {/* Checkbox Section */}
             <div className="flex flex-col gap-10 w-full flex-grow justify-start p-6">
                 <label className="flex items-center gap-4">
-                    <Checkbox 
-                    className="cursor-pointer" 
-                    onClick={() => {
-                        ScoutingData.teleop.park == 0 ? ScoutingData.teleop.park = 1 : ScoutingData.teleop.park = 0
-                    }}/>
+                    <Checkbox
+                        checked={parkChecked}
+                        disabled={shallowChecked || deepChecked} 
+                        onCheckedChange={(checked) => {
+                            setParkChecked(checked == true);
+                        }}
+                    />
                     <span className="text-3xl">Park</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <Checkbox 
-                    className="cursor-pointer" 
-                    onClick={() => {
-                        ScoutingData.teleop.shallow == 0 ? ScoutingData.teleop.shallow = 1 : ScoutingData.teleop.shallow = 0
-                    }}/>
+                    <Checkbox
+                        checked={shallowChecked}
+                        disabled={parkChecked || missedShallowChecked || deepChecked} 
+                        onCheckedChange={(checked) => {
+                            setShallowChecked(checked == true);
+                        }}
+                    />
                     <span className="text-3xl">Shallow Cage</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <Checkbox 
-                    className="cursor-pointer" 
-                    onClick={() => {
-                        ScoutingData.teleop.missedshallow == 0 ? ScoutingData.teleop.missedshallow = 1 : ScoutingData.teleop.missedshallow = 0
-                    }}/>
+                    <Checkbox
+                        checked={missedShallowChecked}
+                        disabled={shallowChecked} 
+                        onCheckedChange={(checked) => {
+                            setMissedShallowChecked(checked == true);
+                        }}
+                    />
                     <span className="text-3xl">Missed Shallow Cage</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <Checkbox 
-                    className="cursor-pointer" 
-                    onClick={() => {
-                        ScoutingData.teleop.deep == 0 ? ScoutingData.teleop.deep = 1 : ScoutingData.teleop.deep = 0
-                    }}/>
+                    <Checkbox
+                        checked={deepChecked}
+                        disabled={parkChecked || shallowChecked || missedDeepChecked} 
+                        onCheckedChange={(checked) => {
+                            setDeepChecked(checked == true);
+                        }}
+                    />
                     <span className="text-3xl">Deep Cage</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <Checkbox 
-                    className="cursor-pointer" 
-                    onClick={() => {
-                        ScoutingData.teleop.misseddeep == 0 ? ScoutingData.teleop.misseddeep = 1 : ScoutingData.teleop.misseddeep = 0
-                    }}/>
+                    <Checkbox
+                        checked={missedDeepChecked}
+                        disabled={deepChecked} 
+                        onCheckedChange={(checked) => {
+                            setMissedDeepChecked(checked == true);
+                        }}
+                    />
                     <span className="text-3xl">Missed Deep Cage</span>
                 </label>
             </div>
@@ -67,7 +83,7 @@ export default function EndGame() {
                 <Button className="h-20 bg-green-400 hover:bg-green-500 text-white font-bold text-3xl">
                     Back To Auto
                 </Button>
-            </div>  
+            </div>
         </div>
     );
 }
