@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useRouter } from "next/navigation";
 
 export default function EndGame() {
     // State for checkboxes
@@ -11,6 +12,7 @@ export default function EndGame() {
     const [missedShallowChecked, setMissedShallowChecked] = useState(false);
     const [deepChecked, setDeepChecked] = useState(false);
     const [missedDeepChecked, setMissedDeepChecked] = useState(false);
+    const router = useRouter();
 
     return (
         <div className="flex flex-col items-center min-h-screen p-6">
@@ -31,7 +33,7 @@ export default function EndGame() {
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <Checkbox
+                    <Checkbox className="text-3xl"
                         checked={shallowChecked}
                         disabled={parkChecked || missedShallowChecked || deepChecked} 
                         onCheckedChange={(checked) => {
@@ -77,7 +79,10 @@ export default function EndGame() {
 
             {/* Buttons Section */}
             <div className="mt-auto flex flex-col gap-4 w-full">
-                <Button className="h-20 bg-blue-400 hover:bg-blue-500 text-white font-bold text-3xl">
+                <Button 
+                className="h-20 bg-blue-400 hover:bg-blue-500 text-white font-bold text-3xl"
+                onClick={() => router.push('/scout/matchreview')}
+                >
                     Match Review
                 </Button>
                 <Button className="h-20 bg-green-400 hover:bg-green-500 text-white font-bold text-3xl">
