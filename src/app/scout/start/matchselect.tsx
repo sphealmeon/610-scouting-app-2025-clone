@@ -8,6 +8,7 @@ export default function MatchSelect(){
             <p className="text-2xl mb-6 font-bold">Scouting App</p>
             <Input className="mb-6" type="text" placeholder="Match Number"/>
             <Input className="mb-6" type="text" placeholder="Team Number"/>
+            <Input className="mb-6" type="text" placeholder="Scout Name"/>
             
             {/* Container for checkbox and label */}
             <div className="flex items-center mb-6">

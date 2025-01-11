@@ -23,6 +23,7 @@ export default function EndGame() {
             <div className="flex flex-col gap-10 w-full flex-grow justify-start p-6">
                 <label className="flex items-center gap-4">
                     <Checkbox
+                        className="h-6 w-6"
                         checked={parkChecked}
                         disabled={shallowChecked || deepChecked} 
                         onCheckedChange={(checked) => {
@@ -33,7 +34,8 @@ export default function EndGame() {
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <Checkbox className="text-3xl"
+                    <Checkbox 
+                        className="h-6 w-6"
                         checked={shallowChecked}
                         disabled={parkChecked || missedShallowChecked || deepChecked} 
                         onCheckedChange={(checked) => {
@@ -45,6 +47,7 @@ export default function EndGame() {
 
                 <label className="flex items-center gap-4">
                     <Checkbox
+                        className="h-6 w-6"
                         checked={missedShallowChecked}
                         disabled={shallowChecked} 
                         onCheckedChange={(checked) => {
@@ -56,6 +59,7 @@ export default function EndGame() {
 
                 <label className="flex items-center gap-4">
                     <Checkbox
+                        className="h-6 w-6"
                         checked={deepChecked}
                         disabled={parkChecked || shallowChecked || missedDeepChecked} 
                         onCheckedChange={(checked) => {
@@ -67,6 +71,7 @@ export default function EndGame() {
 
                 <label className="flex items-center gap-4">
                     <Checkbox
+                        className="h-6 w-6"
                         checked={missedDeepChecked}
                         disabled={deepChecked} 
                         onCheckedChange={(checked) => {

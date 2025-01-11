@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import RobotPosition from "./robotposition";
 import MatchSelect from "./matchselect";
 import ScoutSelect from "./scoutselect";
+import DarkModeToggle from "@/app/darkmode";
 
 export default function StartPage(){
     return(
         <div className="relative grid grid-cols-3 gap-4 p-8">
+            <DarkModeToggle/>
             <div className="col-span-1">
                 <RobotPosition />
             </div>
