@@ -4,7 +4,7 @@ export interface Data{
         team: number;
         match: number;
         position: string;
-    };
+    }; 
     auto: {
         leave: number;
         coral: number;

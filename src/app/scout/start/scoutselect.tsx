@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import ChangeButton from "../components/changeButton";
 
 export default function ScoutSelect(){
     return(

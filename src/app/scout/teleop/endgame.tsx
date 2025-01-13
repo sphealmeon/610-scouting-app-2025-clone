@@ -8,10 +8,7 @@ export default function EndGame() {
     return (
         <div className="flex flex-col items-center min-h-screen p-6">
             <DarkModeToggle/>
-            {/* Title Section */}
             <h1 className="font-sans text-2xl">Endgame</h1>
-            
-            {/* Checkbox Section */}
             <div className="flex flex-col gap-10 w-full flex-grow justify-start p-6">
                 <label className="flex items-center gap-4">
                     <input type="checkbox" className="cursor-pointer w-6 h-6" />
