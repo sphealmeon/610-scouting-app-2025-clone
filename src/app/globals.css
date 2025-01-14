@@ -63,6 +63,81 @@ body {
   }
 }
 
+.reef-container {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+}
+
+.section {
+  width: 30%;
+  padding: 20px;
+  background-color: #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1), -10px -10px 20px rgba(255, 255, 255, 0.9);
+}
+
+.buttons, .reef-algae-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+button {
+  background-color: #a8d08d;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1), -5px -5px 10px rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #8a9d66;
+}
+
+button:disabled {
+  background-color: #d0e0d6;
+}
+
+.hexagon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.hexagon {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  background-color: #a8d08d;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.hexagon.L2, .hexagon.L3, .hexagon.L4 {
+  width: 120px;
+  height: 120px;
+}
+
+.hexagon-segment {
+  width: 50%;
+  height: 50%;
+  background-color: #d0e0d6;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+}
+
+.hexagon-segment.active {
+  background-color: #8a9d66;
+}
 
 @layer base {
   * {

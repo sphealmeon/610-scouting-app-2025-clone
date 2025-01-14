@@ -12,7 +12,7 @@ export default function ScoutSelect(){
         <div className="flex flex-col justify-center items-center space-y-4">
             <Button
                 className="mb-20 text-xl py-6 px-8"
-                onClick={() => handleNavigation("/scout/teleop")}
+                onClick={() => handleNavigation("/scout/auto")}
             >Robot Scout</Button>
             <Button 
                 className="text-xl py-6 px-8"
