@@ -1,18 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const Reef = () => {
-  const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
+const Algae = () => {
+  const [level, setLevel] = useState<'L2-L3' | 'L3-L4'>('L2-L3');
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
     visible: false,
     message: "",
   });
 
-  const boards: Record<'L1' | 'L2' | 'L3' | 'L4', string[]> = {
-    L1: ["A", "B", "C", "D", "E", "F"],
-    L2: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
-    L3: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
-    L4: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+  const boards: Record<'L2-L3' | 'L3-L4', string[]> = {
+    'L2-L3': ['A', 'E', 'I'],
+    'L3-L4': ['A', 'E', 'I'],
   };
 
   const showPopup = (message: string) => {
@@ -22,11 +20,11 @@ const Reef = () => {
 
   return (
     <div className="flex flex-col items-center p-4 space-y-4">
-      <h1 className="text-xl font-bold">Auto Coral Scoring</h1>
-      <h1 className="text-xl font-bold">Current Level: {level}</h1>
+      <h1 className="text-xl font-bold">Auto Algae Knock Off</h1>
+      <h1 className="text-xl font-bold">Current Toggle: {level}</h1>
 
       <div className="flex space-x-4">
-        {(["L1", "L2", "L3", "L4"] as const).map((l) => (
+        {(['L2-L3', 'L3-L4'] as const).map((l) => (
           <Button
             key={l}
             className="text-white px-4 py-2 rounded"
@@ -42,7 +40,7 @@ const Reef = () => {
           <div
             key={index}
             className="hexagon hover:neumorphic"
-            onClick={() => showPopup(`Level: ${level}, Button: ${label}`)}
+            onClick={() => showPopup(`Toggle: ${level}, Button: ${label}`)}
           >
             {label}
           </div>
@@ -54,6 +52,21 @@ const Reef = () => {
           <span>{popup.message}</span>
         </div>
       )}
+
+      <div className="flex space-x-4 mt-4">
+        <Button
+          className="text-white px-4 py-2 rounded bg-blue-500"
+          onClick={() => showPopup("Score Barge button clicked")}
+        >
+          Score Barge?
+        </Button>
+        <Button
+          className="text-white px-4 py-2 rounded bg-green-500"
+          onClick={() => showPopup("Score Processor button clicked")}
+        >
+          Score Processor?
+        </Button>
+      </div>
 
       <style jsx>{`
         .hexagonal-container {
@@ -98,12 +111,11 @@ const Reef = () => {
           }
         }
 
-        /* For L2, L3, and L4, set a two-row layout */
-        .hexagonal-container.L2,
-        .hexagonal-container.L3,
-        .hexagonal-container.L4 {
-          grid-template-columns: repeat(6, 1fr);
-          grid-template-rows: repeat(2, 1fr);
+        /* For L2-L3 and L3-L4, set grid layout */
+        .hexagonal-container.L2-L3,
+        .hexagonal-container.L3-L4 {
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: 1fr;
         }
 
         .popup {
@@ -123,4 +135,4 @@ const Reef = () => {
   );
 };
 
-export default Reef;
+export default Algae;
