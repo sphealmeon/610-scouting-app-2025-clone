@@ -3,15 +3,10 @@ import React from "react";
 
 export default function ChangeButton({ name, setMatchState }: {name: string; setMatchState: Function;}){
     return(
-        <Button 
-            onClick={() =>
-                name == "Teleop" ? setMatchState(2) : 
-                name == "Auto" ? setMatchState(1) : 
-                name == "Match Review" ? setMatchState(3) : 
-                setMatchState(0)
-            }
-        >
-            {name}
+        <Button onClick={() =>
+            name == "Teleop" ? setMatchState(2) : name == "Auto" ? setMatchState(1) : name == "Match Review" ? setMatchState(3) : setMatchState(0)
+        }>
+        {name}
         </Button>
     );
 }
