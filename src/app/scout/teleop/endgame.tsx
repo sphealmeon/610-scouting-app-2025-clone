@@ -1,35 +1,76 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import React from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import React, { useState } from "react";
 
 export default function EndGame({setMatchState}: {setMatchState: Function}) {
+    const [parkChecked, setParkChecked] = useState(false);
+    const [shallowChecked, setShallowChecked] = useState(false);
+    const [missedShallowChecked, setMissedShallowChecked] = useState(false);
+    const [deepChecked, setDeepChecked] = useState(false);
+    const [missedDeepChecked, setMissedDeepChecked] = useState(false);
     return (
         <div className="flex flex-col items-center min-h-screen p-6">
             <h1 className="font-sans text-2xl">Endgame</h1>
             <div className="flex flex-col gap-10 w-full flex-grow justify-start p-6">
                 <label className="flex items-center gap-4">
-                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <Checkbox
+                        className="h-6 w-6"
+                        checked={parkChecked}
+                        disabled={shallowChecked || deepChecked} 
+                        onCheckedChange={(checked: boolean) => {
+                            setParkChecked(checked == true);
+                        }}
+                    />
                     <span className="text-3xl">Park</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <Checkbox 
+                        className="h-6 w-6"
+                        checked={shallowChecked}
+                        disabled={parkChecked || missedShallowChecked || deepChecked} 
+                        onCheckedChange={(checked: boolean) => {
+                            setShallowChecked(checked == true);
+                        }}
+                    />
                     <span className="text-3xl">Shallow Cage</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <Checkbox
+                        className="h-6 w-6"
+                        checked={missedShallowChecked}
+                        disabled={shallowChecked} 
+                        onCheckedChange={(checked: boolean) => {
+                            setMissedShallowChecked(checked == true);
+                        }}
+                    />
                     <span className="text-3xl">Missed Shallow Cage</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <Checkbox
+                        className="h-6 w-6"
+                        checked={deepChecked}
+                        disabled={parkChecked || shallowChecked || missedDeepChecked} 
+                        onCheckedChange={(checked: boolean) => {
+                            setDeepChecked(checked == true);
+                        }}
+                    />
                     <span className="text-3xl">Deep Cage</span>
                 </label>
 
                 <label className="flex items-center gap-4">
-                    <input type="checkbox" className="cursor-pointer w-6 h-6" />
+                    <Checkbox
+                        className="h-6 w-6"
+                        checked={missedDeepChecked}
+                        disabled={deepChecked} 
+                        onCheckedChange={(checked: boolean) => {
+                            setMissedDeepChecked(checked == true);
+                        }}
+                    />
                     <span className="text-3xl">Missed Deep Cage</span>
                 </label>
             </div>
