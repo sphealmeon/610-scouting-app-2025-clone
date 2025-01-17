@@ -2,6 +2,7 @@ import { Data } from "../interfaces";
 
 export const ScoutingData: Data = {
     start: {
+        scoutName: "",
         preload: 0,
         team: 0,
         match: 0,
@@ -23,10 +24,12 @@ export const ScoutingData: Data = {
     teleop: {
         floorPickup: 0,
         sourcePickup: 0,
+        pickupAlgae: 0,
+        pickupAlgaeFromReef: 0,
         l4Scored: 0,
         l3Scored: 0,
         l2Scored: 0,
-        l1scored: 0,
+        l1Scored: 0,
         l4Dropped: 0,
         l3Dropped: 0,
         l2Dropped: 0,
@@ -36,20 +39,21 @@ export const ScoutingData: Data = {
         bargeScored: 0,
         bargeDropped: 0,
         algaeRemoved: 0,
-        pickupLocation: "",
         isCoop: 0,
         park: 0,
         shallow: 0,
         deep: 0,
-        missedClimb: 0,
+        missedshallow: 0,
+        misseddeep: 0,
         general: "",
         reason: "",
-        explaination: "",
+        explanation: "",
     },
 }
 
 export const resetData = () => {
     ScoutingData.start = {
+        scoutName: "",
         preload: 0,
         team: 0,
         match: 0,
@@ -73,10 +77,12 @@ export const resetData = () => {
     ScoutingData.teleop = {
         floorPickup: 0,
         sourcePickup: 0,
+        pickupAlgae: 0,
+        pickupAlgaeFromReef: 0,
         l4Scored: 0,
         l3Scored: 0,
         l2Scored: 0,
-        l1scored: 0,
+        l1Scored: 0,
         l4Dropped: 0,
         l3Dropped: 0,
         l2Dropped: 0,
@@ -86,14 +92,14 @@ export const resetData = () => {
         bargeScored: 0,
         bargeDropped: 0,
         algaeRemoved: 0,
-        pickupLocation: "",
         isCoop: 0,
         park: 0,
         shallow: 0,
         deep: 0,
-        missedClimb: 0,
+        missedshallow: 0,
+        misseddeep: 0,
         general: "",
         reason: "",
-        explaination: "",
+        explanation: "",
     };
 }

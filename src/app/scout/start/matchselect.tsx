@@ -10,6 +10,12 @@ export default function MatchSelect() {
     const [teams, setTeams] = useState<string[]>([]); // Teams for the selected match
     const [selectedTeam, setSelectedTeam] = useState("");
     const [error, setError] = useState("");
+    const [scoutingData, setScoutingData] = useState({
+        start: {
+            match: "",
+            team: ""
+        }
+    });
 
     useEffect(() => {
         const fetchMatches = async () => {
@@ -41,7 +47,7 @@ export default function MatchSelect() {
                 }
             }
             else {
-                //some non api thingy
+                // Handle non-API scenario here
             }
         };
 
@@ -66,7 +72,16 @@ export default function MatchSelect() {
                 team.replace("frc", "")
             );
             setTeams([...redTeams, ...blueTeams]);
-            console.log("Teams:", ...redTeams, ...blueTeams)
+            console.log("Teams:", ...redTeams, ...blueTeams);
+
+            // Update scouting data with the selected match number
+            setScoutingData(prev => ({
+                ...prev,
+                start: {
+                    ...prev.start,
+                    match: value // Update the match number in ScoutingData
+                }
+            }));
         } else {
             setTeams([]);
         }
@@ -75,6 +90,15 @@ export default function MatchSelect() {
     const handleTeamSelection = (value: string) => {
         setSelectedTeam(value);
         setError(""); // Clear any error when a valid team is selected
+
+        // Update scouting data with the selected team
+        setScoutingData(prev => ({
+            ...prev,
+            start: {
+                ...prev.start,
+                team: value // Update the team number in ScoutingData
+            }
+        }));
     };
 
     return (
@@ -114,7 +138,6 @@ export default function MatchSelect() {
                     ))}
                 </SelectContent>
             </Select>
-
 
             {/* Container for checkbox and label */}
             <div className="flex items-center mb-6">
