@@ -2,7 +2,7 @@
 import { permanentRedirect } from "next/navigation";
 
 export default function Home() {
-  permanentRedirect("/scout/start");
+  permanentRedirect("/scout");
   return (
     <></>
   );
