@@ -1,3 +1,9 @@
+//timer needed to read data from firebase
+export const timer: number = 2000;
+
+//styling for header of each page
+export const headerWidth = "100vw";
+export const headerHeight = "10vh";
 //use blue alliance api;
 export const useApi = true;
 
