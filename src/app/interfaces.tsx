@@ -4,7 +4,8 @@ export interface Data{
         team: number;
         match: number;
         position: string;
-    }; 
+        scoutName: string;
+    };
     auto: {
         leave: number;
         coral: number;
@@ -24,7 +25,7 @@ export interface Data{
         l4Scored: number;
         l3Scored: number;
         l2Scored: number;
-        l1scored: number;
+        l1Scored: number;
         l4Dropped: number;
         l3Dropped: number;
         l2Dropped: number;
@@ -34,15 +35,15 @@ export interface Data{
         bargeScored: number;
         bargeDropped: number;
         algaeRemoved: number;
-        pickupLocation: string;
         isCoop: number;
         park: number;
         shallow: number;
         deep: number;
-        missedClimb: number;
+        missedshallow: number;
+        misseddeep: number;
         general: string;
         reason: string;
-        explaination: string;
+        explanation: string;
     };
 }
 
