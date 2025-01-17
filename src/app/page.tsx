@@ -1,7 +1,9 @@
-import React from "react";
+"use client";
 import { permanentRedirect } from "next/navigation";
 
-export default function Home(){
-  permanentRedirect("/scout");
-  return<></>;
+export default function Home() {
+  permanentRedirect("/scout/start");
+  return (
+    <></>
+  );
 }
