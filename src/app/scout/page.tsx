@@ -12,7 +12,7 @@ export default function Home() {
   const[matchState, setMatchState] = useState(0);
   return (
     <div>
-     <DarkModeToggle/>
+     {/* <DarkModeToggle/> */}
       {matchState == 0 ? (
         <Start setMatchState={setMatchState}/>
       ) : matchState == 1 ? (

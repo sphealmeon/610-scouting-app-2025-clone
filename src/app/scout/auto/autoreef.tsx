@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const Reef = () => {
+const Reef = ({setMatchState}: {setMatchState: Function}) => {
   const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
     visible: false,
@@ -47,6 +47,19 @@ const Reef = () => {
             {label}
           </div>
         ))}
+        
+      </div>
+      <div className="flex flex-row gap-4">
+        <Button
+          onClick={() => setMatchState(0)}
+        >
+          Back to Start
+        </Button>
+        <Button
+          onClick={() => setMatchState(2)}
+        >
+        To Teleop
+        </Button>
       </div>
 
       {popup.visible && (
