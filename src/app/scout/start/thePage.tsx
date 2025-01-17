@@ -19,9 +19,8 @@ export default function StartPage({setMatchState}: {setMatchState: Function}){
                     <MatchSelect />
                 </div>
                 <div className="col-span-1 flex justify-center">
-                    <ScoutSelect />
+                    <ScoutSelect setMatchState={setMatchState} />
                 </div>
-                <ChangeButton name={"Start"} setMatchState={setMatchState}></ChangeButton>
             </div>
         </>
     );

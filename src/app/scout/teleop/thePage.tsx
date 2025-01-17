@@ -8,7 +8,6 @@ import CoralScoring from "./coralscoring";
 import EndGame from "./endgame";
 import ChangeButton from "../components/changeButton";
 import ScoutHeader from "../components/scoutHeader";
-import DarkModeToggle from "@/app/darkmode";
 
 export default function Home({ setMatchState }: { setMatchState: Function}) {
   const [leftPageState, setLeftPageState] = useState("pickupCoral");
@@ -50,7 +49,7 @@ export default function Home({ setMatchState }: { setMatchState: Function}) {
 
         <div className="flex flex-col w-1/3 border-r p-4">
           {rightPageState === "endGame" && (
-            <EndGame/>
+            <EndGame setMatchState={setMatchState} />
           )}
 
         </div>
