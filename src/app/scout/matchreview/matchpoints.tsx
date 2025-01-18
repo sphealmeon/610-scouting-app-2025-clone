@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 
 
-export default function matchpoints() {
+export default function Matchpoints({setMatchState}: {setMatchState: Function}) {
    const [Coral, setCoral] = useState(0);
    const [Algae, setAlgae] = useState(0);
    const [Fcoral, setFcoral] = useState(0);
@@ -16,6 +16,37 @@ export default function matchpoints() {
    const [Balgae, setBalgae] = useState(0);
    const [Submit, setSubmit] = useState(false);
    const [checked, setChecked] = useState(false);
+
+   function handleProcessorClick(){
+    setPalgae(Palgae + 1);
+    setAlgae(Algae + 1);
+}
+
+function handleRobotShotClick(){
+    setAlgae(Algae + 1);
+    setBalgae(Balgae + 1);
+}
+
+function handleFloorPickupClick(){
+    setCoral(Coral + 1);
+    setFcoral(Fcoral + 1);
+}
+
+function handleRemoveallAlgaeClick(){
+    setAlgae(0);
+    setPalgae(0);
+    setBalgae(0);
+}
+
+function handleRemoveallCoralClick(){
+    setCoral(0);
+    setFcoral(0);
+}
+
+   const handleSubmit = () => {
+    setSubmit(!Submit)
+    setMatchState(0);
+  };
 
 
    return (
@@ -32,31 +63,19 @@ export default function matchpoints() {
            <div className="text-2xl gap-6">
            Algae Scored in Barge: <span className="text-3xl font-semibold text-blue-500">{Balgae}</span>
            </div>
-           <div className="ml-30 grid grid-cols-3 gap-2">
+           <div className="grid grid-cols-4 gap-2"> 
+           {/* can fix this formatting later */}
 
            <Button
-               onClick={() => setFcoral(Fcoral + 1)}
+               onClick={handleFloorPickupClick}
                className="w-64 h-24 text-4xl bg-green-800 text-white rounded">
                Floor Pickup
            </Button>
 
-
            <Button
-               onClick={() => setPalgae(Palgae + 1)}
+               onClick={handleProcessorClick}
                className="w-64 h-24 text-4xl bg-green-800 text-white rounded">
                Processor
-           </Button>
-
-           <Button
-               onClick={() => setBalgae(Balgae + 1)}
-               className="w-64 h-24 text-4xl bg-green-800 text-white rounded">
-               Human Shot
-           </Button>
-
-           <Button
-               onClick={() => setFcoral(Fcoral + 1)}
-               className="w-64 h-24 text-4xl bg-green-800 text-white rounded">
-               Human Feed
            </Button>
 
            <Button
@@ -66,32 +85,30 @@ export default function matchpoints() {
            </Button>
 
            <Button
-               onClick={() => setBalgae(Balgae + 1)}
-               className="w-64 h-24 text-4xl bg-green-800 text-white rounded">
-               Robot Shot
-           </Button>
-
-           <Button
                onClick={() => setCoral(Coral + 1)}
                className="w-64 h-24 text-4xl bg-green-800 text-white rounded">
                Add Coral 
            </Button>
 
            <Button
-               onClick={() => setCoral(0)}
+               onClick={handleRobotShotClick}
+               className="w-64 h-24 text-4xl bg-green-800 text-white rounded">
+               Robot Shot
+           </Button>
+
+           <Button
+               onClick={handleRemoveallCoralClick}
                className="w-64 h-24 text-4xl bg-red-800 text-white rounded">
                Remove all Coral
            </Button>
 
-
            <Button
-               onClick={() => setAlgae(0)}
+               onClick={handleRemoveallAlgaeClick}
                className="w-64 h-24 text-4xl bg-red-800 text-white rounded">
                Remove all Algae
            </Button>
            
            </div>
-
            <div className="text-2xl flex flex-col items-start space-y-4">
                <label className="flex items-center space-x-2">
                    <input type="checkbox"
@@ -119,10 +136,11 @@ export default function matchpoints() {
 
            <div className="text-2xl flex flex-col items-start space-y-6">
             <Button
-                        onClick={() => setSubmit(!Submit)}
-                        className="w-64 h-24 text-4xl bg-green-800 text-white rounded">
-                        Submit
-                    </Button>
+                onClick={() => handleSubmit()}
+                className="w-64 h-24 text-4xl bg-green-800 text-white rounded"
+            >
+                Submit
+            </Button>
             </div>
        </div>
    );

@@ -1,9 +1,11 @@
-import ScoutHeader from "../components/scoutHeader";
+"use client";
 
-export default function MatchReviewPage({setMatchState}: {setMatchState: Function}){
-    return(
-        <>
-            {/*<ScoutHeader name={"MatchReview"}/>*/}
-        </>
+import Matchpoints from "./matchpoints";
+
+export default function MatchReviewPage({setMatchState}: {setMatchState: Function}) {
+    return (
+        <div>
+            <Matchpoints setMatchState={setMatchState}/>
+        </div>
     );
 }

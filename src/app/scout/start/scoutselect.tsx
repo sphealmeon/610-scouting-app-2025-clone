@@ -13,7 +13,12 @@ export default function ScoutSelect({setMatchState}: {setMatchState: Function}){
             {/* <Button 
                 className="mb-20 text-xl py-6 px-8"
             >Robot Scout</Button> */}
-            <Button className="text-xl py-6 px-8">HP Scout</Button>
+            <Button 
+                className="text-xl py-6 px-8"
+                onClick={() => setMatchState(4)}
+            >
+                HP Scout
+            </Button>
         </div>
     );
 }
