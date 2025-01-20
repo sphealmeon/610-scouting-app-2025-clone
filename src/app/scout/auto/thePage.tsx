@@ -11,10 +11,12 @@ export default function AutoPage({setMatchState}: {setMatchState: Function}){
             <div className="w-1/2 p-4">
                 <Reef setMatchState={setMatchState} />
             </div>
+            <div className="w-1/2 p-4 items-center justify-center">
+                <Button>leave</Button>
+            </div>
             <div className="w-1/2 p-4">
                 <Algae />
             </div>
-            
         </div>
     );
 }
