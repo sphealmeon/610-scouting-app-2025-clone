@@ -24,6 +24,8 @@ export const ScoutingData: Data = {
     teleop: {
         floorPickup: 0,
         sourcePickup: 0,
+        pickupAlgae: 0,
+        pickupAlgaeFromReef: 0,
         l4Scored: 0,
         l3Scored: 0,
         l2Scored: 0,
