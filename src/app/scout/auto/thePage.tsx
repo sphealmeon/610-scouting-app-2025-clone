@@ -1,8 +1,9 @@
 'use client';
 
-import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import Algae from "./autoalgae";
 import Reef from "./autoreef";
+import Leave from "./leave";
 
 
 export default function AutoPage({setMatchState}: {setMatchState: Function}){
@@ -11,8 +12,8 @@ export default function AutoPage({setMatchState}: {setMatchState: Function}){
             <div className="w-1/2 p-4">
                 <Reef setMatchState={setMatchState} />
             </div>
-            <div className="w-1/2 p-4 items-center justify-center">
-                <Button>leave</Button>
+            <div className="w-1/2 p-4"> 
+                <Leave />
             </div>
             <div className="w-1/2 p-4">
                 <Algae />
