@@ -1,18 +1,24 @@
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import ChangeButton from "../components/changeButton";
 
-export default function ScoutSelect(){
-    const router = useRouter();
-
+export default function ScoutSelect({setMatchState}: {setMatchState: Function}){
     return(
         <div className="flex flex-col justify-center items-center space-y-4">
             <Button 
-            className="mb-20 text-xl py-6 px-8"
-            onClick={() => router.push('/scout/teleop')}
+                className="mb-20 text-xl py-6 px-8"
+                onClick={() => setMatchState(1)}
             >
                 Robot Scout
             </Button>
-            <Button className="text-xl py-6 px-8">HP Scout</Button>
+            {/* <Button 
+                className="mb-20 text-xl py-6 px-8"
+            >Robot Scout</Button> */}
+            <Button 
+                className="text-xl py-6 px-8"
+                onClick={() => setMatchState(4)}
+            >
+                HP Scout
+            </Button>
         </div>
     );
 }

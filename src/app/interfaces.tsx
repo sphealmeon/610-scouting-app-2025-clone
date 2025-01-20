@@ -22,6 +22,8 @@ export interface Data{
     teleop: {
         floorPickup: number;
         sourcePickup: number;
+        pickupAlgae: number;
+        pickupAlgaeFromReef: number;
         l4Scored: number;
         l3Scored: number;
         l2Scored: number;
