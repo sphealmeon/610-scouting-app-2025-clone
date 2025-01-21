@@ -21,7 +21,7 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         checked={parkChecked}
                         disabled={shallowChecked || deepChecked} 
                         onCheckedChange={(checked: boolean) => {
-                            setParkChecked(!checked);
+                            setParkChecked(checked == true);
                             if(ScoutingData.teleop.park == 0){
                                 ScoutingData.teleop.park = 1;
                             }
@@ -39,7 +39,7 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         checked={shallowChecked}
                         disabled={parkChecked || missedShallowChecked || deepChecked} 
                         onCheckedChange={(checked: boolean) => {
-                            setShallowChecked(!checked);
+                            setShallowChecked(checked == true);
                             if(ScoutingData.teleop.shallow == 0){
                                 ScoutingData.teleop.shallow = 1;
                             }
