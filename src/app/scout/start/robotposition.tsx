@@ -1,3 +1,4 @@
+import { ScoutingData } from "@/app/data";
 import { useState } from "react";
 
 export default function RobotPosition() {
@@ -10,6 +11,9 @@ export default function RobotPosition() {
 
     // Handle click on position
     const handleClick = (position: string) => {
+        //Write to data: match number
+        ScoutingData.start.position=position;
+        
         // Update scouting data with the selected position
         setScoutingData((prevState) => ({
             ...prevState,

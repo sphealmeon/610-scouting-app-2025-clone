@@ -41,8 +41,8 @@ export interface Data{
         park: number;
         shallow: number;
         deep: number;
-        missedshallow: number;
-        misseddeep: number;
+        missedShallow: number;
+        missedDeep: number;
         general: string;
         reason: string;
         explanation: string;

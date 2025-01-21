@@ -1,5 +1,6 @@
 'use client';
 
+import { ScoutingData } from "@/app/data";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import React, { useState } from "react";
@@ -20,7 +21,13 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         checked={parkChecked}
                         disabled={shallowChecked || deepChecked} 
                         onCheckedChange={(checked: boolean) => {
-                            setParkChecked(checked == true);
+                            setParkChecked(!checked);
+                            if(ScoutingData.teleop.park == 0){
+                                ScoutingData.teleop.park = 1;
+                            }
+                            else{
+                                ScoutingData.teleop.park = 0;
+                            }
                         }}
                     />
                     <span className="text-3xl">Park</span>
@@ -32,7 +39,13 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         checked={shallowChecked}
                         disabled={parkChecked || missedShallowChecked || deepChecked} 
                         onCheckedChange={(checked: boolean) => {
-                            setShallowChecked(checked == true);
+                            setShallowChecked(!checked);
+                            if(ScoutingData.teleop.shallow == 0){
+                                ScoutingData.teleop.shallow = 1;
+                            }
+                            else{
+                                ScoutingData.teleop.shallow = 0;
+                            }
                         }}
                     />
                     <span className="text-3xl">Shallow Cage</span>
@@ -45,6 +58,12 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         disabled={shallowChecked} 
                         onCheckedChange={(checked: boolean) => {
                             setMissedShallowChecked(checked == true);
+                            if(ScoutingData.teleop.missedShallow == 0){
+                                ScoutingData.teleop.missedShallow = 1;
+                            }
+                            else{
+                                ScoutingData.teleop.missedShallow = 0;
+                            }
                         }}
                     />
                     <span className="text-3xl">Missed Shallow Cage</span>
@@ -57,6 +76,12 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         disabled={parkChecked || shallowChecked || missedDeepChecked} 
                         onCheckedChange={(checked: boolean) => {
                             setDeepChecked(checked == true);
+                            if(ScoutingData.teleop.deep == 0){
+                                ScoutingData.teleop.deep = 1;
+                            }
+                            else{
+                                ScoutingData.teleop.deep = 0;
+                            }
                         }}
                     />
                     <span className="text-3xl">Deep Cage</span>
@@ -69,6 +94,12 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         disabled={deepChecked} 
                         onCheckedChange={(checked: boolean) => {
                             setMissedDeepChecked(checked == true);
+                            if(ScoutingData.teleop.missedDeep == 0){
+                                ScoutingData.teleop.missedShallow = 1;
+                            }
+                            else{
+                                ScoutingData.teleop.missedShallow = 0;
+                            }
                         }}
                     />
                     <span className="text-3xl">Missed Deep Cage</span>
