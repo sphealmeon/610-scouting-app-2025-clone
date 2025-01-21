@@ -1,7 +1,53 @@
+import { ScoutingData } from "@/app/data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 const Reef = ({setMatchState}: {setMatchState: Function}) => {
+
+  function handleLeave () {
+    ScoutingData.auto.leave = 1;
+  }
+
+  function handleCoral () {
+    ScoutingData.auto.coral++;
+  }
+
+  function handleAlgae () {
+    ScoutingData.auto.algae++;
+  }
+
+  function handleDroppedCoral () {
+    ScoutingData.auto.droppedCoral++;
+  }
+
+  function handleDroppedAlgae () {
+    ScoutingData.auto.droppedAlgae++;
+  }
+
+  function handleScore(l: 'L1' | 'L2' | 'L3' | 'L4') {
+    setLevel(l);
+    if (l === "L1") {
+      ScoutingData.auto.l1++;
+    }
+    if (l === "L2") {
+      ScoutingData.auto.l2++;
+    }
+    if (l === "L3") {
+      ScoutingData.auto.l3++;
+    }
+    if (l === "L4") {
+      ScoutingData.auto.l4++;
+    }
+  }  
+
+  function handleProcessor () {
+    ScoutingData.auto.processor++;
+  }
+
+  function handleBarge () {
+    ScoutingData.auto.barge++;
+  }
+
   const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
     visible: false,
@@ -30,7 +76,7 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
           <Button
             key={l}
             className="text-white px-4 py-2 rounded"
-            onClick={() => setLevel(l)}
+            onClick={() => handleScore(l)}
           >
             {l}
           </Button>
@@ -137,3 +183,7 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
 };
 
 export default Reef;
+
+function SetStateAction(l: string): import("react").SetStateAction<"L1" | "L2" | "L3" | "L4"> {
+  throw new Error("Function not implemented.");
+}
