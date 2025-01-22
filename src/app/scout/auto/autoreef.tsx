@@ -184,6 +184,3 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
 
 export default Reef;
 
-function SetStateAction(l: string): import("react").SetStateAction<"L1" | "L2" | "L3" | "L4"> {
-  throw new Error("Function not implemented.");
-}
