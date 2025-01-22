@@ -33,10 +33,14 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                 >
                     Red Missed
                 </div>
+                <Button className="" onClick={() => setMatchState(0)}>
+                    Back to Start
+                </Button>
+                <Button className="" onClick={() => setMatchState(0)}>
+                    Submit
+                </Button>
             </div>
-            <Button className="m-6 w-screen " onClick={() => setMatchState(0)}>
-                Back to Start
-            </Button>
+            
         </div>
     );
 }
