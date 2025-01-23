@@ -16,7 +16,10 @@ export default function MatchReviewPage({setMatchState}: {setMatchState: Functio
     return (
         <div>
             <div className="h-screen">
-                <ReviewHeader handlePageChange={handlePageChange}/>
+                <ReviewHeader 
+                    setMatchState={setMatchState} 
+                    handlePageChange={handlePageChange}
+                />
                 {pageState === "auto" && (
                 <AutoReview/>
                 )}
