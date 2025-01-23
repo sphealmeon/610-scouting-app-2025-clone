@@ -3,6 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState, useEffect } from "react";
 import { key } from "@/app/globalVars"; // Assuming `key` contains the event key for the API
 import { useApi } from "@/app/globalVars"; // Assuming `useApi` determines if the API should be used
+import { ScoutingData } from "@/app/data";
 
 export default function MatchSelect() {
     const [matches, setMatches] = useState<any[]>([]); // Store match data
@@ -55,6 +56,9 @@ export default function MatchSelect() {
     }, [useApi]);
 
     const handleMatchNumberChange = (value: string) => {
+        //Write to data: match number
+        ScoutingData.start.match=parseInt(value);
+
         setMatchNumber(value);
         setSelectedTeam("");
         setError("");
@@ -88,6 +92,9 @@ export default function MatchSelect() {
     };
 
     const handleTeamSelection = (value: string) => {
+        //Write to data: team number
+        ScoutingData.start.team=parseInt(value);
+
         setSelectedTeam(value);
         setError(""); // Clear any error when a valid team is selected
 

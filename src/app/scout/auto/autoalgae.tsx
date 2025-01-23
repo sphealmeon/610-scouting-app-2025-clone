@@ -1,3 +1,4 @@
+import { ScoutingData } from "@/app/data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -10,13 +11,21 @@ const Algae = () => {
 
   const boards: Record<'L2-L3' | 'L3-L4', string[]> = {
     'L2-L3': ['A', 'E', 'I'],
-    'L3-L4': ['A', 'E', 'I'],
+    'L3-L4': ['c', 'G', 'J'],
   };
 
   const showPopup = (message: string) => {
     setPopup({ visible: true, message });
     setTimeout(() => setPopup({ visible: false, message: "" }), 2000);
   };
+
+  function handleProcessor () {
+    ScoutingData.auto.processor++;
+  }
+  
+  function handleBarge () {
+    ScoutingData.auto.barge++;
+  }
 
   return (
     <div className="flex flex-col items-center p-4 space-y-4">

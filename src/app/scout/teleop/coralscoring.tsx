@@ -1,6 +1,7 @@
 'use client';
 
 import React from "react";
+import { ScoutingData } from "../../data";
 
 export default function PickupCoral({ handlePageChange }: { handlePageChange: (state: string) => void }) {
   return (
@@ -11,15 +12,19 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
       <div className="flex flex-col gap-4 w-full flex-grow">
         {/* L4 Section */}
         <div className="flex gap-4 w-full flex-grow">
-          <div
+        <div
             className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
-            onClick={() => handlePageChange("pickupCoral")}
+            onClick={() => {handlePageChange("pickupCoral")
+            ++ScoutingData.teleop.l4Scored
+            }}
           >
             L4 Made
           </div>
           <div
             className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
-            onClick={() => handlePageChange("pickupCoral")}
+            onClick={() => {handlePageChange("pickupCoral")
+            ++ScoutingData.teleop.l4Dropped
+            }}
           >
             L4 Missed
           </div>
@@ -29,13 +34,17 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
         <div className="flex gap-4 w-full flex-grow">
           <div
             className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
-            onClick={() => handlePageChange("pickupCoral")}
+            onClick={() => {handlePageChange("pickupCoral")
+            ++ScoutingData.teleop.l3Scored
+            }}
           >
             L3 Made
           </div>
           <div
             className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
-            onClick={() => handlePageChange("pickupCoral")}
+            onClick={() => {handlePageChange("pickupCoral")
+            ++ScoutingData.teleop.l3Dropped
+            }}
           >
             L3 Missed
           </div>
@@ -45,13 +54,17 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
         <div className="flex gap-4 w-full flex-grow">
           <div
             className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
-            onClick={() => handlePageChange("pickupCoral")}
+            onClick={() => {handlePageChange("pickupCoral")
+            ++ScoutingData.teleop.l2Scored
+            }}
           >
             L2 Made
           </div>
           <div
             className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
-            onClick={() => handlePageChange("pickupCoral")}
+            onClick={() => {handlePageChange("pickupCoral")
+            ++ScoutingData.teleop.l2Dropped
+            }}
           >
             L2 Missed
           </div>
@@ -61,13 +74,17 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
         <div className="flex gap-4 w-full flex-grow">
           <div
             className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
-            onClick={() => handlePageChange("pickupCoral")}
+            onClick={() => {handlePageChange("pickupCoral")
+            ++ScoutingData.teleop.l1Scored
+            }}
           >
             L1 Made
           </div>
           <div
             className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
-            onClick={() => handlePageChange("pickupCoral")}
+            onClick={() => {handlePageChange("pickupCoral")
+            ++ScoutingData.teleop.l1Dropped
+            }}
           >
             L1 Missed
           </div>

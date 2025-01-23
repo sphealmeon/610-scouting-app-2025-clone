@@ -1,6 +1,7 @@
 "use client";
 
 
+import { ScoutingData } from "@/app/data";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
@@ -136,7 +137,13 @@ function handleRemoveallCoralClick(){
 
            <div className="text-2xl flex flex-col items-start space-y-6">
             <Button
-                onClick={() => handleSubmit()}
+                onClick={
+                    () => {
+                        console.log(ScoutingData);
+                        handleSubmit()
+                    }
+                }
+                   
                 className="w-64 h-24 text-4xl bg-green-800 text-white rounded"
             >
                 Submit
