@@ -54,8 +54,6 @@ export interface AggregateData {
     matchAggregateData: Data;
     matchesPlayed: number;
     autoPPG: number;
-    autoCoralAccuracy: number;
-    autoAlgaeAccuracy: number;
     climbAccuracy: number;
     teleopCyclesScored: number;
     teleopAccuracy: number;
