@@ -1,29 +1,82 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label";
+import React, { useState } from "react"
+
 
 export default function NotesReview() {
+    const [parkChecked, setParkChecked] = useState(false);
+    const [shallowChecked, setShallowChecked] = useState(false);
+    const [missedShallowChecked, setMissedShallowChecked] = useState(false);
+    const [deepChecked, setDeepChecked] = useState(false);
+    const [missedDeepChecked, setMissedDeepChecked] = useState(false);
     return (
-        <div className="text-2xl flex flex-col items-start space-y-4">
-            <label className="flex items-center space-x-2">
-                <Checkbox className="w-6 h-6" />
-                <span>Deep Cage</span>
-            </label>
+        <div className="text-2xl flex flex-col items-start space-y-4 p-4">
+            <label className="flex items-center gap-4">
+                    <Checkbox
+                        className="h-6 w-6"
+                        checked={parkChecked}
+                        disabled={shallowChecked || deepChecked} 
+                        onCheckedChange={(checked: boolean) => {
+                            setParkChecked(checked == true);
+                        }}
+                    />
+                    <span className="text-3xl">Park</span>
+                </label>
 
-            <label className="flex items-center space-x-2">
-                <Checkbox className="w-6 h-6" />
-                <span>Shallow Cage</span>
-            </label>
+                <label className="flex items-center gap-4">
+                    <Checkbox 
+                        className="h-6 w-6"
+                        checked={shallowChecked}
+                        disabled={parkChecked || missedShallowChecked || deepChecked} 
+                        onCheckedChange={(checked: boolean) => {
+                            setShallowChecked(checked == true);
+                        }}
+                    />
+                    <span className="text-3xl">Shallow Cage</span>
+                </label>
 
-            <label className="flex items-center space-x-2">
-                <Checkbox className="w-6 h-6" />
-                <span>Park</span>
-            </label>
+                <label className="flex items-center gap-4">
+                    <Checkbox
+                        className="h-6 w-6"
+                        checked={missedShallowChecked}
+                        disabled={shallowChecked} 
+                        onCheckedChange={(checked: boolean) => {
+                            setMissedShallowChecked(checked == true);
+                        }}
+                    />
+                    <span className="text-3xl">Missed Shallow Cage</span>
+                </label>
+
+                <label className="flex items-center gap-4">
+                    <Checkbox
+                        className="h-6 w-6"
+                        checked={deepChecked}
+                        disabled={parkChecked || shallowChecked || missedDeepChecked} 
+                        onCheckedChange={(checked: boolean) => {
+                            setDeepChecked(checked == true);
+                        }}
+                    />
+                    <span className="text-3xl">Deep Cage</span>
+                </label>
+
+                <label className="flex items-center gap-4">
+                    <Checkbox
+                        className="h-6 w-6"
+                        checked={missedDeepChecked}
+                        disabled={deepChecked} 
+                        onCheckedChange={(checked: boolean) => {
+                            setMissedDeepChecked(checked == true);
+                        }}
+                    />
+                    <span className="text-3xl">Missed Deep Cage</span>
+                </label>
             
-            <Input placeholder="Notes"/>
+            <Label>Notes</Label>
+            <Textarea placeholder="Notes" className="w-1/3 h-20 resize-none"/>
 
             <Label>Broken?</Label>
-            <Input placeholder="What Happened?"/>
+            <Textarea placeholder="What Happened?" className="w-1/3 h-20 resize-none"/>
         </div>
     );
 }
