@@ -17,7 +17,7 @@ export default function ReviewHeader({
     };
 
     return (
-        <div className="bg-green-200 flex flex-row h-20 w-full items-center justify-center gap-20 rounded-r border-2 border-green-900">
+        <div className="bg-green-200 flex flex-row h-20 w-full items-center justify-center gap-20 border-2 border-green-900">
             <Button
                 className="h-15 w-45 text-3xl bg-red-400 hover:bg-red-300"
                 onClick={() => setMatchState(2)}

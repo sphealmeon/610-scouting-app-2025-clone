@@ -26,7 +26,7 @@ export default function Popup({
                 <CardContent>
                     <p>Click "Yes" to confirm or "No" to cancel.</p>
                 </CardContent>
-                <CardFooter className="flex justify-end gap-4">
+                <CardFooter className="flex justify-start gap-4">
                     <Button
                         className="bg-red-400 hover:bg-red-300"
                         onClick={() => setConfirm(false)}
