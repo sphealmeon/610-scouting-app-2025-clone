@@ -51,18 +51,49 @@ function handleRemoveallCoralClick(){
 
    return (
        <div className="flex flex-col items-center p-6 space-y-6 bg-gray-15 h-screen">
-           <h1 className="text-7xl font-bold text-gray-10000">Match review</h1>
-           <p className="text-2xl space-y-6">
-               Coral Scored: <span className="text-3xl font-semibold text-blue-500">{Coral}</span>
-               Algae Scored: <span className="text-3xl font-semibold text-blue-500">{Algae}</span>
-           </p>
-           <div className="text-2xl gap-6">
-            Floor Pickup Coral Scored: <span className="text-3xl font-semibold text-blue-500">{Fcoral}</span>
-            Processor Scored: <span className="text-3xl font-semibold text-blue-500">{Palgae}</span>
-           </div>
-           <div className="text-2xl gap-6">
-           Algae Scored in Barge: <span className="text-3xl font-semibold text-blue-500">{Balgae}</span>
-           </div>
+           {/* <h1 className="text-7xl font-bold text-gray-10000">Match review</h1> */}
+            <div className="grid grid-cols-2 gap-6"> 
+                <div>
+                <p className="text-2xl space-y-6">
+                    Coral Scored: <span className="text-3xl font-semibold text-blue-500">{Coral}</span>
+                    Algae Scored: <span className="text-3xl font-semibold text-blue-500">{Algae}</span>
+                </p>
+                <div className="text-2xl gap-6">
+                    Floor Pickup Coral Scored: <span className="text-3xl font-semibold text-blue-500">{Fcoral}</span>
+                    Processor Scored: <span className="text-3xl font-semibold text-blue-500">{Palgae}</span>
+                </div>
+                <div className="text-2xl gap-6">
+                Algae Scored in Barge: <span className="text-3xl font-semibold text-blue-500">{Balgae}</span>
+                </div>
+                </div>
+                <div>
+                <div className="text-2xl flex flex-col items-start space-y-4">
+                    <label className="flex items-center space-x-2">
+                        <input type="checkbox"
+                        className= "w-10 h-10"
+                        />
+                            <span>Deep Cage</span>
+                    </label>
+
+
+                    <label className="text-2xl flex items-center space-x-2">
+                    <input type="checkbox"
+                    className= "w-10 h-10"
+                    /> 
+                        <span>Shallow Cage</span>
+                    </label>
+
+
+                    <label className="text-2xl flex items-center space-x-2">
+                    <input type="checkbox"
+                    className= "w-10 h-10"
+                    />
+                        <span>Park</span>
+                    </label>
+                </div>
+            </div>
+            </div>
+            
            <div className="grid grid-cols-4 gap-2"> 
            {/* can fix this formatting later */}
 
@@ -108,30 +139,6 @@ function handleRemoveallCoralClick(){
                Remove all Algae
            </Button>
            
-           </div>
-           <div className="text-2xl flex flex-col items-start space-y-4">
-               <label className="flex items-center space-x-2">
-                   <input type="checkbox"
-                   className= "w-10 h-10"
-                   />
-                       <span>Deep Cage</span>
-               </label>
-
-
-               <label className="text-2xl flex items-center space-x-2">
-               <input type="checkbox"
-               className= "w-10 h-10"
-               /> 
-                   <span>Shallow Cage</span>
-               </label>
-
-
-               <label className="text-2xl flex items-center space-x-2">
-               <input type="checkbox"
-               className= "w-10 h-10"
-               />
-                   <span>Park</span>
-               </label>
            </div>
 
            <div className="text-2xl flex flex-col items-start space-y-6">

@@ -1,7 +1,8 @@
-export default function TeleopReview() {
+import Matchpoints from "./matchpoints";
+export default function TeleopReview({setMatchState}: {setMatchState: Function}) {
     return (
-        <div className="bg-red-300 h-screen">
-            TELEOP
+        <div className="h-screen">
+            <Matchpoints setMatchState={setMatchState}/>
         </div>
     );
 }
