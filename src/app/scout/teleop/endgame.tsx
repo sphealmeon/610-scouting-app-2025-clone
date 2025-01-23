@@ -74,6 +74,8 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                     <span className="text-3xl">Missed Deep Cage</span>
                 </label>
             </div>
+
+            {/* Buttons Section */}
             <div className="mt-auto flex flex-col gap-4 w-full">
                     <Button 
                         className="h-20 bg-blue-400 hover:bg-blue-500 text-white font-bold text-3xl"

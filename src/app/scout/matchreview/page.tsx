@@ -1,12 +1,33 @@
-"use client";
+"use client"
+import DarkModeToggle from "@/app/darkmode";
+import ReviewHeader from "./header";
+import React, { useState } from "react";
+import AutoReview from "./auto";
+import TeleopReview from "./teleop";
+import NotesReview from "./notes";
 
-import Matchpoints from "./matchpoints";
+export default function MatchReviewPage(){
+    const [pageState, setPageState] = useState("auto");  
 
-export default function Page() {
+    const handlePageChange = (state: string) => {
+        setPageState(state);
+      };
+    
     return (
         <div>
-       
-            <Matchpoints></Matchpoints>
+            <div className="h-screen">
+                <ReviewHeader handlePageChange={handlePageChange}/>
+                {pageState === "auto" && (
+                <AutoReview/>
+                )}
+                {pageState === "teleop" && (
+                <TeleopReview/>
+                )}
+                {pageState === "notes" && (
+                <NotesReview/>
+                )}
+            </div>
+            
         </div>
     );
 }

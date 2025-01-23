@@ -19,7 +19,7 @@ export default function DarkModeToggle() {
     return (
         <Button
             onClick={handleToggle}
-            className={`fixed top-10 right-10 flex items-center justify-center w-10 h-10 rounded-full ${
+            className={`fixed top-5 right-5 flex items-center justify-center w-10 h-10 rounded-full ${
                 isDarkMode ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400' : 'bg-gray-300 hover:bg-gray-200 text-blue-600'
             }`}
         >

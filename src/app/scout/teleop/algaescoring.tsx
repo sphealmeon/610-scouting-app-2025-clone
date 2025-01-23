@@ -1,6 +1,7 @@
 'use client';
 
 import React from "react";
+import { ScoutingData } from "./data";
 
 export default function AlgaeScoring({ handlePageChange }: { handlePageChange: (state: string) => void }) {
   return (
@@ -11,13 +12,17 @@ export default function AlgaeScoring({ handlePageChange }: { handlePageChange: (
         <div className="flex gap-4 w-full flex-grow">
           <div
             className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer "
-            onClick={() => handlePageChange("pickupAlgae")}
+            onClick={() => {handlePageChange("pickupAlgae")
+            ++ScoutingData.teleop.processorScored
+            }}
           >
             Processor Made
           </div>
           <div
             className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
-            onClick={() => handlePageChange("pickupAlgae")}
+            onClick={() => {handlePageChange("pickupAlgae")
+            ++ScoutingData.teleop.processorDropped
+            }}
           >
             Processor Missed
           </div>
@@ -26,13 +31,17 @@ export default function AlgaeScoring({ handlePageChange }: { handlePageChange: (
         <div className="flex gap-4 w-full flex-grow">
           <div
             className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
-            onClick={() => handlePageChange("pickupAlgae")}
+            onClick={() => {handlePageChange("pickupAlgae")
+            ++ScoutingData.teleop.bargeScored
+            }}
           >
             Net Made
           </div>
           <div
             className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
-            onClick={() => handlePageChange("pickupAlgae")}
+            onClick={() => {handlePageChange("pickupAlgae")
+            ++ScoutingData.teleop.bargeDropped
+            }}
           >
             Net Missed
           </div>
@@ -42,6 +51,7 @@ export default function AlgaeScoring({ handlePageChange }: { handlePageChange: (
         <div
           className="bg-blue-400 hover:bg-blue-500 text-white text-3xl font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
           onClick={() => handlePageChange("pickupAlgae")}
+          // Do we want algae dropped data
         >
           Dropped - Field
         </div>
