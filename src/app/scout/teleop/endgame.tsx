@@ -11,9 +11,9 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
     const [deepChecked, setDeepChecked] = useState(false);
     const [missedDeepChecked, setMissedDeepChecked] = useState(false);
     return (
-        <div className="flex flex-col items-center min-h-screen p-6">
+        <div className="flex flex-col gap-4 items-center min-h-screen p-6">
             <h1 className="font-sans text-2xl">Endgame</h1>
-            <div className="flex flex-col gap-10 w-full flex-grow justify-start p-6">
+            <div className="flex flex-col gap-10 border-4 border-gray-200 bg-gray-100 rounded-lg w-full flex-grow justify-center p-6">
                 <label className="flex items-center gap-4">
                     <Checkbox
                         className="h-6 w-6"

@@ -4,8 +4,8 @@ import React from "react";
 
 export default function PickupAlgae({ handlePageChange }: { handlePageChange: (state: string) => void }) {
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen gap-6 p-6 px-0">
-      <h1 className="font-sans text-2xl">Pickup - Algae</h1>
+    <div className="flex flex-col items-center justify-start items-start min-h-screen p-6 px-0">
+      <h1 className="font-sans text-2xl mb-4">Pickup - Algae</h1>
       <div className="flex flex-col text-3xl gap-4 w-full px-6 flex-grow">
         <div
           className="bg-blue-400 hover:bg-blue-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer p-6"
