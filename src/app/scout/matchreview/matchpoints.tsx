@@ -2,6 +2,7 @@
 
 
 import { ScoutingData } from "@/app/data";
+import { SubmitMatch } from "@/app/firebase/submitMatch";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
@@ -47,6 +48,11 @@ function handleRemoveallCoralClick(){
    const handleSubmit = () => {
     setSubmit(!Submit)
     setMatchState(0);
+    SubmitMatch({
+        team: ScoutingData.start.team, 
+        match: ScoutingData.start.match, 
+        matchData: ScoutingData,
+    })
   };
 
 
