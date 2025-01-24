@@ -74,69 +74,73 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
       totalData.auto.l4 * 7 +
       totalData.auto.l3 * 6 +
       totalData.auto.l2 * 4 +
-      totalData.auto.l1 * 3,
-    climbAccuracy:
-      totalData.teleop.hang == 0
+      totalData.auto.l1 * 3 +
+      totalData.auto.leave * 2
+      ,
+    teleopPPG:
+      totalData.teleop.l4Scored * 5 +
+      totalData.teleop.l3Scored * 4 +
+      totalData.teleop.l2Scored * 3 +
+      totalData.teleop.l1Scored * 2 +
+      totalData.teleop.processorScored * 6 +
+      totalData.teleop.bargeScored * 4,
+
+    coralCyclesScored:
+      totalData.teleop.l4Scored +
+      totalData.teleop.l3Scored +
+      totalData.teleop.l2Scored +
+      totalData.teleop.l1Scored,
+    algaeCyclesScored:
+      totalData.teleop.pickupAlgae +
+      totalData.teleop.processorScored,
+
+    teleopL1Accuracy:
+      totalData.teleop.l1Scored == 0
         ? 0
-        : totalData.teleop.hang /
-          (totalData.teleop.hang + totalData.teleop.missedClimb),
-    speakerTeleAccuracy:
-      totalData.teleop.speakerScored == 0
+        : totalData.teleop.l1Scored /
+          (totalData.teleop.l1Scored + totalData.teleop.l1Dropped),
+    teleopL2Accuracy:
+      totalData.teleop.l2Scored == 0
         ? 0
-        : totalData.teleop.speakerScored /
-          (totalData.teleop.speakerScored + totalData.teleop.speakerDrop),
-    ampTeleAccuracy:
-      totalData.teleop.ampScored == 0
+        : totalData.teleop.l2Scored /
+          (totalData.teleop.l2Scored + totalData.teleop.l2Dropped),
+    teleopL3Accuracy:
+      totalData.teleop.l3Scored == 0
         ? 0
-        : totalData.teleop.ampScored /
-          (totalData.teleop.ampScored + totalData.teleop.ampDrop),
-    trapAccuracy:
-      totalData.teleop.trapScored == 0
+        : totalData.teleop.l3Scored /
+          (totalData.teleop.l3Scored + totalData.teleop.l3Dropped),
+    teleopL4Accuracy:
+      totalData.teleop.l4Scored == 0
         ? 0
-        : totalData.teleop.trapScored /
-          (totalData.teleop.trapScored + totalData.teleop.trapDrop),
-    teleopMisses:
-      totalData.teleop.fieldDrop +
-      totalData.teleop.speakerDrop +
-      totalData.teleop.ampDrop +
-      totalData.teleop.trapDrop,
-    teleopCyclesScored:
-      totalData.teleop.speakerScored +
-      totalData.teleop.ampScored +
-      totalData.teleop.trapScored,
-    teleopTotalCycles:
-      totalData.teleop.speakerScored +
-      totalData.teleop.ampScored +
-      totalData.teleop.trapScored +
-      totalData.teleop.fieldDrop +
-      totalData.teleop.speakerDrop +
-      totalData.teleop.ampDrop +
-      totalData.teleop.trapDrop +
-      totalData.teleop.feed,
-    teleopAccuracy:
-      totalData.teleop.speakerScored +
-        totalData.teleop.ampScored +
-        totalData.teleop.trapScored ==
-      0
+        : totalData.teleop.l4Scored /
+          (totalData.teleop.l4Scored + totalData.teleop.l4Dropped),
+    teleopBargeAccuracy:
+      totalData.teleop.bargeScored == 0
         ? 0
-        : (totalData.teleop.speakerScored +
-            totalData.teleop.ampScored +
-            totalData.teleop.trapScored) /
-          (totalData.teleop.speakerScored +
-            totalData.teleop.ampScored +
-            totalData.teleop.trapScored +
-            totalData.teleop.fieldDrop +
-            totalData.teleop.speakerDrop +
-            totalData.teleop.ampDrop +
-            totalData.teleop.trapDrop),
+        : totalData.teleop.bargeScored /
+          (totalData.teleop.bargeScored + totalData.teleop.bargeDropped),
+    teleopProcessorAccuracy:
+      totalData.teleop.processorScored == 0
+        ? 0
+        : totalData.teleop.processorScored /
+          (totalData.teleop.processorScored + totalData.teleop.processorDropped),
+
+    shallowAccuracy:
+      totalData.teleop.shallow == 0
+        ? 0
+        : totalData.teleop.shallow /
+          (totalData.teleop.shallow + totalData.teleop.missedShallow),
+    deepAccuracy:
+      totalData.teleop.deep == 0
+        ? 0
+        : totalData.teleop.deep /
+          (totalData.teleop.deep + totalData.teleop.missedDeep),
     endgamePPG:
-      totalData.teleop.trapScored * 5 +
-      totalData.teleop.park +
-      totalData.teleop.hang * 3 +
-      totalData.teleop.harmony * 5,
-    distShot2:
-      totalData.teleop.distShot,
-    brokePercentage: numMatches == 0 ? 0 : timesBroke / numMatches,
+      totalData.teleop.deep * 10 +
+      totalData.teleop.shallow * 6 +
+      totalData.teleop.park * 2,
+    brokePercentage: 
+      numMatches == 0 ? 0 : timesBroke / numMatches,
   };
 
 
