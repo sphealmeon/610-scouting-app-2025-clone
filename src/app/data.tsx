@@ -57,6 +57,12 @@ export const ScoutingData: Data = {
         reason: "",
         explanation: "",
     },
+    humanPlayer: {
+        blueScored: 0,
+        redScored: 0,
+        blueMissed: 0,
+        redMissed: 0,
+    },
 };
 
 export const resetData = () => {
@@ -114,4 +120,9 @@ export const resetData = () => {
     ScoutingData.teleop.general = "";
     ScoutingData.teleop.reason = "";
     ScoutingData.teleop.explanation = "";
+
+    ScoutingData.humanPlayer.blueScored = 0;
+    ScoutingData.humanPlayer.redScored = 0;
+    ScoutingData.humanPlayer.blueMissed = 0;
+    ScoutingData.humanPlayer.redMissed = 0;
 };

@@ -2,6 +2,7 @@ export interface Data {
     start: StartData;
     auto: AutoData;
     teleop: TeleopData;
+    humanPlayer: HumanPlayerData;
 }
 
 interface StartData {
@@ -85,6 +86,13 @@ interface TeleopData {
     general: string;
     reason: string;
     explanation: string;
+}
+
+interface HumanPlayerData {
+    blueScored: number;
+    redScored: number;
+    blueMissed: number;
+    redMissed: number;
 }
 
 export interface AggregateData {
