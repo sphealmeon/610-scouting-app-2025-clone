@@ -1,4 +1,5 @@
 'use client';
+import { ScoutingData } from "../../data";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,6 +11,32 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
     const [missedShallowChecked, setMissedShallowChecked] = useState(false);
     const [deepChecked, setDeepChecked] = useState(false);
     const [missedDeepChecked, setMissedDeepChecked] = useState(false);
+
+    const handleParkChange = (checked: boolean) => {
+        setParkChecked(checked);
+        ScoutingData.teleop.park = checked ? 1 : 0;
+    };
+
+    const handleShallowChange = (checked: boolean) => {
+        setShallowChecked(checked);
+        ScoutingData.teleop.shallow = checked ? 1 : 0;
+    };
+
+    const handleMissedShallowChange = (checked: boolean) => {
+        setMissedShallowChecked(checked);
+        ScoutingData.teleop.missedshallow = checked ? 1 : 0;
+    };
+
+    const handleDeepChange = (checked: boolean) => {
+        setDeepChecked(checked);
+        ScoutingData.teleop.deep = checked ? 1 : 0;
+    };
+
+    const handleMissedDeepChange = (checked: boolean) => {
+        setMissedDeepChecked(checked);
+        ScoutingData.teleop.misseddeep = checked ? 1 : 0;
+    };
+
     return (
         <div className="flex flex-col gap-4 items-center min-h-screen p-6">
             <h1 className="font-sans text-2xl">Endgame</h1>
@@ -19,9 +46,7 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         className="h-6 w-6"
                         checked={parkChecked}
                         disabled={shallowChecked || deepChecked} 
-                        onCheckedChange={(checked: boolean) => {
-                            setParkChecked(checked == true);
-                        }}
+                        onCheckedChange={handleParkChange}
                     />
                     <span className="text-3xl">Park</span>
                 </label>
@@ -31,9 +56,7 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         className="h-6 w-6"
                         checked={shallowChecked}
                         disabled={parkChecked || missedShallowChecked || deepChecked} 
-                        onCheckedChange={(checked: boolean) => {
-                            setShallowChecked(checked == true);
-                        }}
+                        onCheckedChange={handleShallowChange}
                     />
                     <span className="text-3xl">Shallow Cage</span>
                 </label>
@@ -43,9 +66,7 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         className="h-6 w-6"
                         checked={missedShallowChecked}
                         disabled={shallowChecked} 
-                        onCheckedChange={(checked: boolean) => {
-                            setMissedShallowChecked(checked == true);
-                        }}
+                        onCheckedChange={handleMissedShallowChange}
                     />
                     <span className="text-3xl">Missed Shallow Cage</span>
                 </label>
@@ -55,9 +76,7 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         className="h-6 w-6"
                         checked={deepChecked}
                         disabled={parkChecked || shallowChecked || missedDeepChecked} 
-                        onCheckedChange={(checked: boolean) => {
-                            setDeepChecked(checked == true);
-                        }}
+                        onCheckedChange={handleDeepChange}
                     />
                     <span className="text-3xl">Deep Cage</span>
                 </label>
@@ -67,9 +86,7 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
                         className="h-6 w-6"
                         checked={missedDeepChecked}
                         disabled={deepChecked} 
-                        onCheckedChange={(checked: boolean) => {
-                            setMissedDeepChecked(checked == true);
-                        }}
+                        onCheckedChange={handleMissedDeepChange}
                     />
                     <span className="text-3xl">Missed Deep Cage</span>
                 </label>

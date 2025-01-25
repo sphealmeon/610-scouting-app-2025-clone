@@ -1,48 +1,48 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Interface } from 'readline';
+import { ScoutingData } from "../../data";
 
 interface Scores {
-    coral: {
-      L4Made: number;
-      L4Missed: number;
-      L3Made: number;
-      L3Missed: number;
-      L2Made: number;
-      L2Missed: number;
-      L1Made: number;
-      L1Missed: number;
-      DroppedField: number;
-    };
-    algae: {
-      ProcessorMade: number;
-      ProcessorMissed: number;
-      NetMade: number;
-      NetMissed: number;
-      DroppedField: number;
-    };
+  coral: {
+    L4Made: number;
+    L4Missed: number;
+    L3Made: number;
+    L3Missed: number;
+    L2Made: number;
+    L2Missed: number;
+    L1Made: number;
+    L1Missed: number;
+    DroppedField: number;
+  };
+  algae: {
+    ProcessorMade: number;
+    ProcessorMissed: number;
+    NetMade: number;
+    NetMissed: number;
+    DroppedField: number;
+  };
 }
 
 export default function TeleopReview() {
-  const [scores, setScores] = useState({
+  const [scores, setScores] = useState<Scores>({
     coral: {
-      L4Made: 0,
-      L4Missed: 0,
-      L3Made: 0,
-      L3Missed: 0,
-      L2Made: 0,
-      L2Missed: 0,
-      L1Made: 0,
-      L1Missed: 0,
-      DroppedField: 0,
+      L4Made: ScoutingData.teleop.l4Scored,
+      L4Missed: ScoutingData.teleop.l4Dropped,
+      L3Made: ScoutingData.teleop.l3Scored,
+      L3Missed: ScoutingData.teleop.l3Dropped,
+      L2Made: ScoutingData.teleop.l2Scored,
+      L2Missed: ScoutingData.teleop.l2Dropped,
+      L1Made: ScoutingData.teleop.l1Scored,
+      L1Missed: ScoutingData.teleop.l1Dropped,
+      DroppedField: ScoutingData.teleop.algaeRemoved,
     },
     algae: {
-      ProcessorMade: 0,
-      ProcessorMissed: 0,
-      NetMade: 0,
-      NetMissed: 0,
-      DroppedField: 0,
+      ProcessorMade: ScoutingData.teleop.processorScored,
+      ProcessorMissed: ScoutingData.teleop.processorDropped,
+      NetMade: ScoutingData.teleop.bargeScored,
+      NetMissed: ScoutingData.teleop.bargeDropped,
+      DroppedField: ScoutingData.teleop.algaeRemoved,
     },
   });
 
@@ -56,24 +56,24 @@ export default function TeleopReview() {
     }));
   };
 
-  const renderScoringButtons = (category, items) => (
+  const renderScoringButtons = (category: keyof Scores, items: (keyof Scores["coral" | "algae"])[]) => (
     <Card className="mb-4">
       <CardContent>
         <h2 className="text-xl font-bold mb-2">Scoring - {category}</h2>
         {items.map((item) => (
-          <div key={item} className="flex items-center justify-between mb-2">
+          <div key={item as string} className="flex items-center justify-between mb-2">
             <span className="text-lg">{item.replace(/([A-Z])/g, ' $1')}</span>
             <div className="flex items-center gap-2">
               <Button
                 className="bg-red-500 hover:bg-red-400"
-                onClick={() => handleScoreChange(category.toLowerCase(), item, -1)}
+                onClick={() => handleScoreChange(category, item, -1)}
               >
                 -
               </Button>
-              <span>{scores[category.toLowerCase()][item]}</span>
+              <span>{scores[category][item]}</span>
               <Button
                 className="bg-green-500 hover:bg-green-400"
-                onClick={() => handleScoreChange(category.toLowerCase(), item, 1)}
+                onClick={() => handleScoreChange(category, item, 1)}
               >
                 +
               </Button>
@@ -85,12 +85,13 @@ export default function TeleopReview() {
   );
 
   return (
-    <div className="m-4 p-4 mx-auto grid grid-cols-2 gap-4">
-      {renderScoringButtons('Coral', Object.keys(scores.coral))}
-      {renderScoringButtons('Algae', Object.keys(scores.algae))}
+    <div className="p-4 w-full mx-auto grid grid-cols-2">
+      {renderScoringButtons('coral', Object.keys(scores.coral) as (keyof Scores["coral"])[])}
+      {renderScoringButtons('algae', Object.keys(scores.algae) as (keyof Scores["algae"])[])}
     </div>
   );
-};
+}
+
 
 // "use client";
 

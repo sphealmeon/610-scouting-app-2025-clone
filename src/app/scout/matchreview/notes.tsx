@@ -2,14 +2,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react"
+import { ScoutingData } from "../../data";
 
 
 export default function NotesReview() {
-    const [parkChecked, setParkChecked] = useState(false);
-    const [shallowChecked, setShallowChecked] = useState(false);
-    const [missedShallowChecked, setMissedShallowChecked] = useState(false);
-    const [deepChecked, setDeepChecked] = useState(false);
-    const [missedDeepChecked, setMissedDeepChecked] = useState(false);
+    const [parkChecked, setParkChecked] = useState(ScoutingData.teleop.park === 1);
+    const [shallowChecked, setShallowChecked] = useState(ScoutingData.teleop.shallow === 1);
+    const [missedShallowChecked, setMissedShallowChecked] = useState(ScoutingData.teleop.missedshallow === 1);
+    const [deepChecked, setDeepChecked] = useState(ScoutingData.teleop.deep === 1);
+    const [missedDeepChecked, setMissedDeepChecked] = useState(ScoutingData.teleop.misseddeep === 1);
     return (
         <div className="text-2xl flex flex-col items-start space-y-4 p-4">
             <label className="flex items-center gap-4">
@@ -18,7 +19,8 @@ export default function NotesReview() {
                         checked={parkChecked}
                         disabled={shallowChecked || deepChecked} 
                         onCheckedChange={(checked: boolean) => {
-                            setParkChecked(checked == true);
+                            setParkChecked(checked);
+                            ScoutingData.teleop.park = checked ? 1 : 0;
                         }}
                     />
                     <span className="text-3xl">Park</span>
@@ -30,7 +32,8 @@ export default function NotesReview() {
                         checked={shallowChecked}
                         disabled={parkChecked || missedShallowChecked || deepChecked} 
                         onCheckedChange={(checked: boolean) => {
-                            setShallowChecked(checked == true);
+                            setShallowChecked(checked);
+                            ScoutingData.teleop.shallow = checked ? 1 : 0;
                         }}
                     />
                     <span className="text-3xl">Shallow Cage</span>
@@ -42,7 +45,8 @@ export default function NotesReview() {
                         checked={missedShallowChecked}
                         disabled={shallowChecked} 
                         onCheckedChange={(checked: boolean) => {
-                            setMissedShallowChecked(checked == true);
+                            setMissedShallowChecked(checked);
+                            ScoutingData.teleop.missedshallow = checked ? 1 : 0;
                         }}
                     />
                     <span className="text-3xl">Missed Shallow Cage</span>
@@ -54,7 +58,8 @@ export default function NotesReview() {
                         checked={deepChecked}
                         disabled={parkChecked || shallowChecked || missedDeepChecked} 
                         onCheckedChange={(checked: boolean) => {
-                            setDeepChecked(checked == true);
+                            setDeepChecked(checked);
+                            ScoutingData.teleop.deep = checked ? 1 : 0;
                         }}
                     />
                     <span className="text-3xl">Deep Cage</span>
@@ -66,7 +71,8 @@ export default function NotesReview() {
                         checked={missedDeepChecked}
                         disabled={deepChecked} 
                         onCheckedChange={(checked: boolean) => {
-                            setMissedDeepChecked(checked == true);
+                            setMissedDeepChecked(checked);
+                            ScoutingData.teleop.misseddeep = checked ? 1 : 0;
                         }}
                     />
                     <span className="text-3xl">Missed Deep Cage</span>
