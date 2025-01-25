@@ -11,7 +11,7 @@ export default function MatchReviewPage({setMatchState}: {setMatchState: Functio
 
     const handlePageChange = (state: string) => {
         setPageState(state);
-      };
+    };
     
     return (
         <div>
@@ -24,13 +24,12 @@ export default function MatchReviewPage({setMatchState}: {setMatchState: Functio
                 <AutoReview/>
                 )}
                 {pageState === "teleop" && (
-                <TeleopReview setMatchState={setMatchState}/>
+                <TeleopReview/>
                 )}
                 {pageState === "notes" && (
                 <NotesReview/>
                 )}
             </div>
-            
         </div>
     );
 }

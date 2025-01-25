@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { resetData } from "@/app/data";
 import {
     Card,
     CardContent,
@@ -37,6 +38,8 @@ export default function Popup({
                         className="bg-green-500 hover:bg-green-400"
                         onClick={() => {
                             setMatchState(0);
+                            {/* RESETING DATA */}
+                            resetData();
                             setConfirm(false);
                         }}
                     >
