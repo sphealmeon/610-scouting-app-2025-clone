@@ -1,8 +1,26 @@
 import { Button } from "@/components/ui/button";
+import { ScoutingData, resetData } from "@/app/data";
 
 export default function HumanPlayerMain({ setMatchState }: { setMatchState: Function }) {
-    const handleClick = () => {
-        // Add logic for handling clicks
+    const handleExit = () => {
+        resetData();
+        setMatchState(0);
+    };
+
+    const handleBlueScored = () => {
+        ScoutingData.humanPlayer.blueScored++;
+    };
+
+    const handleRedScored = () => {
+        ScoutingData.humanPlayer.redScored++;
+    };
+
+    const handleBlueMissed = () => {
+        ScoutingData.humanPlayer.blueMissed++;
+    };
+
+    const handleRedMissed = () => {
+        ScoutingData.humanPlayer.redMissed++;
     };
 
     return (
@@ -11,36 +29,35 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
             <div className="grid grid-cols-2 gap-4 w-full p-6 border-4 rounded-lg border-gray-300 bg-gray-200">
                 <div
                     className="flex items-center justify-center h-60 text-3xl font-bold bg-blue-500 hover:bg-blue-400 text-white text-center cursor-pointer rounded-lg"
-                    onClick={() => handleClick()}
+                    onClick={handleBlueScored}
                 >
                     Blue Scored
                 </div>
                 <div
                     className="flex items-center justify-center h-60 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-white text-center cursor-pointer rounded-lg"
-                    onClick={() => handleClick()}
+                    onClick={handleRedScored}
                 >
                     Red Scored
                 </div>
                 <div
                     className="flex items-center justify-center h-60 text-3xl font-bold bg-blue-400 hover:bg-blue-300 text-white text-center cursor-pointer rounded-lg"
-                    onClick={() => handleClick()}
+                    onClick={handleBlueMissed}
                 >
                     Blue Missed
                 </div>
                 <div
                     className="flex items-center justify-center h-60 text-3xl font-bold bg-red-400 hover:bg-red-300 text-white text-center cursor-pointer rounded-lg"
-                    onClick={() => handleClick()}
+                    onClick={handleRedMissed}
                 >
                     Red Missed
                 </div>
-                <Button className="h-20 text-xl font-bold" onClick={() => setMatchState(0)}>
+                <Button className="h-20 text-xl font-bold" onClick={handleExit}>
                     Back to Start
                 </Button>
-                <Button className="h-20 text-xl font-bold" onClick={() => setMatchState(0)}>
+                <Button className="h-20 text-xl font-bold" onClick={handleExit}>
                     Submit
                 </Button>
             </div>
-            
         </div>
     );
 }

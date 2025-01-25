@@ -1,6 +1,8 @@
 import { ScoutingData } from "@/app/data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { ScoutingData } from "../../data";
+import { CoralSlots, ExtendedCoralSlots } from "@/app/interfaces";
 
 const Reef = ({setMatchState}: {setMatchState: Function}) => {
 
@@ -61,6 +63,29 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     L4: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
   };
 
+  const handleHexagonClick = (level: string, slot: keyof ExtendedCoralSlots) => {
+    // Update ScoutingData for the specific slot
+    switch(level) {
+        case 'L4': 
+            ScoutingData.auto.L4[slot]++;
+            ScoutingData.auto.l4++;
+            break;
+        case 'L3': 
+            ScoutingData.auto.L3[slot]++;
+            ScoutingData.auto.l3++;
+            break;
+        case 'L2': 
+            ScoutingData.auto.L2[slot]++;
+            ScoutingData.auto.l2++;
+            break;
+        case 'L1': 
+            ScoutingData.auto.L1[slot as keyof CoralSlots]++;
+            ScoutingData.auto.l1++;
+            break;
+    }
+    showPopup(`Scored in Level ${level}, Slot ${slot}`);
+  };
+
   const showPopup = (message: string) => {
     setPopup({ visible: true, message });
     setTimeout(() => setPopup({ visible: false, message: "" }), 2000);
@@ -88,12 +113,11 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
           <div
             key={index}
             className="hexagon hover:neumorphic"
-            onClick={() => showPopup(`Level: ${level}, Button: ${label}`)}
+            onClick={() => handleHexagonClick(level, label as keyof ExtendedCoralSlots)}
           >
             {label}
           </div>
         ))}
-        
       </div>
       <div className="flex flex-row gap-4">
         <Button
