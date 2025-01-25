@@ -5,18 +5,17 @@ import { ScoutingData } from "../../data";
 
 export default function PickupAlgae({ handlePageChange }: { handlePageChange: (state: string) => void }) {
   const handleFloorPickup = () => {
-    ScoutingData.teleop.floorPickup += 1; // Increment floorPickup count
-    handlePageChange("algaeScoring"); // Navigate to the next page
+    ScoutingData.teleop.pickupAlgae++;
+    handlePageChange("algaeScoring");
   };
 
   const handleReefPickup = () => {
-    ScoutingData.teleop.sourcePickup += 1; // Increment sourcePickup count
-    handlePageChange("algaeScoring"); // Navigate to the next page
+    ScoutingData.teleop.pickupAlgaeFromReef++;
+    handlePageChange("algaeScoring");
   };
 
   const handleKnockedOffReef = () => {
-    ScoutingData.teleop.algaeRemoved += 1; // Increment sourcePickup count
-    // handlePageChange("algaeScoring"); // Navigate to the next page
+    ScoutingData.teleop.algaeRemoved++;
   };
 
   return (

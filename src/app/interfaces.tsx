@@ -64,6 +64,8 @@ interface TeleopData {
     sourcePickup: number;
     pickupAlgae: number;
     pickupAlgaeFromReef: number;
+    pickupCoral: number;
+    pickupCoralFromStation: number;
     l4Scored: number;
     l3Scored: number;
     l2Scored: number;
