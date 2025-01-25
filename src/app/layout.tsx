@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import classes from "./css/HeaderSimple.module.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,18 +28,18 @@ const links = [
 
 export function MainHeader() {
   const items = links.map((link) => (
-    <a key={link.label} href={link.link} className={classes.link}>
+    <a key={link.label} href={link.link} className="px-3 py-2 hover:bg-gray-100">
       {link.label}
     </a>
   ));
 
   return (
-    <header className={classes.header}>
-      <div className={`max-w-xs mx-auto ${classes.inner}`}>
-        <nav className={`flex gap-0 ${classes.desktopItems}`}>
+    <header className="border-b border-gray-200">
+      <div className="max-w-xs mx-auto px-4">
+        <nav className="flex gap-0">
           {items}
         </nav>
-        <div className={classes.mobileHeader}></div>
+        <div className="md:hidden"></div>
       </div>
     </header>
   );
