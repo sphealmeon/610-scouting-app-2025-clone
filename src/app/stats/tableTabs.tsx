@@ -1,4 +1,4 @@
-import React from "react";
+/*import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import AutoTable from "./tables/autoTable";
@@ -36,4 +36,4 @@ export default function TableTabs({ teamData }: { teamData: AggregateData[] }) {
       </TabsContent>
     </Tabs>
   );
-}
+}*/

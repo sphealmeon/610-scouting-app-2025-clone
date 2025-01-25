@@ -8,7 +8,7 @@ import { FetchTeams } from "@/app/blueAlliance/fetchTeams";
 import Link from "next/link";
 import { timer } from "@/app/globalVars";
 import { delay } from "@/app/utils/delay";
-import TableTabs from "./tableTabs";
+//import TableTabs from "./tableTabs";
 
 /**
  * @returns button to retrieve data, loads the team tabs with the tables
@@ -45,7 +45,7 @@ export default function Home() {
       >
         Get Data
       </Button>
-      {update ? <TableTabs teamData={teamData} /> : <></>}
+      {/*{update ? <TableTabs teamData={teamData} /> : <></>}*/}
     </>
   );
 }
