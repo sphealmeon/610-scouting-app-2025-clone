@@ -6,11 +6,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import React, { useState } from "react";
 
 export default function EndGame({setMatchState}: {setMatchState: Function}) {
-    const [parkChecked, setParkChecked] = useState(false);
-    const [shallowChecked, setShallowChecked] = useState(false);
-    const [missedShallowChecked, setMissedShallowChecked] = useState(false);
-    const [deepChecked, setDeepChecked] = useState(false);
-    const [missedDeepChecked, setMissedDeepChecked] = useState(false);
+    const [parkChecked, setParkChecked] = useState(ScoutingData.teleop.park === 1);
+    const [shallowChecked, setShallowChecked] = useState(ScoutingData.teleop.shallow === 1);
+    const [missedShallowChecked, setMissedShallowChecked] = useState(ScoutingData.teleop.missedshallow === 1);
+    const [deepChecked, setDeepChecked] = useState(ScoutingData.teleop.deep === 1);
+    const [missedDeepChecked, setMissedDeepChecked] = useState(ScoutingData.teleop.misseddeep === 1);
 
     const handleParkChange = (checked: boolean) => {
         setParkChecked(checked);
