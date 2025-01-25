@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { ScoutingData } from "@/app/data";
+import { AlgaeSlots } from "@/app/interfaces";
 
 const Algae = () => {
   const [level, setLevel] = useState<'L2-L3' | 'L3-L4'>('L2-L3');
@@ -16,6 +18,22 @@ const Algae = () => {
   const showPopup = (message: string) => {
     setPopup({ visible: true, message });
     setTimeout(() => setPopup({ visible: false, message: "" }), 2000);
+  };
+
+  const handleHexagonClick = (level: 'L2-L3' | 'L3-L4', slot: keyof AlgaeSlots) => {
+    ScoutingData.auto.algaeSlots[level][slot]++;
+    ScoutingData.auto.algae++;
+    showPopup(`Knocked off algae at ${level}, Slot ${slot}`);
+  };
+
+  const handleProcessorClick = () => {
+    ScoutingData.auto.processor++;
+    showPopup("Scored in Processor");
+  };
+
+  const handleBargeClick = () => {
+    ScoutingData.auto.barge++;
+    showPopup("Scored in Barge");
   };
 
   return (
@@ -40,7 +58,7 @@ const Algae = () => {
           <div
             key={index}
             className="hexagon hover:neumorphic"
-            onClick={() => showPopup(`Toggle: ${level}, Button: ${label}`)}
+            onClick={() => handleHexagonClick(level, label as keyof AlgaeSlots)}
           >
             {label}
           </div>
@@ -56,15 +74,15 @@ const Algae = () => {
       <div className="flex space-x-4 mt-4">
         <Button
           className="text-white px-4 py-2 rounded bg-blue-500"
-          onClick={() => showPopup("Score Barge button clicked")}
+          onClick={handleProcessorClick}
         >
-          Score Barge?
+          Score Processor?
         </Button>
         <Button
           className="text-white px-4 py-2 rounded bg-green-500"
-          onClick={() => showPopup("Score Processor button clicked")}
+          onClick={handleBargeClick}
         >
-          Score Processor?
+          Score Barge?
         </Button>
       </div>
 

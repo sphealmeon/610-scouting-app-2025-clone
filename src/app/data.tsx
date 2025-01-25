@@ -1,4 +1,4 @@
-import { Data } from "@/app/interfaces";
+import { Data, CoralSlots, ExtendedCoralSlots, AlgaeSlots } from "@/app/interfaces";
 
 export const ScoutingData: Data = {
     start: {
@@ -20,6 +20,14 @@ export const ScoutingData: Data = {
         l1: 0,
         processor: 0,
         barge: 0,
+        L1: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 },
+        L2: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0, I: 0, J: 0, K: 0, L: 0 },
+        L3: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0, I: 0, J: 0, K: 0, L: 0 },
+        L4: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0, I: 0, J: 0, K: 0, L: 0 },
+        algaeSlots: {
+            'L2-L3': { A: 0, E: 0, I: 0 },
+            'L3-L4': { A: 0, E: 0, I: 0 }
+        }
     },
     teleop: {
         floorPickup: 0,
@@ -69,6 +77,16 @@ export const resetData = () => {
     ScoutingData.auto.l1 = 0;
     ScoutingData.auto.processor = 0;
     ScoutingData.auto.barge = 0;
+
+    // Reset coral slots
+    (Object.keys(ScoutingData.auto.L1) as Array<keyof CoralSlots>).forEach(key => ScoutingData.auto.L1[key] = 0);
+    (Object.keys(ScoutingData.auto.L2) as Array<keyof ExtendedCoralSlots>).forEach(key => ScoutingData.auto.L2[key] = 0);
+    (Object.keys(ScoutingData.auto.L3) as Array<keyof ExtendedCoralSlots>).forEach(key => ScoutingData.auto.L3[key] = 0);
+    (Object.keys(ScoutingData.auto.L4) as Array<keyof ExtendedCoralSlots>).forEach(key => ScoutingData.auto.L4[key] = 0);
+
+    // Reset algae slots
+    (Object.keys(ScoutingData.auto.algaeSlots['L2-L3']) as Array<keyof AlgaeSlots>).forEach(key => ScoutingData.auto.algaeSlots['L2-L3'][key] = 0);
+    (Object.keys(ScoutingData.auto.algaeSlots['L3-L4']) as Array<keyof AlgaeSlots>).forEach(key => ScoutingData.auto.algaeSlots['L3-L4'][key] = 0);
 
     ScoutingData.teleop.floorPickup = 0;
     ScoutingData.teleop.sourcePickup = 0;
