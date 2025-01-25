@@ -102,12 +102,17 @@ export interface AggregateData {
     matchAggregateData: Data;
     matchesPlayed: number;
     autoPPG: number;
-    autoCoralAccuracy: number;
-    autoAlgaeAccuracy: number;
-    climbAccuracy: number;
-    teleopCyclesScored: number;
-    teleopAccuracy: number;
-    teleopTotalCycles: number;
+    teleopPPG: number;
+    coralCyclesScored: number;
+    algaeCyclesScored: number;
+    teleopL1Accuracy: number;
+    teleopL2Accuracy: number;
+    teleopL3Accuracy: number;
+    teleopL4Accuracy: number;
+    teleopBargeAccuracy: number;
+    teleopProcessorAccuracy: number;
+    shallowAccuracy: number;
+    deepAccuracy: number;
     endgamePPG: number;
     brokePercentage: number;
 }
