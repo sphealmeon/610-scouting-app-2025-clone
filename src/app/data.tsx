@@ -53,8 +53,8 @@ export const ScoutingData: Data = {
         park: 0,
         shallow: 0,
         deep: 0,
-        missedShallow: 0,
-        missedDeep: 0,
+        missedshallow: 0,
+        misseddeep: 0,
         general: "",
         reason: "",
         explanation: "",
@@ -119,8 +119,8 @@ export const resetData = () => {
     ScoutingData.teleop.park = 0;
     ScoutingData.teleop.shallow = 0;
     ScoutingData.teleop.deep = 0;
-    ScoutingData.teleop.missedShallow = 0;
-    ScoutingData.teleop.missedDeep = 0;
+    ScoutingData.teleop.missedshallow = 0;
+    ScoutingData.teleop.misseddeep = 0;
     ScoutingData.teleop.general = "";
     ScoutingData.teleop.reason = "";
     ScoutingData.teleop.explanation = "";

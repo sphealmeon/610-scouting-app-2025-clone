@@ -1,7 +1,6 @@
 import { ScoutingData } from "@/app/data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { ScoutingData } from "../../data";
 import { CoralSlots, ExtendedCoralSlots } from "@/app/interfaces";
 
 const Reef = ({setMatchState}: {setMatchState: Function}) => {

@@ -1,7 +1,6 @@
 import { ScoutingData } from "@/app/data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { ScoutingData } from "@/app/data";
 import { AlgaeSlots } from "@/app/interfaces";
 
 const Algae = () => {
