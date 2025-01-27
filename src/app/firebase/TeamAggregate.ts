@@ -9,7 +9,9 @@ import { doc, getDoc } from "firebase/firestore";
  */
 export const TeamAggregate = async ({ team }: { team: number }) => {
   const document = await getDoc(doc(db, team + "", "aggregate"));
-  const teamData: AggregateData = document.data()?.aggregateData;
-
+  const rawData = document.data();
+  console.log("Raw data from Firebase for team", team, ":", rawData);
+  const teamData: AggregateData = rawData?.aggregateData;
+  console.log("Processed team data:", teamData);
   return teamData;
 };

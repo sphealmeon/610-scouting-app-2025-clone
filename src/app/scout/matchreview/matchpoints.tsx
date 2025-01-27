@@ -46,6 +46,7 @@ function handleRemoveallCoralClick(){
 }
 
    const handleSubmit = () => {
+    SubmitMatch({ team: ScoutingData.start.team, match: ScoutingData.start.match, matchData: ScoutingData });
     setSubmit(!Submit)
     setMatchState(0);
   };
