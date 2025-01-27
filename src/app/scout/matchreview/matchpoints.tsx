@@ -6,7 +6,7 @@ import { SubmitMatch } from "@/app/firebase/submitMatch";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-
+import { CalculateAggregate } from "@/app/firebase/calculateAggregate";
 
 export default function Matchpoints({setMatchState}: {setMatchState: Function}) {
    const [Coral, setCoral] = useState(0);
@@ -46,6 +46,7 @@ function handleRemoveallCoralClick(){
 }
 
    const handleSubmit = () => {
+    CalculateAggregate({ team: ScoutingData.start.team });
     SubmitMatch({ team: ScoutingData.start.team, match: ScoutingData.start.match, matchData: ScoutingData });
     setSubmit(!Submit)
     setMatchState(0);

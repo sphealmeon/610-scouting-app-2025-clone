@@ -140,14 +140,13 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
       totalData.teleop.deep * 10 +
       totalData.teleop.shallow * 6 +
       totalData.teleop.park * 2,
-    brokePercentage: 
-      numMatches == 0 ? 0 : timesBroke / numMatches,
+    brokePercentage: numMatches === 0 ? 0 : timesBroke / numMatches,
   };
 
 
   //Sets the new Aggregate Data
   await setDoc(
-    doc(db, team + "", "aggregate"),
+    doc(db, team.toString(), "aggregate"),
     {
       aggregateData,
     },
