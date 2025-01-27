@@ -20,6 +20,6 @@ export const SubmitMatch = async ({
 }) => {
   await setDoc(doc(db, team + "", match + ""), {
     matchData,
+    aggregateData: CalculateAggregate({ team }),
   });
-  CalculateAggregate({ team });
 };
