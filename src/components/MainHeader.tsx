@@ -11,7 +11,7 @@ const links = [
 
 export function MainHeader() {
   const items = links.map((link) => (
-    <a key={link.label} href={link.link} className="px-3 py-2 hover:bg-green-200">
+    <a key={link.label} href={link.link} className="px-3 py-2 hover:bg-green-200 text-lg">
       {link.label}
     </a>
   ));
