@@ -76,8 +76,9 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
       totalData.auto.l3 * 6 +
       totalData.auto.l2 * 4 +
       totalData.auto.l1 * 3 +
-      totalData.auto.leave * 2
-      ,
+      totalData.auto.leave * 2 +
+      totalData.auto.processor * 6 +
+      totalData.auto.barge * 4,
     teleopPPG:
       totalData.teleop.l4Scored * 5 +
       totalData.teleop.l3Scored * 4 +
@@ -90,7 +91,8 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
       totalData.teleop.l4Scored +
       totalData.teleop.l3Scored +
       totalData.teleop.l2Scored +
-      totalData.teleop.l1Scored,
+      totalData.teleop.l1Scored +
+      totalData.auto.coral,
     algaeCyclesScored:
       totalData.teleop.pickupAlgae +
       totalData.teleop.processorScored,
@@ -137,7 +139,7 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
         : totalData.teleop.deep /
           (totalData.teleop.deep + totalData.teleop.missedDeep),
     endgamePPG:
-      totalData.teleop.deep * 10 +
+      totalData.teleop.deep * 12 +
       totalData.teleop.shallow * 6 +
       totalData.teleop.park * 2,
     brokePercentage: numMatches === 0 ? 0 : timesBroke / numMatches,

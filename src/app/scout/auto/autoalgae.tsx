@@ -20,10 +20,12 @@ const Algae = () => {
   };
 
   function handleProcessor () {
+    showPopup("Score Processor button clicked")
     ScoutingData.auto.processor++;
   }
   
   function handleBarge () {
+    showPopup("Score Barge button clicked")
     ScoutingData.auto.barge++;
   }
 
@@ -65,13 +67,13 @@ const Algae = () => {
       <div className="flex space-x-4 mt-4">
         <Button
           className="text-white px-4 py-2 rounded bg-blue-500"
-          onClick={() => showPopup("Score Barge button clicked")}
+          onClick={handleBarge}
         >
           Score Barge?
         </Button>
         <Button
           className="text-white px-4 py-2 rounded bg-green-500"
-          onClick={() => showPopup("Score Processor button clicked")}
+          onClick={handleProcessor}
         >
           Score Processor?
         </Button>
