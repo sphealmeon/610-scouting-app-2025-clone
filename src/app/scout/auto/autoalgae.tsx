@@ -19,13 +19,19 @@ const Algae = () => {
     setTimeout(() => setPopup({ visible: false, message: "" }), 2000);
   };
 
+  function handleAlgae () {
+    ScoutingData.auto.algae++;
+  }
+
   function handleProcessor () {
     showPopup("Score Processor button clicked")
+    handleAlgae();
     ScoutingData.auto.processor++;
   }
   
   function handleBarge () {
     showPopup("Score Barge button clicked")
+    handleAlgae();
     ScoutingData.auto.barge++;
   }
 
