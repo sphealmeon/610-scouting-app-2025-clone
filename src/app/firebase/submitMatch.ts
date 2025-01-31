@@ -22,9 +22,9 @@ export const SubmitMatch = async ({
 
   try {
     await setDoc(doc(db, team + "", match + ""), {
-      matchData: matchData,
-      aggregateData: JSON.stringify(await CalculateAggregate({ team }))
+      matchData,
     });
+    CalculateAggregate({ team })
   } catch (e) {
     console.error(e);
   }

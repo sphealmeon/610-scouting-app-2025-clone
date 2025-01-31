@@ -51,6 +51,7 @@ export interface Data{
 
 export interface AggregateData {
     team: number;
+    standing: number;
     matchAggregateData: Data;
     matchesPlayed: number;
     autoPPG: number;

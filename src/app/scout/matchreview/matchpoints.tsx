@@ -1,7 +1,7 @@
 "use client";
 
 
-import { ScoutingData } from "@/app/data";
+import { resetData, ScoutingData } from "@/app/data";
 import { SubmitMatch } from "@/app/firebase/submitMatch";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -16,7 +16,6 @@ export default function Matchpoints({setMatchState}: {setMatchState: Function}) 
    const [Rcoral, setRcoral] = useState(0);
    const [Ralgae, setRalgae] = useState(0);
    const [Balgae, setBalgae] = useState(0);
-   const [Submit, setSubmit] = useState(false);
    const [checked, setChecked] = useState(false);
 
    function handleProcessorClick(){
@@ -44,14 +43,6 @@ function handleRemoveallCoralClick(){
     setCoral(0);
     setFcoral(0);
 }
-
-   const handleSubmit = () => {
-    CalculateAggregate({ team: ScoutingData.start.team });
-    SubmitMatch({ team: ScoutingData.start.team, match: ScoutingData.start.match, matchData: ScoutingData });
-    setSubmit(!Submit)
-    setMatchState(0);
-  };
-
 
    return (
        <div className="flex flex-col items-center p-6 space-y-6 bg-gray-15 h-screen">
@@ -142,8 +133,10 @@ function handleRemoveallCoralClick(){
             <Button
                 onClick={
                     () => {
-                        console.log(ScoutingData);
-                        handleSubmit()
+                        CalculateAggregate({ team: ScoutingData.start.team });
+                        SubmitMatch({ team: ScoutingData.start.team, match: ScoutingData.start.match, matchData: ScoutingData });
+                        resetData();
+                        setMatchState(0);
                     }
                 }
                    

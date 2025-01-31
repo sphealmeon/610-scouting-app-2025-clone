@@ -11,6 +11,38 @@ import { TeamAggregate } from "./TeamAggregate";
  * @param team the team to calculate Aggregate Data for
  */
 export const CalculateAggregate = async ({ team }: { team:number }) => {
+  let standing: number = 0;
+  if (useApi) {
+    await fetch(
+      "https://www.thebluealliance.com/api/v3/event/" + key + "/rankings",
+      {
+        method: "GET",
+        headers: {
+          "X-TBA-Auth-Key":
+            "R0slEz1yXDCVyedRLzFMoE5QrgkG4i73OwRuKlNHiw7lVMuO2lBQcwuzdg6iqvAq",
+        },
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        for (let j = 0; j < data.rankings.length; j++) {
+          if ("frc" + team == data.rankings[j].team_key) {
+            standing = parseInt(data.rankings[j].rank);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  } else {
+    const tempAggData: AggregateData = await TeamAggregate({ team: team });
+    standing = tempAggData.standing;
+  }
   let numMatches: number = 0;
   let timesBroke: number = 0;
 
@@ -70,6 +102,7 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
   const aggregateData: AggregateData = {
     matchAggregateData: totalData,
     team: team,
+    standing: standing,
     matchesPlayed: numMatches,
     autoPPG:
       totalData.auto.l4 * 7 +
