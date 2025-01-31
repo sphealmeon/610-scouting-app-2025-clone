@@ -10,8 +10,6 @@ export const ScoutingData: Data = {
     },
     auto: {
         leave: 0,
-        coral: 0,
-        algae: 0,
         droppedCoral: 0,
         droppedAlgae: 0,
         l4: 0,

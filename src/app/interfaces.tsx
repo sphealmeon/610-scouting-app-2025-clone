@@ -8,8 +8,6 @@ export interface Data{
     };
     auto: {
         leave: number;
-        coral: number;
-        algae: number;
         droppedCoral: number;
         droppedAlgae: number;
         l4: number;

@@ -24,8 +24,6 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
     },
     auto: {
       leave: ScoutingData.auto.leave,
-      coral: ScoutingData.auto.coral,
-      algae: ScoutingData.auto.algae,
       droppedCoral: ScoutingData.auto.droppedCoral,
       droppedAlgae: ScoutingData.auto.droppedAlgae,
       l4: ScoutingData.auto.l4,
@@ -76,7 +74,7 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
       totalData.auto.l3 * 6 +
       totalData.auto.l2 * 4 +
       totalData.auto.l1 * 3 +
-      totalData.auto.leave * 2 +
+      totalData.auto.leave * 3 +
       totalData.auto.processor * 6 +
       totalData.auto.barge * 4,
     teleopPPG:
@@ -92,10 +90,15 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
       totalData.teleop.l3Scored +
       totalData.teleop.l2Scored +
       totalData.teleop.l1Scored +
-      totalData.auto.coral,
+      totalData.auto.l1 +
+      totalData.auto.l2 +
+      totalData.auto.l3 +
+      totalData.auto.l4,
     algaeCyclesScored:
-      totalData.teleop.pickupAlgae +
-      totalData.teleop.processorScored,
+      totalData.teleop.bargeScored +
+      totalData.teleop.processorScored +
+      totalData.auto.barge +
+      totalData.auto.processor,
 
     teleopL1Accuracy:
       totalData.teleop.l1Scored == 0
