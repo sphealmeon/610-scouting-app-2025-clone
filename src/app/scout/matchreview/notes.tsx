@@ -2,14 +2,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react"
-import { ScoutingData } from "../../data";
+import { ScoutingData } from "../data";
 
 export default function NotesReview() {
     const [parkChecked, setParkChecked] = useState(ScoutingData.teleop.park === 1);
     const [shallowChecked, setShallowChecked] = useState(ScoutingData.teleop.shallow === 1);
-    const [missedShallowChecked, setMissedShallowChecked] = useState(ScoutingData.teleop.missedshallow === 1);
+    const [missedShallowChecked, setMissedShallowChecked] = useState(ScoutingData.teleop.missedShallow === 1);
     const [deepChecked, setDeepChecked] = useState(ScoutingData.teleop.deep === 1);
-    const [missedDeepChecked, setMissedDeepChecked] = useState(ScoutingData.teleop.misseddeep === 1);
+    const [missedDeepChecked, setMissedDeepChecked] = useState(ScoutingData.teleop.missedDeep === 1);
     const [generalNotes, setGeneralNotes] = useState(ScoutingData.teleop.general);
     const [robotIssues, setRobotIssues] = useState(ScoutingData.teleop.reason);
 
@@ -51,7 +51,7 @@ export default function NotesReview() {
                             disabled={shallowChecked} 
                             onCheckedChange={(checked: boolean) => {
                                 setMissedShallowChecked(checked);
-                                ScoutingData.teleop.missedshallow = checked ? 1 : 0;
+                                ScoutingData.teleop.missedShallow = checked ? 1 : 0;
                             }}
                         />
                         <span className="text-2xl">Missed Shallow Cage</span>
@@ -77,7 +77,7 @@ export default function NotesReview() {
                             disabled={deepChecked} 
                             onCheckedChange={(checked: boolean) => {
                                 setMissedDeepChecked(checked);
-                                ScoutingData.teleop.misseddeep = checked ? 1 : 0;
+                                ScoutingData.teleop.missedDeep = checked ? 1 : 0;
                             }}
                         />
                         <span className="text-2xl">Missed Deep Cage</span>

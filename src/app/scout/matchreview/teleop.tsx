@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ScoutingData } from "../../data";
+import { ScoutingData } from "../data";
 
 interface Scores {
   coral: {
@@ -86,8 +86,6 @@ export default function TeleopReview() {
 
   return (
     <div className="p-4 w-full mx-auto grid grid-cols-2">
-      {renderScoringButtons('coral', Object.keys(scores.coral) as (keyof Scores["coral"])[])}
-      {renderScoringButtons('algae', Object.keys(scores.algae) as (keyof Scores["algae"])[])}
     </div>
   );
 }

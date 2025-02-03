@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { resetData } from "@/app/data";
+import { resetData } from "../data";
 import {
     Card,
     CardContent,

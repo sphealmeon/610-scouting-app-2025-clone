@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ScoutingData, resetData } from "@/app/data";
+import { ScoutingData, resetData } from "../data";
 
 export default function HumanPlayerMain({ setMatchState }: { setMatchState: Function }) {
     const handleExit = () => {

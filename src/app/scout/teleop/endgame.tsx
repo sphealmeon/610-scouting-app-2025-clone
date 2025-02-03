@@ -1,5 +1,3 @@
-'use client';
-import { ScoutingData } from "../../data";
 
 import { ScoutingData } from "@/app/scout/data";
 import { Button } from "@/components/ui/button";
@@ -9,9 +7,9 @@ import React, { useState } from "react";
 export default function EndGame({setMatchState}: {setMatchState: Function}) {
     const [parkChecked, setParkChecked] = useState(ScoutingData.teleop.park === 1);
     const [shallowChecked, setShallowChecked] = useState(ScoutingData.teleop.shallow === 1);
-    const [missedShallowChecked, setMissedShallowChecked] = useState(ScoutingData.teleop.missedshallow === 1);
+    const [missedShallowChecked, setMissedShallowChecked] = useState(ScoutingData.teleop.missedShallow === 1);
     const [deepChecked, setDeepChecked] = useState(ScoutingData.teleop.deep === 1);
-    const [missedDeepChecked, setMissedDeepChecked] = useState(ScoutingData.teleop.misseddeep === 1);
+    const [missedDeepChecked, setMissedDeepChecked] = useState(ScoutingData.teleop.missedDeep === 1);
 
     const handleParkChange = (checked: boolean) => {
         setParkChecked(checked);
@@ -25,7 +23,7 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
 
     const handleMissedShallowChange = (checked: boolean) => {
         setMissedShallowChecked(checked);
-        ScoutingData.teleop.missedshallow = checked ? 1 : 0;
+        ScoutingData.teleop.missedShallow = checked ? 1 : 0;
     };
 
     const handleDeepChange = (checked: boolean) => {
@@ -35,7 +33,7 @@ export default function EndGame({setMatchState}: {setMatchState: Function}) {
 
     const handleMissedDeepChange = (checked: boolean) => {
         setMissedDeepChecked(checked);
-        ScoutingData.teleop.misseddeep = checked ? 1 : 0;
+        ScoutingData.teleop.missedDeep = checked ? 1 : 0;
     };
 
     return (
