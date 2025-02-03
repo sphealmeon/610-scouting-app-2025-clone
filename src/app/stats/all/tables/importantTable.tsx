@@ -8,16 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useRouter } from "next/navigation";
 import { AggregateData } from "@/app/interfaces";
-import { setCookie } from "@/app/cookies/cookies";
 
 /**
  * @param teamData an AggregateData array of all the teams data
  * @returns a sortable table mostly containing to most important data
  */
 export default function ImportantTable({ teamData }: { teamData: AggregateData[] }) {
-  const router = useRouter();
 
   return (
     <div className="rounded-md border">
@@ -37,12 +34,7 @@ export default function ImportantTable({ teamData }: { teamData: AggregateData[]
         <TableBody>
           {teamData.map((data) => (
             <TableRow 
-              key={data.team}
-              className="cursor-pointer hover:bg-muted/50"
-              onClick={() => {
-                router.push("/stats/team");
-                setCookie("Team", data.team.toString());
-              }}
+              key={data.team}          
             >
               <TableCell className="font-medium">{data.team}</TableCell>
               <TableCell>{data.autoPPG.toFixed(2)}</TableCell>

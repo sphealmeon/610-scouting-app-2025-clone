@@ -215,14 +215,20 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
     team: team,
     standing: standing,
     matchesPlayed: numMatches,
-    autoPPG:
-      totalData.auto.l4 * 7 +
-      totalData.auto.l3 * 6 +
-      totalData.auto.l2 * 4 +
-      totalData.auto.l1 * 3 +
-      totalData.auto.leave * 2 +
-      totalData.auto.processor * 6 +
-      totalData.auto.barge * 4,
+    autoPPG: (
+        // L4 total (all slots * 7 points)
+        Object.values(totalData.auto.l4).reduce((sum, val) => sum + val, 0) * 7 +
+        // L3 total (all slots * 6 points)
+        Object.values(totalData.auto.l3).reduce((sum, val) => sum + val, 0) * 6 +
+        // L2 total (all slots * 4 points)
+        Object.values(totalData.auto.l2).reduce((sum, val) => sum + val, 0) * 4 +
+        // L1 total (all slots * 3 points)
+        Object.values(totalData.auto.l1).reduce((sum, val) => sum + val, 0) * 3 +
+        // Other auto points
+        totalData.auto.leave * 3 +
+        totalData.auto.processor * 6 +
+        totalData.auto.barge * 4
+    ),
     teleopPPG:
       totalData.teleop.l4Scored * 5 +
       totalData.teleop.l3Scored * 4 +

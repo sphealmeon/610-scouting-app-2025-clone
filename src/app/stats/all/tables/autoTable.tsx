@@ -8,16 +8,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useRouter } from "next/navigation";
 import { AggregateData } from "@/app/interfaces";
-import { setCookie } from "@/app/cookies/cookies";
 
 /**
  * @param teamData an AggregateData array of all the teams data
  * @returns a sortable table containing auto data
  */
 export default function AutoTable({ teamData }: { teamData: AggregateData[] }) {
-  const router = useRouter();
+
+  const sumLevelValues = (levelData: any) => {
+    if (!levelData) return 0;
+    return Object.values(levelData).reduce((sum: number, val: any) => sum + (val || 0), 0);
+  };
 
   return (
     <div className="rounded-md border">
@@ -42,11 +44,6 @@ export default function AutoTable({ teamData }: { teamData: AggregateData[] }) {
           {teamData.map((data) => (
             <TableRow 
               key={data.team}
-              className="cursor-pointer hover:bg-muted/50"
-              onClick={() => {
-                router.push("/stats/team");
-                setCookie("Team", data.team.toString());
-              }}
             >
               <TableCell className="font-medium">{data.team}</TableCell>
               <TableCell>{data.autoPPG.toFixed(2)}</TableCell>
@@ -54,10 +51,10 @@ export default function AutoTable({ teamData }: { teamData: AggregateData[] }) {
               <TableCell>{data.matchAggregateData.auto.algae}</TableCell>
               <TableCell>{data.matchAggregateData.auto.droppedCoral}</TableCell>
               <TableCell>{data.matchAggregateData.auto.droppedAlgae}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.l4}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.l3}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.l2}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.l1}</TableCell>
+              <TableCell>{sumLevelValues(data.matchAggregateData.auto.l4)}</TableCell>
+              <TableCell>{sumLevelValues(data.matchAggregateData.auto.l3)}</TableCell>
+              <TableCell>{sumLevelValues(data.matchAggregateData.auto.l2)}</TableCell>
+              <TableCell>{sumLevelValues(data.matchAggregateData.auto.l1)}</TableCell>
               <TableCell>{data.matchAggregateData.auto.processor}</TableCell>
               <TableCell>{data.matchAggregateData.auto.barge}</TableCell>
             </TableRow>

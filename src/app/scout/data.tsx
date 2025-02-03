@@ -14,10 +14,56 @@ export const ScoutingData: Data = {
         algae: 0,
         droppedCoral: 0,
         droppedAlgae: 0,
-        l4: 0,
-        l3: 0,
-        l2: 0,
-        l1: 0,
+        l4: {
+            A: 0,
+            B: 0,
+            C: 0,
+            D: 0,
+            E: 0,
+            F: 0,
+            G: 0,
+            H: 0,
+            I: 0,
+            J: 0,
+            K: 0,
+            L: 0,
+        },
+        l3: {
+            A: 0,
+            B: 0,
+            C: 0,
+            D: 0,
+            E: 0,
+            F: 0,
+            G: 0,
+            H: 0,
+            I: 0,
+            J: 0,
+            K: 0,
+            L: 0,
+        },
+        l2: {
+            A: 0,
+            B: 0,
+            C: 0,
+            D: 0,
+            E: 0,
+            F: 0,
+            G: 0,
+            H: 0,
+            I: 0,
+            J: 0,
+            K: 0,
+            L: 0,
+        },
+        l1: {
+            A: 0,
+            B: 0,
+            C: 0,
+            D: 0,
+            E: 0,
+            F: 0,
+        },
         processor: 0,
         barge: 0,
     },
@@ -69,10 +115,48 @@ export const resetData = () => {
     ScoutingData.auto.algae = 0;
     ScoutingData.auto.droppedCoral = 0;
     ScoutingData.auto.droppedAlgae = 0;
-    ScoutingData.auto.l4 = 0;
-    ScoutingData.auto.l3 = 0;
-    ScoutingData.auto.l2 = 0;
-    ScoutingData.auto.l1 = 0;
+    ScoutingData.auto.l4.A = 0;
+    ScoutingData.auto.l4.B = 0;
+    ScoutingData.auto.l4.C = 0;
+    ScoutingData.auto.l4.D = 0;
+    ScoutingData.auto.l4.E = 0;
+    ScoutingData.auto.l4.F = 0;
+    ScoutingData.auto.l4.G = 0;
+    ScoutingData.auto.l4.H = 0;
+    ScoutingData.auto.l4.I = 0;
+    ScoutingData.auto.l4.J = 0;
+    ScoutingData.auto.l4.K = 0;
+    ScoutingData.auto.l4.L = 0;
+    ScoutingData.auto.l3.A = 0;
+    ScoutingData.auto.l3.B = 0;
+    ScoutingData.auto.l3.C = 0;
+    ScoutingData.auto.l3.D = 0;
+    ScoutingData.auto.l3.E = 0;
+    ScoutingData.auto.l3.F = 0;
+    ScoutingData.auto.l3.G = 0;
+    ScoutingData.auto.l3.H = 0;
+    ScoutingData.auto.l3.I = 0;
+    ScoutingData.auto.l3.J = 0;
+    ScoutingData.auto.l3.K = 0;
+    ScoutingData.auto.l3.L = 0;
+    ScoutingData.auto.l2.A = 0;
+    ScoutingData.auto.l2.B = 0;
+    ScoutingData.auto.l2.C = 0;
+    ScoutingData.auto.l2.D = 0;
+    ScoutingData.auto.l2.E = 0;
+    ScoutingData.auto.l2.F = 0;
+    ScoutingData.auto.l2.G = 0;
+    ScoutingData.auto.l2.H = 0;
+    ScoutingData.auto.l2.I = 0;
+    ScoutingData.auto.l2.J = 0;
+    ScoutingData.auto.l2.K = 0;
+    ScoutingData.auto.l2.L = 0;
+    ScoutingData.auto.l1.A = 0;
+    ScoutingData.auto.l1.B = 0;
+    ScoutingData.auto.l1.C = 0;
+    ScoutingData.auto.l1.D = 0;
+    ScoutingData.auto.l1.E = 0;
+    ScoutingData.auto.l1.F = 0;
     ScoutingData.auto.processor = 0;
     ScoutingData.auto.barge = 0;
 

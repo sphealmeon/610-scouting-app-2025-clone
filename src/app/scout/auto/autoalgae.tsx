@@ -1,7 +1,6 @@
 import { ScoutingData } from "@/app/scout/data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { AlgaeSlots } from "@/app/interfaces";
 
 const Algae = () => {
   const [level, setLevel] = useState<'L2-L3' | 'L3-L4'>('L2-L3');
@@ -12,7 +11,7 @@ const Algae = () => {
 
   const boards: Record<'L2-L3' | 'L3-L4', string[]> = {
     'L2-L3': ['A', 'E', 'I'],
-    'L3-L4': ['c', 'G', 'J'],
+    'L3-L4': ['C', 'G', 'J'],
   };
 
   const showPopup = (message: string) => {
@@ -29,6 +28,16 @@ const Algae = () => {
     showPopup("Score Barge button clicked")
     ScoutingData.auto.barge++;
     showPopup("Scored in Barge");
+  };
+
+  const handleHexagonClick = (level: 'L2-L3' | 'L3-L4', slot: string) => {
+    ScoutingData.auto.algae++;
+    if (level === 'L2-L3') {
+        ScoutingData.auto.l2[slot as keyof typeof ScoutingData.auto.l2]++;
+    } else {
+        ScoutingData.auto.l3[slot as keyof typeof ScoutingData.auto.l3]++;
+    }
+    showPopup(`Knocked off algae in ${level}, Slot ${slot}`);
   };
 
   return (
@@ -53,7 +62,7 @@ const Algae = () => {
           <div
             key={index}
             className="hexagon hover:neumorphic"
-            onClick={() => handleHexagonClick(level, label as keyof AlgaeSlots)}
+            onClick={() => handleHexagonClick(level, label)}
           >
             {label}
           </div>

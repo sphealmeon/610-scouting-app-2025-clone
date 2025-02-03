@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useRouter } from "next/navigation";
 import { AggregateData } from "@/app/interfaces";
 import { setCookie } from "@/app/cookies/cookies";
 
@@ -17,7 +16,6 @@ import { setCookie } from "@/app/cookies/cookies";
  * @returns a sortable table containing all data
  */
 export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
-  const router = useRouter();
 
   return (
     <div className="rounded-md border">
@@ -43,11 +41,6 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
           {teamData.map((data) => (
             <TableRow 
               key={data.team}
-              className="cursor-pointer hover:bg-muted/50"
-              onClick={() => {
-                router.push("/stats/team");
-                setCookie("Team", data.team.toString());
-              }}
             >
               <TableCell className="font-medium">{data.team}</TableCell>
               <TableCell>{data.matchesPlayed}</TableCell>

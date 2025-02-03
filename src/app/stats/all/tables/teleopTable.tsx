@@ -8,16 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useRouter } from "next/navigation";
 import { AggregateData } from "@/app/interfaces";
-import { setCookie } from "@/app/cookies/cookies";
 
 /**
  * @param teamData an AggregateData array of all the teams data
  * @returns a sortable table containing teleop data
  */
 export default function TeleopTable({ teamData }: { teamData: AggregateData[] }) {
-  const router = useRouter();
 
   return (
     <div className="rounded-md border">
@@ -43,11 +40,6 @@ export default function TeleopTable({ teamData }: { teamData: AggregateData[] })
           {teamData.map((data) => (
             <TableRow 
               key={data.team}
-              className="cursor-pointer hover:bg-muted/50"
-              onClick={() => {
-                router.push("/stats/team");
-                setCookie("Team", data.team.toString());
-              }}
             >
               <TableCell className="font-medium">{data.team}</TableCell>
               <TableCell>{data.teleopPPG.toFixed(2)}</TableCell>

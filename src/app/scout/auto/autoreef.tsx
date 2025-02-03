@@ -1,7 +1,6 @@
 import { ScoutingData } from "@/app/scout/data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { CoralSlots, ExtendedCoralSlots } from "@/app/interfaces";
 
 const Reef = ({setMatchState}: {setMatchState: Function}) => {
 
@@ -16,18 +15,6 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
   function handleScore(l: 'L1' | 'L2' | 'L3' | 'L4') {
     setLevel(l);
     handleCoral();
-    if (l === "L1") {
-      ScoutingData.auto.l1++;
-    }
-    if (l === "L2") {
-      ScoutingData.auto.l2++;
-    }
-    if (l === "L3") {
-      ScoutingData.auto.l3++;
-    }
-    if (l === "L4") {
-      ScoutingData.auto.l4++;
-    }
   }  
 
   const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
@@ -43,24 +30,25 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     L4: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
   };
 
-  const handleHexagonClick = (level: string, slot: keyof ExtendedCoralSlots) => {
-    // Update ScoutingData for the specific slot
+  const handleHexagonClick = (level: string, slot: 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L') => {
     switch(level) {
         case 'L4': 
-            ScoutingData.auto.L4[slot]++;
-            ScoutingData.auto.l4++;
+            ScoutingData.auto.l4[slot]++;
+            ScoutingData.auto.coral++;
             break;
-        case 'L3': 
-            ScoutingData.auto.L3[slot]++;
-            ScoutingData.auto.l3++;
+        case 'L3':
+            ScoutingData.auto.l3[slot]++;
+            ScoutingData.auto.coral++;
             break;
-        case 'L2': 
-            ScoutingData.auto.L2[slot]++;
-            ScoutingData.auto.l2++;
+        case 'L2':
+            ScoutingData.auto.l2[slot]++;
+            ScoutingData.auto.coral++;
             break;
         case 'L1': 
-            ScoutingData.auto.L1[slot as keyof CoralSlots]++;
-            ScoutingData.auto.l1++;
+            if (['A', 'B', 'C', 'D', 'E', 'F'].includes(slot)) {
+                ScoutingData.auto.l1[slot as 'A' | 'B' | 'C' | 'D' | 'E' | 'F']++;
+                ScoutingData.auto.coral++;
+            }
             break;
     }
     showPopup(`Scored in Level ${level}, Slot ${slot}`);
@@ -93,7 +81,7 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
           <div
             key={index}
             className="hexagon hover:neumorphic"
-            onClick={() => handleHexagonClick(level, label as keyof ExtendedCoralSlots)}
+            onClick={() => handleHexagonClick(level, label as 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L')}
           >
             {label}
           </div>
