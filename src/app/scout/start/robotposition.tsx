@@ -1,4 +1,4 @@
-import { ScoutingData } from "@/app/data";
+import { ScoutingData } from "@/app/scout/data";
 import { useState } from "react";
 
 export default function RobotPosition() {

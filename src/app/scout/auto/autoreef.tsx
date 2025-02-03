@@ -1,32 +1,21 @@
-import { ScoutingData } from "@/app/data";
+import { ScoutingData } from "@/app/scout/data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { CoralSlots, ExtendedCoralSlots } from "@/app/interfaces";
 
 const Reef = ({setMatchState}: {setMatchState: Function}) => {
 
-  function handleLeave () {
-    ScoutingData.auto.leave = 1;
-  }
-
   function handleCoral () {
     ScoutingData.auto.coral++;
-  }
-
-  function handleAlgae () {
-    ScoutingData.auto.algae++;
   }
 
   function handleDroppedCoral () {
     ScoutingData.auto.droppedCoral++;
   }
 
-  function handleDroppedAlgae () {
-    ScoutingData.auto.droppedAlgae++;
-  }
-
   function handleScore(l: 'L1' | 'L2' | 'L3' | 'L4') {
     setLevel(l);
+    handleCoral();
     if (l === "L1") {
       ScoutingData.auto.l1++;
     }
@@ -40,14 +29,6 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
       ScoutingData.auto.l4++;
     }
   }  
-
-  function handleProcessor () {
-    ScoutingData.auto.processor++;
-  }
-
-  function handleBarge () {
-    ScoutingData.auto.barge++;
-  }
 
   const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({

@@ -1,6 +1,7 @@
 'use client';
 import { ScoutingData } from "../../data";
 
+import { ScoutingData } from "@/app/scout/data";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import React, { useState } from "react";

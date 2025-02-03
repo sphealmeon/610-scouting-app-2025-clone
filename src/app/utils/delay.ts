@@ -1,0 +1,1 @@
+export const delay = (fn: Function, ms: number) => setTimeout(fn, ms); 

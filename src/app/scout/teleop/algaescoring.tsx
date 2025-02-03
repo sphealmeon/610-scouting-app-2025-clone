@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import { ScoutingData } from "../../data";
+import { ScoutingData } from "../data";
 
 export default function AlgaeScoring({ handlePageChange }: { handlePageChange: (state: string) => void }) {
   return (

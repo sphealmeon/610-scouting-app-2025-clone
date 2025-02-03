@@ -1,4 +1,4 @@
-import { ScoutingData } from "@/app/data";
+import { ScoutingData } from "@/app/scout/data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { AlgaeSlots } from "@/app/interfaces";
@@ -20,18 +20,13 @@ const Algae = () => {
     setTimeout(() => setPopup({ visible: false, message: "" }), 2000);
   };
 
-  const handleHexagonClick = (level: 'L2-L3' | 'L3-L4', slot: keyof AlgaeSlots) => {
-    ScoutingData.auto.algaeSlots[level][slot]++;
-    ScoutingData.auto.algae++;
-    showPopup(`Knocked off algae at ${level}, Slot ${slot}`);
-  };
-
-  const handleProcessorClick = () => {
+  function handleProcessor () {
+    showPopup("Score Processor button clicked")
     ScoutingData.auto.processor++;
-    showPopup("Scored in Processor");
-  };
-
-  const handleBargeClick = () => {
+  }
+  
+  function handleBarge () {
+    showPopup("Score Barge button clicked")
     ScoutingData.auto.barge++;
     showPopup("Scored in Barge");
   };
@@ -74,13 +69,13 @@ const Algae = () => {
       <div className="flex space-x-4 mt-4">
         <Button
           className="text-white px-4 py-2 rounded bg-blue-500"
-          onClick={handleProcessorClick}
+          onClick={handleBarge}
         >
           Score Processor?
         </Button>
         <Button
           className="text-white px-4 py-2 rounded bg-green-500"
-          onClick={handleBargeClick}
+          onClick={handleProcessor}
         >
           Score Barge?
         </Button>

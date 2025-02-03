@@ -18,8 +18,16 @@ export const SubmitMatch = async ({
   match: number;
   matchData: Data;
 }) => {
-  await setDoc(doc(db, team.toString(), match.toString()), {
-    matchData,
-  });
-  CalculateAggregate({ team });
+  console.log(matchData);
+
+  try {
+    await setDoc(doc(db, team + "", match + ""), {
+      matchData,
+    });
+    CalculateAggregate({ team })
+  } catch (e) {
+    console.error(e);
+  }
+
+  console.log("Match submitted");
 };

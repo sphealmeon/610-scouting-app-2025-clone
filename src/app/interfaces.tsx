@@ -1,61 +1,52 @@
-export interface Data {
-    start: StartData;
-    auto: AutoData;
-    teleop: TeleopData;
-    humanPlayer: HumanPlayerData;
-}
-
-interface StartData {
-    preload: number;
-    team: number;
-    match: number;
-    position: string;
-    scoutName: string;
-}
-
-export interface CoralSlots {
-    A: number;
-    B: number;
-    C: number;
-    D: number;
-    E: number;
-    F: number;
-}
-
-export interface ExtendedCoralSlots extends CoralSlots {
-    G: number;
-    H: number;
-    I: number;
-    J: number;
-    K: number;
-    L: number;
-}
-
-export interface AlgaeSlots {
-    A: number;
-    E: number;
-    I: number;
-}
-
-interface AutoData {
-    leave: number;
-    coral: number;
-    algae: number;
-    droppedCoral: number;
-    droppedAlgae: number;
-    l4: number;
-    l3: number;
-    l2: number;
-    l1: number;
-    processor: number;
-    barge: number;
-    L1: CoralSlots;
-    L2: ExtendedCoralSlots;
-    L3: ExtendedCoralSlots;
-    L4: ExtendedCoralSlots;
-    algaeSlots: {
-        'L2-L3': AlgaeSlots;
-        'L3-L4': AlgaeSlots;
+export interface Data{
+    [x: string]: any;   
+    start: {
+        preload: number;
+        team: number;
+        match: number;
+        position: string;
+        scoutName: string;
+    };
+    auto: {
+        leave: number;
+        coral: number;
+        algae: number;
+        droppedCoral: number;
+        droppedAlgae: number;
+        l4: number;
+        l3: number;
+        l2: number;
+        l1: number;
+        processor: number;
+        barge: number;
+    };
+    teleop: {
+        floorPickup: number;
+        sourcePickup: number;
+        pickupAlgae: number;
+        pickupAlgaeFromReef: number;
+        l4Scored: number;
+        l3Scored: number;
+        l2Scored: number;
+        l1Scored: number;
+        l4Dropped: number;
+        l3Dropped: number;
+        l2Dropped: number;
+        l1Dropped: number;
+        processorScored: number;
+        processorDropped: number;
+        bargeScored: number;
+        bargeDropped: number;
+        algaeRemoved: number;
+        isCoop: number;
+        park: number;
+        shallow: number;
+        deep: number;
+        missedShallow: number;
+        missedDeep: number;
+        general: string;
+        reason: string;
+        explanation: string;
     };
 }
 
@@ -99,6 +90,7 @@ interface HumanPlayerData {
 
 export interface AggregateData {
     team: number;
+    standing: number;
     matchAggregateData: Data;
     matchesPlayed: number;
     autoPPG: number;

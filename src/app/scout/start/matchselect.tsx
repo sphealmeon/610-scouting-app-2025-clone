@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState, useEffect } from "react";
 import { key } from "@/app/globalVars"; // Assuming `key` contains the event key for the API
 import { useApi } from "@/app/globalVars"; // Assuming `useApi` determines if the API should be used
-import { ScoutingData } from "@/app/data";
+import { ScoutingData } from "@/app/scout/data";
 
 export default function MatchSelect() {
     const [matches, setMatches] = useState<any[]>([]); // Store match data
