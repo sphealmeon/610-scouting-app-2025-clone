@@ -17,6 +17,10 @@ export default function MatchSelect() {
             team: ""
         }
     });
+    
+    function matchverify() : boolean {
+        return selectedTeam !== "" && matchNumber !== ""
+    }
 
     useEffect(() => {
         const fetchMatches = async () => {

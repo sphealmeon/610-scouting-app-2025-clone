@@ -22,6 +22,8 @@ export default function StartPage({setMatchState}: {setMatchState: Function}){
                     <ScoutSelect setMatchState={setMatchState} />
                 </div>
             </div>
+            
         </>
     );
 }
+

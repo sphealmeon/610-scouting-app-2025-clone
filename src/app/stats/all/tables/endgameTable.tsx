@@ -45,11 +45,11 @@ export default function EndgameTable({ teamData }: { teamData: AggregateData[] }
               <TableCell>{data.endgamePPG.toFixed(2)}</TableCell>
               <TableCell>{(data.shallowAccuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.deepAccuracy * 100).toFixed(1)}%</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.park}</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.shallow}</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.deep}</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.missedShallow}</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.missedDeep}</TableCell>
+              <TableCell>{(data.matchAggregateData.teleop.park * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.matchAggregateData.teleop.shallow * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.matchAggregateData.teleop.deep * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.matchAggregateData.teleop.missedShallow * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.matchAggregateData.teleop.missedDeep * 100).toFixed(1)}%</TableCell>
             </TableRow>
           ))}
         </TableBody>
