@@ -1,7 +1,7 @@
 "use client";
 
 
-import { resetData, ScoutingData } from "@/app/data";
+import { resetData, ScoutingData } from "@/app/scout/data";
 import { SubmitMatch } from "@/app/firebase/submitMatch";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";

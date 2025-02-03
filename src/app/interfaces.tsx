@@ -1,4 +1,5 @@
 export interface Data{
+    [x: string]: any;   
     start: {
         preload: number;
         team: number;

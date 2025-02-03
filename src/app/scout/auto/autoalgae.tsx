@@ -1,4 +1,4 @@
-import { ScoutingData } from "@/app/data";
+import { ScoutingData } from "@/app/scout/data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 

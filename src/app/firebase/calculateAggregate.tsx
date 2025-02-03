@@ -1,18 +1,46 @@
 import { Data, AggregateData } from "../interfaces";
-import { ScoutingData } from "../data"
+import { ScoutingData } from "../scout/data"
 import { db } from "./firebase";
 import { collection, getDocs, doc, setDoc } from "firebase/firestore";
 import { useApi } from "../globalVars";
 import { key } from "../globalVars";
 import { TeamAggregate } from "./TeamAggregate";
+import { getIgnoreBroken, getUseLast4Matches } from "./aggregateModifiers";
 
 /**
  * calcualtes Aggregate Data for a team
  * @param team the team to calculate Aggregate Data for
  */
-export const CalculateAggregate = async ({ team }: { team:number }) => {
+export const CalculateAggregate = async ({ team }: { team: number }) => {
   let standing: number = 0;
+  let opr: number = 0;
+  let dpr: number = 0;
+
+  //gets opr & dpr from BA or else gets it from saved database
   if (useApi) {
+    await fetch(
+      "https://www.thebluealliance.com/api/v3/event/" + key + "/oprs",
+      {
+        method: "GET",
+        headers: {
+          "X-TBA-Auth-Key":
+            "R0slEz1yXDCVyedRLzFMoE5QrgkG4i73OwRuKlNHiw7lVMuO2lBQcwuzdg6iqvAq",
+        },
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        opr = data.oprs["frc" + team];
+        dpr = data.dprs["frc" + team];
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     await fetch(
       "https://www.thebluealliance.com/api/v3/event/" + key + "/rankings",
       {
@@ -43,6 +71,7 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
     const tempAggData: AggregateData = await TeamAggregate({ team: team });
     standing = tempAggData.standing;
   }
+
   let numMatches: number = 0;
   let timesBroke: number = 0;
 
@@ -96,8 +125,90 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
       explanation: ScoutingData.teleop.explanation,
     },
   };
-  
+  const ignoreBrokenVar: boolean = await getIgnoreBroken();
+  let useLast4MatchesVar: boolean = await getUseLast4Matches();
+  const last4Matches: string[] = [];
 
+  let numMatchesForRawAverage: number = 0;
+
+  //Calculates the average for all raw match values
+  const querySnapshot = await getDocs(collection(db, team + ""));
+  if (useLast4MatchesVar) {
+    const tempArray: number[] = [];
+    querySnapshot.forEach((document) => {
+      if (!(document.id == "aggregate")) {
+        if (ignoreBrokenVar) {
+          if (document.data().matchData["teleop"]["reason"] == "") {
+            tempArray.push(parseInt(document.id));
+          }
+        } else {
+          tempArray.push(parseInt(document.id));
+        }
+      }
+    });
+    tempArray.sort(function (a, b) {
+      return b - a;
+    });
+    if (tempArray.length <= 4) {
+      useLast4MatchesVar = false;
+    } else {
+      for (let i = 0; i < 4; i++) {
+        last4Matches.push(tempArray[i] + "");
+      }
+    }
+    console.log(last4Matches);
+  }
+  querySnapshot.forEach((document) => {
+    if (!(document.id == "aggregate")) {
+      if (document.data().matchData["teleop"]["reason"] != "") {
+        timesBroke++;
+      }
+      numMatches++;
+      if (
+        (ignoreBrokenVar &&
+          document.data().matchData["teleop"]["reason"] == "") ||
+        !ignoreBrokenVar
+      ) {
+        if (
+          (useLast4MatchesVar && last4Matches.includes(document.id)) ||
+          !useLast4MatchesVar
+        ) {
+          console.log("team = " + team + "match = " + document.id);
+          const keys = Object.keys(totalData) as Array<keyof typeof totalData>;
+          numMatchesForRawAverage++;
+          keys.forEach((key) => {
+            for (const value in totalData[key]) {
+              if (
+                value == "ring1" ||
+                value == "ring2" ||
+                value == "ring3" ||
+                value == "ring4" ||
+                value == "ring5"
+              ) {
+                totalData[key][value] *= numMatchesForRawAverage - 1;
+                totalData[key][value] +=
+                  document.data().matchData[key][value] != 0 ? 1 : 0;
+                totalData[key][value] /= numMatchesForRawAverage;
+              } else if (
+                !(
+                  value == "team" ||
+                  value == "match" ||
+                  value == "position" ||
+                  value == "general" ||
+                  value == "reason" ||
+                  value == "explination"
+                )
+              ) {
+                totalData[key][value] *= numMatchesForRawAverage - 1;
+                totalData[key][value] += document.data().matchData[key][value];
+                totalData[key][value] /= numMatchesForRawAverage;
+              }
+            }
+          });
+        }
+      }
+    }
+  });
   //Converts it to an AggregateData object
   const aggregateData: AggregateData = {
     matchAggregateData: totalData,
@@ -185,6 +296,8 @@ export const CalculateAggregate = async ({ team }: { team:number }) => {
     {
       aggregateData,
     },
-    { merge: true }
+    { 
+      merge: true 
+    }
   );
 };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ScoutingData } from "../../data";
+import { ScoutingData } from "../data";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const Leave = () => {
