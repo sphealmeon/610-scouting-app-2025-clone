@@ -57,8 +57,6 @@ export const resetData = () => {
     ScoutingData.start.scoutName = "";
 
     ScoutingData.auto.leave = 0;
-    ScoutingData.auto.coral = 0;
-    ScoutingData.auto.algae = 0;
     ScoutingData.auto.droppedCoral = 0;
     ScoutingData.auto.droppedAlgae = 0;
     ScoutingData.auto.l4 = 0;
