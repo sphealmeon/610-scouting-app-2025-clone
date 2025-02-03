@@ -4,6 +4,7 @@ import { AggregateData } from "@/app/interfaces";
 import { TeamAggregate } from "@/app/firebase/TeamAggregate";
 import { FetchTeams } from "@/app/blueAlliance/fetchTeams";
 import TableTabs from "./tableTabs";
+import { MainHeader } from "@/components/MainHeader";
 
 export default function Page() {
   const [teams, setTeams] = useState<string[]>([]);
@@ -28,5 +29,10 @@ export default function Page() {
 
   if (loading) return <div>Loading...</div>;
 
-  return <TableTabs teamData={teamData} />;
+  return ( 
+  <>
+  <MainHeader />
+  <TableTabs teamData={teamData} />
+  </>
+  );
 }

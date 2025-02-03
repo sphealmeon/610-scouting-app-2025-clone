@@ -22,7 +22,7 @@ export default function AutoTable({ teamData }: { teamData: AggregateData[] }) {
   };
 
   return (
-    <div className="rounded-md border">
+    <div suppressHydrationWarning className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
