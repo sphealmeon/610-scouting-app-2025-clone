@@ -15,7 +15,8 @@ export default function MatchSelect() {
     const [scoutingData, setScoutingData] = useState({
         start: {
             match: "",
-            team: ""
+            team: "",
+            scoutName: ""
         }
     });
     
@@ -116,6 +117,16 @@ export default function MatchSelect() {
     return (
         <div className="w-1/2 flex flex-col items-center justify-center">
             <p className="text-2xl mb-6 font-bold">Scouting App</p>
+
+            {/* Scout Name Input */}
+            <Input
+                type="text"
+                placeholder="Enter Scout Name"
+                className="mb-6 w-full"
+                onChange={(e) => {
+                    ScoutingData.start.scoutName = e.target.value;
+                }}
+            />
 
             {useApi ? (
                 // API-based dropdowns
