@@ -2,7 +2,13 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import { ScoutingData } from "../data";
 
-export default function ChangeButton({ name, setMatchState }: {name: string; setMatchState: Function;}) {
+interface ChangeButtonProps {
+    name: string;
+    setMatchState: Function;
+    disabled?: boolean;
+}
+
+export default function ChangeButton({ name, setMatchState, disabled }: ChangeButtonProps) {
     const handleClick = () => {
         if (name === "Teleop") {
             setMatchState(2);
@@ -13,11 +19,13 @@ export default function ChangeButton({ name, setMatchState }: {name: string; set
         } else {
             setMatchState(0);
         }
-        console.log("Current ScoutingData:", ScoutingData);
     };
 
     return (
-        <Button onClick={handleClick}>
+        <Button 
+            onClick={handleClick}
+            disabled={disabled}
+        >
             {name}
         </Button>
     );

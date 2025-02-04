@@ -1,13 +1,36 @@
 'use client';
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import RobotPosition from "./robotposition";
 import MatchSelect from "./matchselect";
 import ScoutSelect from "./scoutselect";
 import ScoutHeader from "../components/scoutHeader";
 import ChangeButton from "../components/changeButton";
+import { ScoutingData } from "../data";
 
 export default function StartPage({setMatchState}: {setMatchState: Function}){
+    const [isReady, setIsReady] = useState(false);
+
+    useEffect(() => {
+        const checkReadyState = () => {
+            const ready = (
+                ScoutingData.start.position != "" && 
+                ScoutingData.start.match != 0 && 
+                ScoutingData.start.team != 0
+            );
+            setIsReady(ready);
+        };
+
+        // Initial check
+        checkReadyState();
+
+        // Set up an interval to check periodically
+        const interval = setInterval(checkReadyState, 100); // Check every 100ms
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(interval);
+    }, []); // Empty dependency array since we're checking ScoutingData directly
+
     return(
         <>
             {/*ScoutHeader name={"Start"}/>*/}
@@ -22,7 +45,6 @@ export default function StartPage({setMatchState}: {setMatchState: Function}){
                     <ScoutSelect setMatchState={setMatchState} />
                 </div>
             </div>
-            
         </>
     );
 }

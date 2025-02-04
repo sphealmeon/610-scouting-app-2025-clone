@@ -18,8 +18,8 @@ export default function MatchSelect() {
         }
     });
     
-    function matchverify() : boolean {
-        return selectedTeam !== "" && matchNumber !== ""
+    const matchverify = () : boolean => {
+        return selectedTeam !== "" && matchNumber !== "";
     }
 
     useEffect(() => {
@@ -157,6 +157,13 @@ export default function MatchSelect() {
                     Preload?
                 </label>
             </div>
+
+            {/* Optional: Add visual feedback about selection state */}
+            {!matchverify() && (
+                <p className="text-sm text-gray-500 mt-2">
+                    Please select both a match and team to continue
+                </p>
+            )}
         </div>
     );
 }
