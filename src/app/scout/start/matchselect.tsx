@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { key } from "@/app/globalVars"; // Assuming `key` contains the event key for the API
 import { useApi } from "@/app/globalVars"; // Assuming `useApi` determines if the API should be used
 import { ScoutingData } from "@/app/scout/data";
+import { Input } from "@/components/ui/input";
 
 export default function MatchSelect() {
     const [matches, setMatches] = useState<any[]>([]); // Store match data
@@ -116,39 +117,59 @@ export default function MatchSelect() {
         <div className="w-1/2 flex flex-col items-center justify-center">
             <p className="text-2xl mb-6 font-bold">Scouting App</p>
 
-            {/* Match Number Dropdown */}
-            <Select onValueChange={handleMatchNumberChange}>
-                <SelectTrigger className="mb-6 w-full">
-                    <SelectValue placeholder="Select Match Number" />
-                </SelectTrigger>
-                <SelectContent>
-                {matches
-                    .sort((a, b) => a.match_number - b.match_number)  
-                    // Numeric sorting 
-                    .map((match) => (
-                        <SelectItem key={match.match_number} value={String(match.match_number)}>
-                            Match {match.match_number}
-                        </SelectItem>
-                ))}
-                </SelectContent>
-            </Select>
+            {useApi ? (
+                // API-based dropdowns
+                <>
+                    <Select onValueChange={handleMatchNumberChange}>
+                        <SelectTrigger className="mb-6 w-full">
+                            <SelectValue placeholder="Select Match Number" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {matches
+                                .sort((a, b) => a.match_number - b.match_number)
+                                .map((match) => (
+                                    <SelectItem key={match.match_number} value={String(match.match_number)}>
+                                        Match {match.match_number}
+                                    </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
 
-            {/* Team Number Dropdown */}
-            <Select
-                onValueChange={handleTeamSelection}
-                disabled={!matchNumber} // Disable until a match is selected
-            >
-                <SelectTrigger className="mb-6 w-full">
-                    <SelectValue placeholder={matchNumber ? "Select Team" : "Select a Match First"} />
-                </SelectTrigger>
-                <SelectContent>
-                    {teams.map((team) => (
-                        <SelectItem key={team} value={team}>
-                            Team {team}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
+                    <Select
+                        onValueChange={handleTeamSelection}
+                        disabled={!matchNumber}
+                    >
+                        <SelectTrigger className="mb-6 w-full">
+                            <SelectValue placeholder={matchNumber ? "Select Team" : "Select a Match First"} />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {teams.map((team) => (
+                                <SelectItem key={team} value={team}>
+                                    Team {team}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </>
+            ) : (
+                // Manual input fields
+                <>
+                    <Input
+                        min="1"
+                        type="number"
+                        placeholder="Enter Match Number"
+                        className="mb-6 w-full"
+                        onChange={(e) => handleMatchNumberChange(e.target.value)}
+                    />
+                    <Input
+                        min="1"
+                        type="number"
+                        placeholder="Enter Team Number"
+                        className="mb-6 w-full"
+                        onChange={(e) => handleTeamSelection(e.target.value)}
+                    />
+                </>
+            )}
 
             {/* Container for checkbox and label */}
             <div className="flex items-center mb-6">
