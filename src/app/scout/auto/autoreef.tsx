@@ -43,23 +43,70 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     L4: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
   };
 
-  const handleHexagonClick = (level: string, slot: keyof ExtendedCoralSlots) => {
+  const handleHexagonClick = (level: string, slot: string) => {
     // Update ScoutingData for the specific slot
     switch(level) {
         case 'L4': 
-            ScoutingData.auto.L4[slot]++;
+            // Use the specific position field directly
+            switch(slot) {
+                case 'A': ScoutingData.auto.l4A++; break;
+                case 'B': ScoutingData.auto.l4B++; break;
+                case 'C': ScoutingData.auto.l4C++; break;
+                case 'D': ScoutingData.auto.l4D++; break;
+                case 'E': ScoutingData.auto.l4E++; break;
+                case 'F': ScoutingData.auto.l4F++; break;
+                case 'G': ScoutingData.auto.l4G++; break;
+                case 'H': ScoutingData.auto.l4H++; break;
+                case 'I': ScoutingData.auto.l4I++; break;
+                case 'J': ScoutingData.auto.l4J++; break;
+                case 'K': ScoutingData.auto.l4K++; break;
+                case 'L': ScoutingData.auto.l4L++; break;
+            }
             ScoutingData.auto.l4++;
             break;
         case 'L3': 
-            ScoutingData.auto.L3[slot]++;
+            switch(slot) {
+                case 'A': ScoutingData.auto.l3A++; break;
+                case 'B': ScoutingData.auto.l3B++; break;
+                case 'C': ScoutingData.auto.l3C++; break;
+                case 'D': ScoutingData.auto.l3D++; break;
+                case 'E': ScoutingData.auto.l3E++; break;
+                case 'F': ScoutingData.auto.l3F++; break;
+                case 'G': ScoutingData.auto.l3G++; break;
+                case 'H': ScoutingData.auto.l3H++; break;
+                case 'I': ScoutingData.auto.l3I++; break;
+                case 'J': ScoutingData.auto.l3J++; break;
+                case 'K': ScoutingData.auto.l3K++; break;
+                case 'L': ScoutingData.auto.l3L++; break;
+            }
             ScoutingData.auto.l3++;
             break;
         case 'L2': 
-            ScoutingData.auto.L2[slot]++;
+            switch(slot) {
+                case 'A': ScoutingData.auto.l2A++; break;
+                case 'B': ScoutingData.auto.l2B++; break;
+                case 'C': ScoutingData.auto.l2C++; break;
+                case 'D': ScoutingData.auto.l2D++; break;
+                case 'E': ScoutingData.auto.l2E++; break;
+                case 'F': ScoutingData.auto.l2F++; break;
+                case 'G': ScoutingData.auto.l2G++; break;
+                case 'H': ScoutingData.auto.l2H++; break;
+                case 'I': ScoutingData.auto.l2I++; break;
+                case 'J': ScoutingData.auto.l2J++; break;
+                case 'K': ScoutingData.auto.l2K++; break;
+                case 'L': ScoutingData.auto.l2L++; break;
+            }
             ScoutingData.auto.l2++;
             break;
         case 'L1': 
-            ScoutingData.auto.L1[slot as keyof CoralSlots]++;
+            switch(slot) {
+                case 'A': ScoutingData.auto.l1A++; break;
+                case 'B': ScoutingData.auto.l1B++; break;
+                case 'C': ScoutingData.auto.l1C++; break;
+                case 'D': ScoutingData.auto.l1D++; break;
+                case 'E': ScoutingData.auto.l1E++; break;
+                case 'F': ScoutingData.auto.l1F++; break;
+            }
             ScoutingData.auto.l1++;
             break;
     }
@@ -93,7 +140,7 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
           <div
             key={index}
             className="hexagon hover:neumorphic"
-            onClick={() => handleHexagonClick(level, label as keyof ExtendedCoralSlots)}
+            onClick={() => handleHexagonClick(level, label)}
           >
             {label}
           </div>
@@ -185,6 +232,7 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     </div>
   );
 };
+
 
 export default Reef;
 

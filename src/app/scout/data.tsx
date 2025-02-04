@@ -18,6 +18,48 @@ export const ScoutingData: Data = {
         l3: 0,
         l2: 0,
         l1: 0,
+        l4A: 0,
+        l4B: 0,
+        l4C: 0,
+        l4D: 0,
+        l4E: 0,
+        l4F: 0,
+        l4G: 0,
+        l4H: 0,
+        l4I: 0,
+        l4J: 0,
+        l4K: 0,
+        l4L: 0,
+        l3A: 0,
+        l3B: 0,
+        l3C: 0,
+        l3D: 0,
+        l3E: 0,
+        l3F: 0,
+        l3G: 0,
+        l3H: 0,
+        l3I: 0,
+        l3J: 0,
+        l3K: 0,
+        l3L: 0,
+        l2A: 0,
+        l2B: 0,
+        l2C: 0,
+        l2D: 0,
+        l2E: 0,
+        l2F: 0,
+        l2G: 0,
+        l2H: 0,
+        l2I: 0,
+        l2J: 0,
+        l2K: 0,
+        l2L: 0,
+        l1A: 0,
+        l1B: 0,
+        l1C: 0,
+        l1D: 0,
+        l1E: 0,
+        l1F: 0,
         processor: 0,
         barge: 0,
     },
@@ -73,6 +115,48 @@ export const resetData = () => {
     ScoutingData.auto.l3 = 0;
     ScoutingData.auto.l2 = 0;
     ScoutingData.auto.l1 = 0;
+    ScoutingData.auto.l4A = 0;
+    ScoutingData.auto.l4B = 0;
+    ScoutingData.auto.l4C = 0;
+    ScoutingData.auto.l4D = 0;
+    ScoutingData.auto.l4E = 0;
+    ScoutingData.auto.l4F = 0;
+    ScoutingData.auto.l4G = 0;
+    ScoutingData.auto.l4H = 0;
+    ScoutingData.auto.l4I = 0;
+    ScoutingData.auto.l4J = 0;
+    ScoutingData.auto.l4K = 0;
+    ScoutingData.auto.l4L = 0;
+    ScoutingData.auto.l3A = 0;
+    ScoutingData.auto.l3B = 0;
+    ScoutingData.auto.l3C = 0;
+    ScoutingData.auto.l3D = 0;
+    ScoutingData.auto.l3E = 0;
+    ScoutingData.auto.l3F = 0;
+    ScoutingData.auto.l3G = 0;
+    ScoutingData.auto.l3H = 0;
+    ScoutingData.auto.l3I = 0;
+    ScoutingData.auto.l3J = 0;
+    ScoutingData.auto.l3K = 0;
+    ScoutingData.auto.l3L = 0;
+    ScoutingData.auto.l2A = 0;
+    ScoutingData.auto.l2B = 0;
+    ScoutingData.auto.l2C = 0;
+    ScoutingData.auto.l2D = 0;
+    ScoutingData.auto.l2E = 0;
+    ScoutingData.auto.l2F = 0;
+    ScoutingData.auto.l2G = 0;
+    ScoutingData.auto.l2H = 0;
+    ScoutingData.auto.l2I = 0;
+    ScoutingData.auto.l2J = 0;
+    ScoutingData.auto.l2K = 0;
+    ScoutingData.auto.l2L = 0;
+    ScoutingData.auto.l1A = 0;
+    ScoutingData.auto.l1B = 0;
+    ScoutingData.auto.l1C = 0;
+    ScoutingData.auto.l1D = 0;
+    ScoutingData.auto.l1E = 0;
+    ScoutingData.auto.l1F = 0;
     ScoutingData.auto.processor = 0;
     ScoutingData.auto.barge = 0;
 

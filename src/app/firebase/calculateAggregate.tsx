@@ -93,6 +93,48 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       l3: ScoutingData.auto.l3,
       l2: ScoutingData.auto.l2,
       l1: ScoutingData.auto.l1,
+      l4A: ScoutingData.auto.l4A,
+      l4B: ScoutingData.auto.l4B,
+      l4C: ScoutingData.auto.l4C,
+      l4D: ScoutingData.auto.l4D,
+      l4E: ScoutingData.auto.l4E,
+      l4F: ScoutingData.auto.l4F,
+      l4G: ScoutingData.auto.l4G,
+      l4H: ScoutingData.auto.l4H,
+      l4I: ScoutingData.auto.l4I,
+      l4J: ScoutingData.auto.l4J,
+      l4K: ScoutingData.auto.l4K,
+      l4L: ScoutingData.auto.l4L,
+      l3A: ScoutingData.auto.l3A,
+      l3B: ScoutingData.auto.l3B,
+      l3C: ScoutingData.auto.l3C,
+      l3D: ScoutingData.auto.l3D,
+      l3E: ScoutingData.auto.l3E,
+      l3F: ScoutingData.auto.l3F,
+      l3G: ScoutingData.auto.l3G,
+      l3H: ScoutingData.auto.l3H,
+      l3I: ScoutingData.auto.l3I,
+      l3J: ScoutingData.auto.l3J,
+      l3K: ScoutingData.auto.l3K,
+      l3L: ScoutingData.auto.l3L,
+      l2A: ScoutingData.auto.l2A,
+      l2B: ScoutingData.auto.l2B,
+      l2C: ScoutingData.auto.l2C,
+      l2D: ScoutingData.auto.l2D,
+      l2E: ScoutingData.auto.l2E,
+      l2F: ScoutingData.auto.l2F,
+      l2G: ScoutingData.auto.l2G,
+      l2H: ScoutingData.auto.l2H,
+      l2I: ScoutingData.auto.l2I,
+      l2J: ScoutingData.auto.l2J,
+      l2K: ScoutingData.auto.l2K,
+      l2L: ScoutingData.auto.l2L,
+      l1A: ScoutingData.auto.l1A,
+      l1B: ScoutingData.auto.l1B,
+      l1C: ScoutingData.auto.l1C,
+      l1D: ScoutingData.auto.l1D,
+      l1E: ScoutingData.auto.l1E,
+      l1F: ScoutingData.auto.l1F,
       processor: ScoutingData.auto.processor,
       barge: ScoutingData.auto.barge,
     },
@@ -179,17 +221,6 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
           keys.forEach((key) => {
             for (const value in totalData[key]) {
               if (
-                value == "ring1" ||
-                value == "ring2" ||
-                value == "ring3" ||
-                value == "ring4" ||
-                value == "ring5"
-              ) {
-                totalData[key][value] *= numMatchesForRawAverage - 1;
-                totalData[key][value] +=
-                  document.data().matchData[key][value] != 0 ? 1 : 0;
-                totalData[key][value] /= numMatchesForRawAverage;
-              } else if (
                 !(
                   value == "team" ||
                   value == "match" ||
