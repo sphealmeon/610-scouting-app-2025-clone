@@ -10,9 +10,46 @@ const Algae = () => {
     message: "",
   });
 
+  const handleHexagonClick = (level: 'L2-L3' | 'L3-L4', slot: string) => {
+    ScoutingData.auto.algae++;
+    
+    if (level === 'L2-L3') {
+      switch(slot) {
+        case 'A':
+          ScoutingData.auto.l2A++;
+          ScoutingData.auto.l3A++;
+          break;
+        case 'E':
+          ScoutingData.auto.l2E++;
+          ScoutingData.auto.l3E++;
+          break;
+        case 'I':
+          ScoutingData.auto.l2I++;
+          ScoutingData.auto.l3I++;
+          break;
+      }
+    } else { // L3-L4
+      switch(slot) {
+        case 'C':
+          ScoutingData.auto.l3C++;
+          ScoutingData.auto.l4C++;
+          break;
+        case 'G':
+          ScoutingData.auto.l3G++;
+          ScoutingData.auto.l4G++;
+          break;
+        case 'J':
+          ScoutingData.auto.l3J++;
+          ScoutingData.auto.l4J++;
+          break;
+      }
+    }
+    showPopup(`Knocked off algae at ${level}, Slot ${slot}`);
+  };
+
   const boards: Record<'L2-L3' | 'L3-L4', string[]> = {
     'L2-L3': ['A', 'E', 'I'],
-    'L3-L4': ['c', 'G', 'J'],
+    'L3-L4': ['C', 'G', 'J'],
   };
 
   const showPopup = (message: string) => {
@@ -53,7 +90,7 @@ const Algae = () => {
           <div
             key={index}
             className="hexagon hover:neumorphic"
-            onClick={() => handleHexagonClick(level, label as keyof AlgaeSlots)}
+            onClick={() => handleHexagonClick(level, label)}
           >
             {label}
           </div>
@@ -69,13 +106,13 @@ const Algae = () => {
       <div className="flex space-x-4 mt-4">
         <Button
           className="text-white px-4 py-2 rounded bg-blue-500"
-          onClick={handleBarge}
+          onClick={handleProcessor}
         >
           Score Processor?
         </Button>
         <Button
           className="text-white px-4 py-2 rounded bg-green-500"
-          onClick={handleProcessor}
+          onClick={handleBarge}
         >
           Score Barge?
         </Button>

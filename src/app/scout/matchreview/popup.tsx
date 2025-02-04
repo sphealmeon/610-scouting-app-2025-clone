@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { resetData } from "../data";
+import { resetData, ScoutingData } from "../data";
 import {
     Card,
     CardContent,
@@ -9,6 +9,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { SubmitMatch } from "@/app/firebase/submitMatch";
 
 export default function Popup({ 
     setConfirm,
@@ -37,8 +38,8 @@ export default function Popup({
                     <Button
                         className="bg-green-500 hover:bg-green-400"
                         onClick={() => {
+                            SubmitMatch({team: ScoutingData.start.team, match: ScoutingData.start.match, matchData: ScoutingData})
                             setMatchState(0);
-                            {/* RESETING DATA */}
                             resetData();
                             setConfirm(false);
                         }}

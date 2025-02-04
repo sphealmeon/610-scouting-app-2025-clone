@@ -17,6 +17,48 @@ export interface Data{
         l3: number;
         l2: number;
         l1: number;
+        l4A: number;
+        l4B: number;
+        l4C: number;
+        l4D: number;
+        l4E: number;
+        l4F: number;
+        l4G: number;
+        l4H: number;
+        l4I: number;
+        l4J: number;
+        l4K: number;
+        l4L: number;
+        l3A: number;
+        l3B: number;
+        l3C: number;
+        l3D: number;
+        l3E: number;
+        l3F: number;
+        l3G: number;
+        l3H: number;
+        l3I: number;
+        l3J: number;
+        l3K: number;
+        l3L: number;
+        l2A: number;
+        l2B: number;
+        l2C: number;
+        l2D: number;
+        l2E: number;
+        l2F: number;
+        l2G: number;
+        l2H: number;
+        l2I: number;
+        l2J: number;
+        l2K: number;
+        l2L: number;
+        l1A: number;
+        l1B: number;
+        l1C: number;
+        l1D: number;
+        l1E: number;
+        l1F: number;
         processor: number;
         barge: number;
     };
@@ -107,4 +149,28 @@ export interface AggregateData {
     deepAccuracy: number;
     endgamePPG: number;
     brokePercentage: number;
+}
+
+export interface CoralSlots {
+    A: number;
+    B: number;
+    C: number;
+    D: number;
+    E: number;
+    F: number;
+}
+
+export interface ExtendedCoralSlots extends CoralSlots {
+    G: number;
+    H: number;
+    I: number;
+    J: number;
+    K: number;
+    L: number;
+}
+
+export interface AlgaeSlots{
+    A: number;
+    E: number;
+    I: number;
 }
