@@ -139,8 +139,8 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       barge: ScoutingData.auto.barge,
     },
     teleop: {
-      floorPickup: ScoutingData.teleop.floorPickup,
-      sourcePickup: ScoutingData.teleop.sourcePickup,
+      coralPickup: ScoutingData.teleop.coralPickup,
+      coralPickupFromStation: ScoutingData.teleop.coralPickupFromStation,
       pickupAlgae: ScoutingData.teleop.pickupAlgae,
       pickupAlgaeFromReef: ScoutingData.teleop.pickupAlgaeFromReef,
       l4Scored: ScoutingData.teleop.l4Scored,
@@ -269,7 +269,9 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.teleop.l1Scored +
       totalData.auto.coral,
     algaeCyclesScored:
-      totalData.teleop.pickupAlgae +
+      totalData.auto.barge +
+      totalData.auto.processor +
+      totalData.teleop.bargeScored +
       totalData.teleop.processorScored,
 
     teleopL1Accuracy:

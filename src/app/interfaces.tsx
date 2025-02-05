@@ -63,8 +63,8 @@ export interface Data{
         barge: number;
     };
     teleop: {
-        floorPickup: number;
-        sourcePickup: number;
+        coralPickup: number;
+        coralPickupFromStation: number;
         pickupAlgae: number;
         pickupAlgaeFromReef: number;
         l4Scored: number;

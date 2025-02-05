@@ -34,8 +34,8 @@ export default function TeleopTable({ teamData }: { teamData: AggregateData[] })
     l4Accuracy: (data: AggregateData) => data.teleopL4Accuracy,
     bargeAccuracy: (data: AggregateData) => data.teleopBargeAccuracy,
     processorAccuracy: (data: AggregateData) => data.teleopProcessorAccuracy,
-    floorPickup: (data: AggregateData) => data.matchAggregateData.teleop.floorPickup,
-    sourcePickup: (data: AggregateData) => data.matchAggregateData.teleop.sourcePickup,
+    coralPickup: (data: AggregateData) => data.matchAggregateData.teleop.coralPickup,
+    coralPickupFromStation: (data: AggregateData) => data.matchAggregateData.teleop.coralPickupFromStation,
     pickupAlgae: (data: AggregateData) => data.matchAggregateData.teleop.pickupAlgae,
     pickupAlgaeFromReef: (data: AggregateData) => data.matchAggregateData.teleop.pickupAlgaeFromReef,
     algaeRemoved: (data: AggregateData) => data.matchAggregateData.teleop.algaeRemoved,
@@ -90,8 +90,8 @@ export default function TeleopTable({ teamData }: { teamData: AggregateData[] })
               <TableCell>{(data.teleopL4Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopBargeAccuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopProcessorAccuracy * 100).toFixed(1)}%</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.floorPickup}</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.sourcePickup}</TableCell>
+              <TableCell>{data.matchAggregateData.teleop.coralPickup}</TableCell>
+              <TableCell>{data.matchAggregateData.teleop.coralPickupFromStation}</TableCell>
               <TableCell>{data.matchAggregateData.teleop.pickupAlgae}</TableCell>
               <TableCell>{data.matchAggregateData.teleop.pickupAlgaeFromReef}</TableCell>
               <TableCell>{data.matchAggregateData.teleop.algaeRemoved}</TableCell>

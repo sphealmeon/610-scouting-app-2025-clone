@@ -64,8 +64,8 @@ export const ScoutingData: Data = {
         barge: 0,
     },
     teleop: {
-        floorPickup: 0,
-        sourcePickup: 0,
+        coralPickup: 0,
+        coralPickupFromStation: 0,
         pickupAlgae: 0,
         pickupAlgaeFromReef: 0,
         l4Scored: 0,
@@ -160,8 +160,8 @@ export const resetData = () => {
     ScoutingData.auto.processor = 0;
     ScoutingData.auto.barge = 0;
 
-    ScoutingData.teleop.floorPickup = 0;
-    ScoutingData.teleop.sourcePickup = 0;
+    ScoutingData.teleop.coralPickup = 0;
+    ScoutingData.teleop.coralPickupFromStation = 0;
     ScoutingData.teleop.pickupAlgae = 0;
     ScoutingData.teleop.pickupAlgaeFromReef = 0;
     ScoutingData.teleop.l4Scored = 0;
