@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,6 +11,8 @@ import {
 import { useRouter } from "next/navigation";
 import { AggregateData } from "@/app/interfaces";
 import { setCookie } from "@/app/cookies/cookies";
+import { ArrowUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 /**
  * @param teamData an AggregateData array of all the teams data
@@ -18,29 +20,60 @@ import { setCookie } from "@/app/cookies/cookies";
  */
 export default function TeleopTable({ teamData }: { teamData: AggregateData[] }) {
   const router = useRouter();
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof typeof sortKeys;
+    direction: 'asc' | 'desc';
+  }>({ key: 'team', direction: 'asc' });
+
+  const sortKeys = {
+    team: (data: AggregateData) => data.team,
+    teleopPPG: (data: AggregateData) => data.teleopPPG,
+    l1Accuracy: (data: AggregateData) => data.teleopL1Accuracy,
+    l2Accuracy: (data: AggregateData) => data.teleopL2Accuracy,
+    l3Accuracy: (data: AggregateData) => data.teleopL3Accuracy,
+    l4Accuracy: (data: AggregateData) => data.teleopL4Accuracy,
+    bargeAccuracy: (data: AggregateData) => data.teleopBargeAccuracy,
+    processorAccuracy: (data: AggregateData) => data.teleopProcessorAccuracy,
+    floorPickup: (data: AggregateData) => data.matchAggregateData.teleop.floorPickup,
+    sourcePickup: (data: AggregateData) => data.matchAggregateData.teleop.sourcePickup,
+    pickupAlgae: (data: AggregateData) => data.matchAggregateData.teleop.pickupAlgae,
+    pickupAlgaeFromReef: (data: AggregateData) => data.matchAggregateData.teleop.pickupAlgaeFromReef,
+    algaeRemoved: (data: AggregateData) => data.matchAggregateData.teleop.algaeRemoved,
+  };
+
+  const sortData = (key: keyof typeof sortKeys) => {
+    setSortConfig(current => ({
+      key,
+      direction: current.key === key && current.direction === 'asc' ? 'desc' : 'asc'
+    }));
+  };
+
+  const sortedData = [...teamData].sort((a, b) => {
+    const getValue = sortKeys[sortConfig.key];
+    const aValue = getValue(a);
+    const bValue = getValue(b);
+    return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+  });
 
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Team</TableHead>
-            <TableHead>Teleop PPG</TableHead>
-            <TableHead>L1 Accuracy</TableHead>
-            <TableHead>L2 Accuracy</TableHead>
-            <TableHead>L3 Accuracy</TableHead>
-            <TableHead>L4 Accuracy</TableHead>
-            <TableHead>Barge Accuracy</TableHead>
-            <TableHead>Processor Accuracy</TableHead>
-            <TableHead>Floor Pickup</TableHead>
-            <TableHead>Source Pickup</TableHead>
-            <TableHead>Pickup Algae</TableHead>
-            <TableHead>Pickup Algae From Reef</TableHead>
-            <TableHead>Algae Removed</TableHead>
+            {Object.entries(sortKeys).map(([key, _]) => (
+              <TableHead key={key} className="p-0">
+                <Button 
+                  className="bg-gray-200 hover:bg-gray-300 text-black w-full rounded-none h-full" 
+                  onClick={() => sortData(key as keyof typeof sortKeys)}
+                >
+                  {key.charAt(0).toUpperCase() + key.slice(1)} <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+            ))}
           </TableRow>
         </TableHeader>
         <TableBody>
-          {teamData.map((data) => (
+          {sortedData.map((data) => (
             <TableRow 
               key={data.team}
               className="cursor-pointer hover:bg-muted/50"

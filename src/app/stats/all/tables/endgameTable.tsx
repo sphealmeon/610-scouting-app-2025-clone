@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,28 +11,61 @@ import {
 import { useRouter } from "next/navigation";
 import { AggregateData } from "@/app/interfaces";
 import { setCookie } from "@/app/cookies/cookies";
+import { ArrowUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function EndgameTable({ teamData }: { teamData: AggregateData[] }) {
   const router = useRouter();
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof typeof sortKeys;
+    direction: 'asc' | 'desc';
+  }>({ key: 'team', direction: 'asc' });
+
+  const sortKeys = {
+    team: (data: AggregateData) => data.team,
+    endgamePPG: (data: AggregateData) => data.endgamePPG,
+    shallowAccuracy: (data: AggregateData) => data.shallowAccuracy,
+    deepAccuracy: (data: AggregateData) => data.deepAccuracy,
+    park: (data: AggregateData) => data.matchAggregateData.teleop.park,
+    shallow: (data: AggregateData) => data.matchAggregateData.teleop.shallow,
+    deep: (data: AggregateData) => data.matchAggregateData.teleop.deep,
+    missedShallow: (data: AggregateData) => data.matchAggregateData.teleop.missedShallow,
+    missedDeep: (data: AggregateData) => data.matchAggregateData.teleop.missedDeep,
+  };
+
+  const sortData = (key: keyof typeof sortKeys) => {
+    setSortConfig(current => ({
+      key,
+      direction: current.key === key && current.direction === 'asc' ? 'desc' : 'asc'
+    }));
+  };
+
+  const sortedData = [...teamData].sort((a, b) => {
+    const getValue = sortKeys[sortConfig.key];
+    const aValue = getValue(a);
+    const bValue = getValue(b);
+    return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+  });
 
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Team</TableHead>
-            <TableHead>Endgame PPG</TableHead>
-            <TableHead>Shallow Accuracy</TableHead>
-            <TableHead>Deep Accuracy</TableHead>
-            <TableHead>Park</TableHead>
-            <TableHead>Shallow</TableHead>
-            <TableHead>Deep</TableHead>
-            <TableHead>Missed Shallow</TableHead>
-            <TableHead>Missed Deep</TableHead>
+            {Object.entries(sortKeys).map(([key, _]) => (
+              <TableHead key={key} className="p-0">
+                <Button 
+                  className="bg-gray-200 hover:bg-gray-300 text-black w-full rounded-none h-full" 
+                  onClick={() => sortData(key as keyof typeof sortKeys)}
+                >
+                  {key.charAt(0).toUpperCase() + key.slice(1)} <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+            ))}
           </TableRow>
         </TableHeader>
         <TableBody>
-          {teamData.map((data) => (
+          {sortedData.map((data) => (
             <TableRow 
               key={data.team}
               className="cursor-pointer hover:bg-muted/50"
