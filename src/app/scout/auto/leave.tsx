@@ -15,7 +15,7 @@ const Leave = () => {
     };
 
     return (
-        <div className="w-1/2 p-4 items-center justify-center">
+        <div className="w-full p-4 items-center justify-center">
             <label className="flex items-center">
                 <Checkbox
                     checked={isChecked}
@@ -24,6 +24,12 @@ const Leave = () => {
                 />
                 Leave
             </label>
+
+            <img 
+                src = "field2.png"
+                className="w-full h-full"
+            />
+
         </div>
     );
 };
