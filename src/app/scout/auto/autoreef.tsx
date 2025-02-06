@@ -1,9 +1,22 @@
-import { ScoutingData } from "@/app/scout/data";
+import { ScoutingData } from "../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { CoralSlots, ExtendedCoralSlots } from "@/app/interfaces";
 
 const Reef = ({setMatchState}: {setMatchState: Function}) => {
+  const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
+  const [activeSlots, setActiveSlots] = useState<Set<string>>(new Set());
+  const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
+    visible: false,
+    message: "",
+  });
+
+  // Define the slots in clockwise order starting from A
+  const slots = {
+    L1: ["A", "B", "C", "D", "E", "F"],
+    L2: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+    L3: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+    L4: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+  };
 
   function handleCoral () {
     ScoutingData.auto.coral++;
@@ -30,87 +43,138 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     }
   }  
 
-  const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
-  const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
-    visible: false,
-    message: "",
-  });
-
-  const boards: Record<'L1' | 'L2' | 'L3' | 'L4', string[]> = {
-    L1: ["A", "B", "C", "D", "E", "F"],
-    L2: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
-    L3: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
-    L4: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
-  };
-
   const handleHexagonClick = (level: string, slot: string) => {
-    // Update ScoutingData for the specific slot
-    switch(level) {
+    const slotKey = `${level}-${slot}`;
+    const newActiveSlots = new Set(activeSlots);
+    
+    if (activeSlots.has(slotKey)) {
+      newActiveSlots.delete(slotKey);
+      switch(level) {
         case 'L4': 
-            // Use the specific position field directly
-            switch(slot) {
-                case 'A': ScoutingData.auto.l4A++; break;
-                case 'B': ScoutingData.auto.l4B++; break;
-                case 'C': ScoutingData.auto.l4C++; break;
-                case 'D': ScoutingData.auto.l4D++; break;
-                case 'E': ScoutingData.auto.l4E++; break;
-                case 'F': ScoutingData.auto.l4F++; break;
-                case 'G': ScoutingData.auto.l4G++; break;
-                case 'H': ScoutingData.auto.l4H++; break;
-                case 'I': ScoutingData.auto.l4I++; break;
-                case 'J': ScoutingData.auto.l4J++; break;
-                case 'K': ScoutingData.auto.l4K++; break;
-                case 'L': ScoutingData.auto.l4L++; break;
-            }
-            ScoutingData.auto.l4++;
-            break;
-        case 'L3': 
-            switch(slot) {
-                case 'A': ScoutingData.auto.l3A++; break;
-                case 'B': ScoutingData.auto.l3B++; break;
-                case 'C': ScoutingData.auto.l3C++; break;
-                case 'D': ScoutingData.auto.l3D++; break;
-                case 'E': ScoutingData.auto.l3E++; break;
-                case 'F': ScoutingData.auto.l3F++; break;
-                case 'G': ScoutingData.auto.l3G++; break;
-                case 'H': ScoutingData.auto.l3H++; break;
-                case 'I': ScoutingData.auto.l3I++; break;
-                case 'J': ScoutingData.auto.l3J++; break;
-                case 'K': ScoutingData.auto.l3K++; break;
-                case 'L': ScoutingData.auto.l3L++; break;
-            }
-            ScoutingData.auto.l3++;
-            break;
-        case 'L2': 
-            switch(slot) {
-                case 'A': ScoutingData.auto.l2A++; break;
-                case 'B': ScoutingData.auto.l2B++; break;
-                case 'C': ScoutingData.auto.l2C++; break;
-                case 'D': ScoutingData.auto.l2D++; break;
-                case 'E': ScoutingData.auto.l2E++; break;
-                case 'F': ScoutingData.auto.l2F++; break;
-                case 'G': ScoutingData.auto.l2G++; break;
-                case 'H': ScoutingData.auto.l2H++; break;
-                case 'I': ScoutingData.auto.l2I++; break;
-                case 'J': ScoutingData.auto.l2J++; break;
-                case 'K': ScoutingData.auto.l2K++; break;
-                case 'L': ScoutingData.auto.l2L++; break;
-            }
-            ScoutingData.auto.l2++;
-            break;
-        case 'L1': 
-            switch(slot) {
-                case 'A': ScoutingData.auto.l1A++; break;
-                case 'B': ScoutingData.auto.l1B++; break;
-                case 'C': ScoutingData.auto.l1C++; break;
-                case 'D': ScoutingData.auto.l1D++; break;
-                case 'E': ScoutingData.auto.l1E++; break;
-                case 'F': ScoutingData.auto.l1F++; break;
-            }
-            ScoutingData.auto.l1++;
-            break;
+          switch(slot) {
+            case 'A': ScoutingData.auto.l4A = 0; break;
+            case 'B': ScoutingData.auto.l4B = 0; break;
+            case 'C': ScoutingData.auto.l4C = 0; break;
+            case 'D': ScoutingData.auto.l4D = 0; break;
+            case 'E': ScoutingData.auto.l4E = 0; break;
+            case 'F': ScoutingData.auto.l4F = 0; break;
+            case 'G': ScoutingData.auto.l4G = 0; break;
+            case 'H': ScoutingData.auto.l4H = 0; break;
+            case 'I': ScoutingData.auto.l4I = 0; break;
+            case 'J': ScoutingData.auto.l4J = 0; break;
+            case 'K': ScoutingData.auto.l4K = 0; break;
+            case 'L': ScoutingData.auto.l4L = 0; break;
+          }
+          break;
+        case 'L3':
+          switch(slot) {
+            case 'A': ScoutingData.auto.l3A = 0; break;
+            case 'B': ScoutingData.auto.l3B = 0; break;
+            case 'C': ScoutingData.auto.l3C = 0; break;
+            case 'D': ScoutingData.auto.l3D = 0; break;
+            case 'E': ScoutingData.auto.l3E = 0; break;
+            case 'F': ScoutingData.auto.l3F = 0; break;
+            case 'G': ScoutingData.auto.l3G = 0; break;
+            case 'H': ScoutingData.auto.l3H = 0; break;
+            case 'I': ScoutingData.auto.l3I = 0; break;
+            case 'J': ScoutingData.auto.l3J = 0; break;
+            case 'K': ScoutingData.auto.l3K = 0; break;
+            case 'L': ScoutingData.auto.l3L = 0; break;
+          }
+          break;
+        case 'L2':
+          switch(slot) {
+            case 'A': ScoutingData.auto.l2A = 0; break;
+            case 'B': ScoutingData.auto.l2B = 0; break;
+            case 'C': ScoutingData.auto.l2C = 0; break;
+            case 'D': ScoutingData.auto.l2D = 0; break;
+            case 'E': ScoutingData.auto.l2E = 0; break;
+            case 'F': ScoutingData.auto.l2F = 0; break;
+            case 'G': ScoutingData.auto.l2G = 0; break;
+            case 'H': ScoutingData.auto.l2H = 0; break;
+            case 'I': ScoutingData.auto.l2I = 0; break;
+            case 'J': ScoutingData.auto.l2J = 0; break;
+            case 'K': ScoutingData.auto.l2K = 0; break;
+            case 'L': ScoutingData.auto.l2L = 0; break;
+          }
+          break;
+        case 'L1':
+          switch(slot) {
+            case 'A': ScoutingData.auto.l1A = 0; break;
+            case 'B': ScoutingData.auto.l1B = 0; break;
+            case 'C': ScoutingData.auto.l1C = 0; break;
+            case 'D': ScoutingData.auto.l1D = 0; break;
+            case 'E': ScoutingData.auto.l1E = 0; break;
+            case 'F': ScoutingData.auto.l1F = 0; break;
+          }
+          break;
+      }
+    } else {
+      newActiveSlots.add(slotKey);
+      switch(level) {
+        case 'L4': 
+          switch(slot) {
+            case 'A': ScoutingData.auto.l4A = 1; break;
+            case 'B': ScoutingData.auto.l4B = 1; break;
+            case 'C': ScoutingData.auto.l4C = 1; break;
+            case 'D': ScoutingData.auto.l4D = 1; break;
+            case 'E': ScoutingData.auto.l4E = 1; break;
+            case 'F': ScoutingData.auto.l4F = 1; break;
+            case 'G': ScoutingData.auto.l4G = 1; break;
+            case 'H': ScoutingData.auto.l4H = 1; break;
+            case 'I': ScoutingData.auto.l4I = 1; break;
+            case 'J': ScoutingData.auto.l4J = 1; break;
+            case 'K': ScoutingData.auto.l4K = 1; break;
+            case 'L': ScoutingData.auto.l4L = 1; break;
+          }
+          break;
+        case 'L3':
+          switch(slot) {
+            case 'A': ScoutingData.auto.l3A = 1; break;
+            case 'B': ScoutingData.auto.l3B = 1; break;
+            case 'C': ScoutingData.auto.l3C = 1; break;
+            case 'D': ScoutingData.auto.l3D = 1; break;
+            case 'E': ScoutingData.auto.l3E = 1; break;
+            case 'F': ScoutingData.auto.l3F = 1; break;
+            case 'G': ScoutingData.auto.l3G = 1; break;
+            case 'H': ScoutingData.auto.l3H = 1; break;
+            case 'I': ScoutingData.auto.l3I = 1; break;
+            case 'J': ScoutingData.auto.l3J = 1; break;
+            case 'K': ScoutingData.auto.l3K = 1; break;
+            case 'L': ScoutingData.auto.l3L = 1; break;
+          }
+          break;
+        case 'L2':
+          switch(slot) {
+            case 'A': ScoutingData.auto.l2A = 1; break;
+            case 'B': ScoutingData.auto.l2B = 1; break;
+            case 'C': ScoutingData.auto.l2C = 1; break;
+            case 'D': ScoutingData.auto.l2D = 1; break;
+            case 'E': ScoutingData.auto.l2E = 1; break;
+            case 'F': ScoutingData.auto.l2F = 1; break;
+            case 'G': ScoutingData.auto.l2G = 1; break;
+            case 'H': ScoutingData.auto.l2H = 1; break;
+            case 'I': ScoutingData.auto.l2I = 1; break;
+            case 'J': ScoutingData.auto.l2J = 1; break;
+            case 'K': ScoutingData.auto.l2K = 1; break;
+            case 'L': ScoutingData.auto.l2L = 1; break;
+          }
+          break;
+        case 'L1':
+          switch(slot) {
+            case 'A': ScoutingData.auto.l1A = 1; break;
+            case 'B': ScoutingData.auto.l1B = 1; break;
+            case 'C': ScoutingData.auto.l1C = 1; break;
+            case 'D': ScoutingData.auto.l1D = 1; break;
+            case 'E': ScoutingData.auto.l1E = 1; break;
+            case 'F': ScoutingData.auto.l1F = 1; break;
+          }
+          break;
+      }
     }
-    showPopup(`Scored in Level ${level}, Slot ${slot}`);
+    
+    setActiveSlots(newActiveSlots);
+    showPopup(`${activeSlots.has(slotKey) ? 'Unscored from' : 'Scored in'} Level ${level}, Slot ${slot}`);
   };
 
   const showPopup = (message: string) => {
@@ -120,119 +184,88 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
 
   return (
     <div className="flex flex-col items-center p-4 space-y-4">
-      <h1 className="text-xl font-bold">Auto Coral Scoring</h1>
-      <h1 className="text-xl font-bold">Current Level: {level}</h1>
+      <h1 className="text-xl font-bold">Auto Coral Scoring - Level {level}</h1>
 
-      <div className="flex space-x-4">
-        {(["L1", "L2", "L3", "L4"] as const).map((l) => (
+      <div className="flex space-x-4 mb-4">
+        {(['L1', 'L2', 'L3', 'L4'] as const).map((l) => (
           <Button
             key={l}
-            className="text-white px-4 py-2 rounded"
-            onClick={() => handleScore(l)}
+            variant={level === l ? "default" : "outline"}
+            onClick={() => setLevel(l)}
           >
             {l}
           </Button>
         ))}
       </div>
 
-      <div className="hexagonal-container">
-        {boards[level].map((label, index) => (
-          <div
-            key={index}
-            className="hexagon hover:neumorphic"
-            onClick={() => handleHexagonClick(level, label)}
-          >
-            {label}
-          </div>
-        ))}
+      <div className="relative w-[400px] h-[400px]">
+        <div className="absolute inset-0">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            {slots[level].map((slot, index) => {
+              const totalSlots = slots[level].length;
+              const angle = (index * (360 / totalSlots));
+              const startAngle = angle * (Math.PI / 180);
+              const endAngle = (angle + (360 / totalSlots)) * (Math.PI / 180);
+              const centerX = 50;
+              const centerY = 50;
+              const radius = 40;
+
+              const x1 = centerX + radius * Math.cos(startAngle);
+              const y1 = centerY + radius * Math.sin(startAngle);
+              const x2 = centerX + radius * Math.cos(endAngle);
+              const y2 = centerY + radius * Math.sin(endAngle);
+
+              // Use straight lines instead of arc
+              const path = `
+                M ${centerX} ${centerY}
+                L ${x1} ${y1}
+                L ${x2} ${y2}
+                Z
+              `;
+
+              const isActive = activeSlots.has(`${level}-${slot}`);
+
+              return (
+                <g key={slot} onClick={() => handleHexagonClick(level, slot)}>
+                  <path
+                    d={path}
+                    fill={isActive ? "#22c55e" : "#ef4444"}
+                    stroke="black"
+                    strokeWidth="0.5"
+                    className="cursor-pointer hover:opacity-80"
+                  />
+                  <text
+                    x={centerX + (radius * 0.7) * Math.cos(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
+                    y={centerY + (radius * 0.7) * Math.sin(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="white"
+                    fontSize="6"
+                    className="pointer-events-none"
+                  >
+                    {slot}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
       </div>
-      <div className="flex flex-row gap-4">
-        <Button
-          onClick={() => setMatchState(0)}
-        >
-          Back to Start
-        </Button>
-        <Button
-          onClick={() => setMatchState(2)}
-        >
-        To Teleop
-        </Button>
+
+      <div className="flex gap-4 mt-4">
+        <Button onClick={() => setMatchState(0)}>Back to Start</Button>
+        <Button onClick={() => setMatchState(2)}>To Teleop</Button>
       </div>
 
       {popup.visible && (
-        <div className="popup">
-          <span>{popup.message}</span>
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2
+                      bg-black bg-opacity-80 text-white px-4 py-2 rounded">
+          {popup.message}
         </div>
       )}
-
-      <style jsx>{`
-        .hexagonal-container {
-          display: grid;
-          justify-content: center;
-          align-items: center;
-          margin: auto;
-          gap: 10px;
-          height: 300px; /* Adjust the height as needed */
-          display: flex;
-          flex-wrap: wrap;
-        }
-
-        .hexagon {
-          width: 60px;
-          height: 60px;
-          background: #e0e0e0;
-          clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-weight: bold;
-          text-align: center;
-          cursor: pointer;
-          box-shadow: 4px 4px 6px #b8b8b8, -4px -4px 6px #ffffff;
-          transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .hexagon.hover:hover {
-          transform: scale(1.1);
-          box-shadow: inset 4px 4px 6px #b8b8b8, inset -4px -4px 6px #ffffff;
-        }
-
-        @media (max-width: 768px) {
-          .hexagonal-container {
-            grid-template-columns: repeat(4, 1fr);
-          }
-
-          .hexagon {
-            width: 40px;
-            height: 40px;
-          }
-        }
-
-        /* For L2, L3, and L4, set a two-row layout */
-        .hexagonal-container.L2,
-        .hexagonal-container.L3,
-        .hexagonal-container.L4 {
-          grid-template-columns: repeat(6, 1fr);
-          grid-template-rows: repeat(2, 1fr);
-        }
-
-        .popup {
-          position: fixed;
-          bottom: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          padding: 10px 20px;
-          background: rgba(0, 0, 0, 0.8);
-          color: white;
-          border-radius: 5px;
-          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-          font-size: 14px;
-        }
-      `}</style>
     </div>
   );
 };
-
 
 export default Reef;
 

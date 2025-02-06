@@ -1,55 +1,70 @@
-import { ScoutingData } from "@/app/scout/data";
+import { ScoutingData } from "../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { AlgaeSlots } from "@/app/interfaces";
 
-const Algae = () => {
+const Algae = ({setMatchState}: {setMatchState: Function}) => {
   const [level, setLevel] = useState<'L2-L3' | 'L3-L4'>('L2-L3');
+  const [activeSlots, setActiveSlots] = useState<Set<string>>(new Set());
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
     visible: false,
     message: "",
   });
 
-  const handleHexagonClick = (level: 'L2-L3' | 'L3-L4', slot: string) => {
-    ScoutingData.auto.algae++;
-    
-    if (level === 'L2-L3') {
-      switch(slot) {
-        case 'A':
-          ScoutingData.auto.l2A++;
-          ScoutingData.auto.l3A++;
-          break;
-        case 'E':
-          ScoutingData.auto.l2E++;
-          ScoutingData.auto.l3E++;
-          break;
-        case 'I':
-          ScoutingData.auto.l2I++;
-          ScoutingData.auto.l3I++;
-          break;
-      }
-    } else { // L3-L4
-      switch(slot) {
-        case 'C':
-          ScoutingData.auto.l3C++;
-          ScoutingData.auto.l4C++;
-          break;
-        case 'G':
-          ScoutingData.auto.l3G++;
-          ScoutingData.auto.l4G++;
-          break;
-        case 'J':
-          ScoutingData.auto.l3J++;
-          ScoutingData.auto.l4J++;
-          break;
-      }
-    }
-    showPopup(`Knocked off algae at ${level}, Slot ${slot}`);
+  // Define which slots can have algae for each level
+  const algaePositions = {
+    'L2-L3': new Set(['A', 'E', 'I']),
+    'L3-L4': new Set(['C', 'G', 'J']),
   };
 
-  const boards: Record<'L2-L3' | 'L3-L4', string[]> = {
-    'L2-L3': ['A', 'E', 'I'],
-    'L3-L4': ['C', 'G', 'J'],
+  const slots = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+
+  const handleHexagonClick = (level: string, slot: string) => {
+    if (!algaePositions[level as keyof typeof algaePositions].has(slot)) return;
+    
+    const slotKey = `${level}-${slot}`;
+    const newActiveSlots = new Set(activeSlots);
+    
+    if (activeSlots.has(slotKey)) {
+      newActiveSlots.delete(slotKey);
+    } else {
+      newActiveSlots.add(slotKey);
+      ScoutingData.auto.algae++;
+      
+      if (level === 'L2-L3') {
+        switch(slot) {
+          case 'A':
+            ScoutingData.auto.l2A++;
+            ScoutingData.auto.l3A++;
+            break;
+          case 'E':
+            ScoutingData.auto.l2E++;
+            ScoutingData.auto.l3E++;
+            break;
+          case 'I':
+            ScoutingData.auto.l2I++;
+            ScoutingData.auto.l3I++;
+            break;
+        }
+      } else { // L3-L4
+        switch(slot) {
+          case 'C':
+            ScoutingData.auto.l3C++;
+            ScoutingData.auto.l4C++;
+            break;
+          case 'G':
+            ScoutingData.auto.l3G++;
+            ScoutingData.auto.l4G++;
+            break;
+          case 'J':
+            ScoutingData.auto.l3J++;
+            ScoutingData.auto.l4J++;
+            break;
+        }
+      }
+    }
+    
+    setActiveSlots(newActiveSlots);
+    showPopup(`${activeSlots.has(slotKey) ? 'Removed' : 'Knocked off'} algae at ${level}, Slot ${slot}`);
   };
 
   const showPopup = (message: string) => {
@@ -57,27 +72,15 @@ const Algae = () => {
     setTimeout(() => setPopup({ visible: false, message: "" }), 2000);
   };
 
-  function handleProcessor () {
-    showPopup("Score Processor button clicked")
-    ScoutingData.auto.processor++;
-  }
-  
-  function handleBarge () {
-    showPopup("Score Barge button clicked")
-    ScoutingData.auto.barge++;
-    showPopup("Scored in Barge");
-  };
-
   return (
     <div className="flex flex-col items-center p-4 space-y-4">
-      <h1 className="text-xl font-bold">Auto Algae Knock Off</h1>
-      <h1 className="text-xl font-bold">Current Toggle: {level}</h1>
+      <h1 className="text-xl font-bold">Auto Algae Knock Off - {level}</h1>
 
-      <div className="flex space-x-4">
+      <div className="flex space-x-4 mb-4">
         {(['L2-L3', 'L3-L4'] as const).map((l) => (
           <Button
             key={l}
-            className="text-white px-4 py-2 rounded"
+            variant={level === l ? "default" : "outline"}
             onClick={() => setLevel(l)}
           >
             {l}
@@ -85,102 +88,78 @@ const Algae = () => {
         ))}
       </div>
 
-      <div className="hexagonal-container">
-        {boards[level].map((label, index) => (
-          <div
-            key={index}
-            className="hexagon hover:neumorphic"
-            onClick={() => handleHexagonClick(level, label)}
-          >
-            {label}
-          </div>
-        ))}
+      <div className="relative w-[400px] h-[400px]">
+        <div className="absolute inset-0">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            {slots.map((slot, index) => {
+              const totalSlots = slots.length;
+              const angle = (index * (360 / totalSlots));
+              const startAngle = angle * (Math.PI / 180);
+              const endAngle = (angle + (360 / totalSlots)) * (Math.PI / 180);
+              const centerX = 50;
+              const centerY = 50;
+              const radius = 40;
+
+              const x1 = centerX + radius * Math.cos(startAngle);
+              const y1 = centerY + radius * Math.sin(startAngle);
+              const x2 = centerX + radius * Math.cos(endAngle);
+              const y2 = centerY + radius * Math.sin(endAngle);
+
+              const path = `
+                M ${centerX} ${centerY}
+                L ${x1} ${y1}
+                L ${x2} ${y2}
+                Z
+              `;
+
+              const hasAlgae = algaePositions[level].has(slot);
+              const isActive = activeSlots.has(`${level}-${slot}`);
+              const fillColor = !hasAlgae ? "#9ca3af" : // grey for non-algae spots
+                              isActive ? "#22c55e" : // green for knocked off
+                              "#ef4444"; // red for algae not knocked off
+
+              return (
+                <g 
+                  key={slot} 
+                  onClick={() => handleHexagonClick(level, slot)}
+                  className={hasAlgae ? "cursor-pointer" : ""}
+                >
+                  <path
+                    d={path}
+                    fill={fillColor}
+                    stroke="black"
+                    strokeWidth="0.5"
+                    className={hasAlgae ? "hover:opacity-80" : ""}
+                  />
+                  <text
+                    x={centerX + (radius * 0.7) * Math.cos(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
+                    y={centerY + (radius * 0.7) * Math.sin(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="white"
+                    fontSize="6"
+                    className="pointer-events-none"
+                  >
+                    {slot}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+      </div>
+
+      <div className="flex gap-4 mt-4">
+        <Button onClick={() => setMatchState(0)}>Back to Start</Button>
+        <Button onClick={() => setMatchState(2)}>To Teleop</Button>
       </div>
 
       {popup.visible && (
-        <div className="popup">
-          <span>{popup.message}</span>
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2
+                      bg-black bg-opacity-80 text-white px-4 py-2 rounded">
+          {popup.message}
         </div>
       )}
-
-      <div className="flex space-x-4 mt-4">
-        <Button
-          className="text-white px-4 py-2 rounded bg-blue-500"
-          onClick={handleProcessor}
-        >
-          Score Processor?
-        </Button>
-        <Button
-          className="text-white px-4 py-2 rounded bg-green-500"
-          onClick={handleBarge}
-        >
-          Score Barge?
-        </Button>
-      </div>
-
-      <style jsx>{`
-        .hexagonal-container {
-          display: grid;
-          justify-content: center;
-          align-items: center;
-          margin: auto;
-          gap: 10px;
-          height: 300px; /* Adjust the height as needed */
-          display: flex;
-          flex-wrap: wrap;
-        }
-
-        .hexagon {
-          width: 60px;
-          height: 60px;
-          background: #e0e0e0;
-          clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-weight: bold;
-          text-align: center;
-          cursor: pointer;
-          box-shadow: 4px 4px 6px #b8b8b8, -4px -4px 6px #ffffff;
-          transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .hexagon.hover:hover {
-          transform: scale(1.1);
-          box-shadow: inset 4px 4px 6px #b8b8b8, inset -4px -4px 6px #ffffff;
-        }
-
-        @media (max-width: 768px) {
-          .hexagonal-container {
-            grid-template-columns: repeat(4, 1fr);
-          }
-
-          .hexagon {
-            width: 40px;
-            height: 40px;
-          }
-        }
-
-        /* For L2-L3 and L3-L4, set grid layout */
-        .hexagonal-container.L2-L3,
-        .hexagonal-container.L3-L4 {
-          grid-template-columns: repeat(3, 1fr);
-          grid-template-rows: 1fr;
-        }
-
-        .popup {
-          position: fixed;
-          bottom: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          padding: 10px 20px;
-          background: rgba(0, 0, 0, 0.8);
-          color: white;
-          border-radius: 5px;
-          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-          font-size: 14px;
-        }
-      `}</style>
     </div>
   );
 };
