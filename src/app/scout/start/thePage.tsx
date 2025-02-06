@@ -8,6 +8,7 @@ import ScoutHeader from "../components/scoutHeader";
 import ChangeButton from "../components/changeButton";
 import { ScoutingData } from "../data";
 
+
 export default function StartPage({setMatchState}: {setMatchState: Function}){
     const [isReady, setIsReady] = useState(false);
 
@@ -33,19 +34,13 @@ export default function StartPage({setMatchState}: {setMatchState: Function}){
 
     return(
         <>
-            {/*ScoutHeader name={"Start"}/>*/}
-            <div className="relative grid grid-cols-3 gap-4 p-8">
-                <div className="col-span-1">
-                    <RobotPosition />
-                </div>
-                <div className="col-span-1 flex justify-center">
-                    <MatchSelect />
-                </div>
-                <div className="col-span-1 flex justify-center">
-                    <ScoutSelect setMatchState={setMatchState} />
-                </div>
-            </div>
-        </>
+        {/* <ScoutHeader name={"Start"}/> */}
+        <div className="relative flex flex-col items-center space-y-8 p-8">
+            <MatchSelect />
+            <RobotPosition />
+            <ScoutSelect setMatchState={setMatchState} />
+        </div>
+    </>
     );
 }
 
