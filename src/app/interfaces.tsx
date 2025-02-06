@@ -151,26 +151,3 @@ export interface AggregateData {
     brokePercentage: number;
 }
 
-export interface CoralSlots {
-    A: number;
-    B: number;
-    C: number;
-    D: number;
-    E: number;
-    F: number;
-}
-
-export interface ExtendedCoralSlots extends CoralSlots {
-    G: number;
-    H: number;
-    I: number;
-    J: number;
-    K: number;
-    L: number;
-}
-
-export interface AlgaeSlots{
-    A: number;
-    E: number;
-    I: number;
-}
