@@ -1,8 +1,8 @@
-import { ScoutingData } from "../data";
+import { ScoutingData } from "../../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const Algae = () => {
+const AlgaeMR = () => {
   const [level, setLevel] = useState<'L2-L3' | 'L3-L4'>('L2-L3');
   const [activeSlots, setActiveSlots] = useState<Set<string>>(new Set());
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
@@ -158,4 +158,4 @@ const Algae = () => {
   );
 };
 
-export default Algae;
+export default AlgaeMR;

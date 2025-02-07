@@ -1,10 +1,9 @@
-import { ScoutingData } from "../data";
+import { ScoutingData } from "../../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const Reef = ({setMatchState}: {setMatchState: Function}) => {
+const ReefMR = () => {
   const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
-  const [activeSlots, setActiveSlots] = useState<Set<string>>(new Set());
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
     visible: false,
     message: "",
@@ -45,22 +44,9 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     const slotData = ScoutingData.auto[slotKey];
     
     if (typeof slotData === 'object' && 'made' in slotData) {
-      if (slotData.made === 0) {
-        slotData.made = 1;
-        handleScore(level as 'L1' | 'L2' | 'L3' | 'L4');
-        showPopup(`Scored at Level ${level}, Slot ${slot}`);
-      } else {
-        slotData.made = 0;
-        showPopup(`Removed score at Level ${level}, Slot ${slot}`);
-      }
+      slotData.made = slotData.made > 0 ? 0 : 1;
+      showPopup(`${slotData.made ? 'Made' : 'Unmade'} at Level ${level}, Slot ${slot}`);
     }
-  };
-
-  // Add helper function to check if slot is scored
-  const getSlotMade = (level: string, slot: string) => {
-    const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
-    const slotData = ScoutingData.auto[slotKey];
-    return typeof slotData === 'object' && 'made' in slotData && slotData.made > 0;
   };
 
   const handleDroppedCoral = (level: string, slot: string) => {
@@ -133,9 +119,33 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     setTimeout(() => setPopup({ visible: false, message: "" }), 2000);
   };
 
+  // Get the made value for a slot
+  const getSlotMade = (level: string, slot: string) => {
+    const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
+    const slotData = ScoutingData.auto[slotKey];
+    return typeof slotData === 'object' && 'made' in slotData && slotData.made > 0;
+  };
+
+  // Add this helper function
+  const getSlotDropped = (level: string, slot: string) => {
+    const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
+    const slotData = ScoutingData.auto[slotKey];
+    return typeof slotData === 'object' && 'dropped' in slotData ? slotData.dropped : 0;
+  };
+
+  // Add decrement handler
+  const handleDecrementDropped = (level: string, slot: string) => {
+    const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
+    const slotData = ScoutingData.auto[slotKey];
+    if (typeof slotData === 'object' && 'dropped' in slotData && slotData.dropped > 0) {
+      slotData.dropped--;
+      ScoutingData.auto.droppedCoral--;
+    }
+  };
+
   return (
     <div className="flex flex-col items-center p-4 space-y-4">
-      <h1 className="text-xl font-bold">Auto Coral Scoring - Level {level}</h1>
+      <h1 className="text-xl font-bold">Auto Reef Review - Level {level}</h1>
 
       <div className="flex space-x-4 mb-4">
         {(['L1', 'L2', 'L3', 'L4'] as const).map((l) => (
@@ -183,54 +193,71 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
                 Z
               `;
 
+              const isMade = getSlotMade(level, slot);
+
               return (
-                <g key={slot}>
-                  {/* Section */}
-                  <g onClick={() => handleHexagonClick(level, slot)}>
-                    <path
-                      d={path}
-                      fill={getSlotMade(level, slot) ? "#22c55e" : "#ef4444"}
-                      stroke="black"
-                      strokeWidth="0.5"
-                      className="cursor-pointer hover:opacity-80"
-                    />
-                    <text
-                      x={centerX + (radius * 0.7) * Math.cos(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
-                      y={centerY + (radius * 0.7) * Math.sin(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill="white"
-                      fontSize="6"
-                      className="pointer-events-none"
-                    >
-                      {slot}
-                    </text>
-                  </g>
-                  
-                  {/* Drop Button */}
-                  <circle
-                    cx={buttonX}
-                    cy={buttonY}
-                    r="2"
-                    fill="#888888"
+                <g key={slot} onClick={() => handleHexagonClick(level, slot)} className="cursor-pointer">
+                  <path
+                    d={path}
+                    fill={isMade ? "#22c55e" : "#ef4444"}
                     stroke="black"
                     strokeWidth="0.5"
-                    className="cursor-pointer hover:fill-red-500"
-                    onClick={() => {
-                      handleDroppedCoral(level, slot);
-                      showPopup(`Dropped coral at Level ${level}, Slot ${slot}`);
-                    }}
+                    className="hover:opacity-80"
                   />
+                  <text
+                    x={centerX + (radius * 0.7) * Math.cos(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
+                    y={centerY + (radius * 0.7) * Math.sin(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="white"
+                    fontSize="6"
+                  >
+                    {slot}
+                  </text>
+
+                  
+                  {/* Add dropped count and incrementor */}
+                  <g onClick={(e) => e.stopPropagation()}>
+                    <text
+                      x={buttonX - 5}
+                      y={buttonY}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="black"
+                      fontSize="4"
+                      className="cursor-pointer"
+                      onClick={() => handleDecrementDropped(level, slot)}
+                    >
+                      -
+                    </text>
+                    <text
+                      x={buttonX}
+                      y={buttonY}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="black"
+                      fontSize="4"
+                    >
+                      {getSlotDropped(level, slot)}
+                    </text>
+                    <text
+                      x={buttonX + 5}
+                      y={buttonY}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="black"
+                      fontSize="4"
+                      className="cursor-pointer"
+                      onClick={() => handleDroppedCoral(level, slot)}
+                    >
+                      +
+                    </text>
+                  </g>
                 </g>
               );
             })}
           </svg>
         </div>
-      </div>
-
-      <div className="flex gap-4 mt-4">
-        <Button onClick={() => setMatchState(0)}>Back to Start</Button>
-        <Button onClick={() => setMatchState(2)}>To Teleop</Button>
       </div>
 
       {popup.visible && (
@@ -243,5 +270,5 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
   );
 };
 
-export default Reef;
+export default ReefMR;
 

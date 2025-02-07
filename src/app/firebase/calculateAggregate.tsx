@@ -197,7 +197,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
           }
         } else {
           tempArray.push(parseInt(document.id));
-        }
+        } 
       }
     });
     tempArray.sort(function (a, b) {

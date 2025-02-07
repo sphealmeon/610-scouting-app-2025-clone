@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import ReviewHeader from "./header";
-import AutoReview from "./auto";
+import AutoReview from "./autoMR/auto";
 import TeleopReview from "./teleop";
 import NotesReview from "./notes";
 

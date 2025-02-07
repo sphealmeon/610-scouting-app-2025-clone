@@ -32,6 +32,10 @@ export default function AutoTable({ teamData }: { teamData: AggregateData[] }) {
     algae: (data: AggregateData) => data.matchAggregateData.auto.algae,
     droppedCoral: (data: AggregateData) => data.matchAggregateData.auto.droppedCoral,
     droppedAlgae: (data: AggregateData) => data.matchAggregateData.auto.droppedAlgae,
+    l1Accuracy: (data: AggregateData) => data.autoL1Accuracy,
+    l2Accuracy: (data: AggregateData) => data.autoL2Accuracy,
+    l3Accuracy: (data: AggregateData) => data.autoL3Accuracy,
+    l4Accuracy: (data: AggregateData) => data.autoL4Accuracy,
     l4: (data: AggregateData) => data.matchAggregateData.auto.l4,
     l3: (data: AggregateData) => data.matchAggregateData.auto.l3,
     l2: (data: AggregateData) => data.matchAggregateData.auto.l2,
@@ -87,6 +91,10 @@ export default function AutoTable({ teamData }: { teamData: AggregateData[] }) {
               <TableCell>{data.matchAggregateData.auto.algae}</TableCell>
               <TableCell>{data.matchAggregateData.auto.droppedCoral}</TableCell>
               <TableCell>{data.matchAggregateData.auto.droppedAlgae}</TableCell>
+              <TableCell>{(data.autoL1Accuracy * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.autoL2Accuracy * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.autoL3Accuracy * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.autoL4Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{data.matchAggregateData.auto.l4}</TableCell>
               <TableCell>{data.matchAggregateData.auto.l3}</TableCell>
               <TableCell>{data.matchAggregateData.auto.l2}</TableCell>
