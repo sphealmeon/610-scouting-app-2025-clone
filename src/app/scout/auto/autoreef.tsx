@@ -47,6 +47,10 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     if (typeof slotData === 'object' && 'made' in slotData) {
       if (slotData.made === 0) {
         slotData.made = 1;
+        // Auto-set leave when scoring
+        if (ScoutingData.auto.leave === 0) {
+          ScoutingData.auto.leave = 1;
+        }
         handleScore(level as 'L1' | 'L2' | 'L3' | 'L4');
         showPopup(`Scored at Level ${level}, Slot ${slot}`);
       } else {

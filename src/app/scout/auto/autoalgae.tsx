@@ -29,6 +29,10 @@ const Algae = () => {
     } else {
       newActiveSlots.add(slotKey);
       ScoutingData.auto.algae++;
+      // Auto-set leave when scoring
+      if (ScoutingData.auto.leave === 0) {
+        ScoutingData.auto.leave = 1;
+      }
       
       if (level === 'L2-L3') {
         switch(slot) {
