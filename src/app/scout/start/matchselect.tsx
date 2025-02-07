@@ -5,6 +5,7 @@ import { key } from "@/app/globalVars"; // Assuming `key` contains the event key
 import { useApi } from "@/app/globalVars"; // Assuming `useApi` determines if the API should be used
 import { ScoutingData } from "@/app/scout/data";
 import { Input } from "@/components/ui/input";
+import { FetchAlliance } from "@/app/blueAlliance/fetchTeamsInMatch";
 
 export default function MatchSelect() {
     const [matches, setMatches] = useState<any[]>([]); // Store match data
@@ -61,10 +62,13 @@ export default function MatchSelect() {
         fetchMatches();
     }, [useApi]);
 
-    const handleMatchNumberChange = (value: string) => {
+    const handleMatchNumberChange = async (value: string) => {
         //Write to data: match number
-        ScoutingData.start.match=parseInt(value);
-
+        ScoutingData.start.match = parseInt(value);
+        if (ScoutingData.start.team) {
+            const alliance = await FetchAlliance(parseInt(value), ScoutingData.start.team);
+            ScoutingData.start.alliance = alliance;
+        }
         setMatchNumber(value);
         setSelectedTeam("");
         setError("");
@@ -97,10 +101,13 @@ export default function MatchSelect() {
         }
     };
 
-    const handleTeamSelection = (value: string) => {
+    const handleTeamSelection = async (value: string) => {
         //Write to data: team number
-        ScoutingData.start.team=parseInt(value);
-
+        ScoutingData.start.team = parseInt(value);
+        if (ScoutingData.start.match) {
+            const alliance = await FetchAlliance(ScoutingData.start.match, parseInt(value));
+            ScoutingData.start.alliance = alliance;
+        }
         setSelectedTeam(value);
         setError(""); // Clear any error when a valid team is selected
 

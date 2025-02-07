@@ -36,6 +36,8 @@ const Leave = () => {
                 {ScoutingData.auto.leave > 0 ? "Left" : "Not Left"}
             </Button>
 
+                Alliance: {ScoutingData.start.alliance}
+
             {popup.visible && (
                 <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2
                               bg-black bg-opacity-80 text-white px-4 py-2 rounded">

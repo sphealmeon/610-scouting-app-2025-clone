@@ -11,7 +11,12 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
   });
 
   // Define the slots in counter-clockwise order starting from left (A)
-  const slots = {
+  const slots = ScoutingData.start.alliance === "red" ? {
+    L1: ["F", "E", "D", "C", "B", "A"],
+    L2: ["A", "L", "K", "J", "I", "H", "G", "F", "E", "D", "C", "B"],
+    L3: ["A", "L", "K", "J", "I", "H", "G", "F", "E", "D", "C", "B"],
+    L4: ["A", "L", "K", "J", "I", "H", "G", "F", "E", "D", "C", "B"],
+  } : {
     L1: ["C", "B", "A", "F", "E", "D"],
     L2: ["G", "F", "E", "D", "C", "B", "A", "L", "K", "J", "I", "H"],
     L3: ["G", "F", "E", "D", "C", "B", "A", "L", "K", "J", "I", "H"],

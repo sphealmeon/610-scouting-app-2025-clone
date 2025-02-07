@@ -6,6 +6,7 @@ export interface Data{
         match: number;
         position: string;
         scoutName: string;
+        alliance: string;
     };
     auto: {
         leave: number;

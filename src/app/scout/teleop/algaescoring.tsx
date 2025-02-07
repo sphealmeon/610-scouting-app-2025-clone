@@ -51,7 +51,7 @@ export default function AlgaeScoring({ handlePageChange }: { handlePageChange: (
         <div
           className="bg-blue-400 hover:bg-blue-500 text-white text-3xl font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
           onClick={() => handlePageChange("pickupAlgae")}
-          // Do we want algae dropped data
+          // Do we want algae dropped data?
         >
           Dropped - Field
         </div>

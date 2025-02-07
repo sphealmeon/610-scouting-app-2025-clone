@@ -15,7 +15,9 @@ const Algae = () => {
     'L3-L4': new Set(['F', 'D', 'B']),
   };
 
-  const slots = ["C", "B", "A", "F", "E", "D"];
+  const slots = ScoutingData.start.alliance === "red" 
+    ? ["F", "E", "D", "C", "B", "A"]
+    : ["C", "B", "A", "F", "E", "D"];
 
   const getSlotKnocked = (level: string, slot: string) => {
     if (level === 'L2-L3') {

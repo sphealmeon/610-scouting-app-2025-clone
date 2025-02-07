@@ -7,6 +7,7 @@ export const ScoutingData: Data = {
         match: 0,
         position: "",
         scoutName: "",
+        alliance: "",
     },
     auto: {
         leave: 0,
@@ -111,6 +112,7 @@ export const resetData = () => {
     ScoutingData.start.match = 0;
     ScoutingData.start.position = "";
     ScoutingData.start.scoutName = "";
+    ScoutingData.start.alliance = "";
 
     ScoutingData.auto.leave = 0;
     ScoutingData.auto.coral = 0;

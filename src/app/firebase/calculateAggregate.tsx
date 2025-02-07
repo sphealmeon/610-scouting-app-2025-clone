@@ -82,6 +82,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       preload: ScoutingData.start.preload,
       position: ScoutingData.start.position,
       scoutName: ScoutingData.start.scoutName,
+      alliance: ScoutingData.start.alliance,
     },
     auto: {
       leave: ScoutingData.auto.leave,
