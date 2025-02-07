@@ -47,6 +47,7 @@ const ReefMR = () => {
   const handleHexagonClick = (level: string, slot: string) => {
     const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
     const slotData = ScoutingData.auto[slotKey];
+    handleScore(level as 'L1' | 'L2' | 'L3' | 'L4');
     
     if (typeof slotData === 'object' && 'made' in slotData) {
       slotData.made = slotData.made > 0 ? 0 : 1;
