@@ -22,9 +22,6 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     ScoutingData.auto.coral++;
   }
 
-  function handleDroppedCoral () {
-    ScoutingData.auto.droppedCoral++;
-  }
 
   function handleScore(l: 'L1' | 'L2' | 'L3' | 'L4') {
     setLevel(l);
@@ -178,8 +175,8 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     showPopup(`${activeSlots.has(slotKey) ? 'Unscored from' : 'Scored in'} Level ${level}, Slot ${slot}`);
   };
 
-  const handleDropped = (level: string, slot: string) => {
-    const slotKey = `${level}-${slot}`;
+  const handleDroppedCoral = (level: string, slot: string) => {
+    ScoutingData.auto.droppedCoral++;
     switch(level) {
       case 'L4':
         switch(slot) {
@@ -334,7 +331,7 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
                     strokeWidth="0.5"
                     className="cursor-pointer hover:fill-red-500"
                     onClick={() => {
-                      handleDroppedCoral();
+                      handleDroppedCoral(level, slot);
                       showPopup(`Dropped coral at Level ${level}, Slot ${slot}`);
                     }}
                   />

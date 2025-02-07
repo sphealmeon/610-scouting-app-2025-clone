@@ -288,25 +288,25 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.teleop.processorScored,
 
     autoL1Accuracy:
-      totalData.auto.l1A.made == 0
+      totalData.auto.l1 == 0
         ? 0
-        : totalData.auto.l1A.made /
-          (totalData.auto.l1A.made + totalData.auto.l1A.dropped),
+        : totalData.auto.l1 /
+          (totalData.auto.l1 + totalData.auto.droppedCoral),
     autoL2Accuracy:
-      totalData.auto.l2A.made == 0
+      totalData.auto.l2 == 0
         ? 0
-        : totalData.auto.l2A.made /
-          (totalData.auto.l2A.made + totalData.auto.l2A.dropped),
+        : totalData.auto.l2 /
+          (totalData.auto.l2 + totalData.auto.droppedCoral),
     autoL3Accuracy:
-      totalData.auto.l3A.made == 0
+      totalData.auto.l3 == 0
         ? 0
-        : totalData.auto.l3A.made /
-          (totalData.auto.l3A.made + totalData.auto.l3A.dropped),
+        : totalData.auto.l3 /
+          (totalData.auto.l3 + totalData.auto.droppedCoral),
     autoL4Accuracy:
-      totalData.auto.l4A.made == 0
+      totalData.auto.l4 == 0
         ? 0
-        : totalData.auto.l4A.made /
-          (totalData.auto.l4A.made + totalData.auto.l4A.dropped),
+        : totalData.auto.l4 /
+          (totalData.auto.l4 + totalData.auto.droppedAlgae),
           
     teleopL1Accuracy:
       totalData.teleop.l1Scored == 0
