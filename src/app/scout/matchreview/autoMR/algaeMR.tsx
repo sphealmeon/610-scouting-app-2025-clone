@@ -7,7 +7,9 @@ interface AlgaeScores {
   processor: number;
 }
 
-const AlgaeMR = () => {
+const AlgaeMR = ({ setLeaveState }: { 
+    setLeaveState: (value: number) => void 
+}) => {
   const [level, setLevel] = useState<'L2-L3' | 'L3-L4'>('L2-L3');
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
     visible: false,
@@ -70,6 +72,10 @@ const AlgaeMR = () => {
         }
       }
       showPopup(`Knocked off algae at ${level}, Slot ${slot}`);
+      if (ScoutingData.auto.leave === 0) {
+        ScoutingData.auto.leave = 1;
+      }
+      setLeaveState(1);
     } else {
       ScoutingData.auto.algae--;
       if (level === 'L2-L3') {

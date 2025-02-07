@@ -2,20 +2,19 @@ import { useState } from "react";
 import { ScoutingData } from "../../data";
 import { Button } from "@/components/ui/button";
 
-const LeaveMR = () => {
+const LeaveMR = ({ leaveState, setLeaveState }: { 
+    leaveState: number, 
+    setLeaveState: (value: number) => void 
+}) => {
     const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
         visible: false,
         message: "",
     });
 
     const handleLeaveClick = () => {
-        if (ScoutingData.auto.leave === 0) {
-            ScoutingData.auto.leave = 1;
-            showPopup("Robot left starting zone");
-        } else {
-            ScoutingData.auto.leave = 0;
-            showPopup("Undid robot leaving");
-        }
+        const newValue = leaveState === 0 ? 1 : 0;
+        setLeaveState(newValue);
+        showPopup(newValue === 1 ? "Robot left starting zone" : "Undid robot leaving");
     };
 
     const showPopup = (message: string) => {
@@ -29,10 +28,10 @@ const LeaveMR = () => {
             <Button
                 onClick={handleLeaveClick}
                 className={`w-32 h-32 text-2xl rounded-full ${
-                    ScoutingData.auto.leave > 0 ? "bg-green-500" : "bg-red-500"
+                    leaveState > 0 ? "bg-green-500" : "bg-red-500"
                 } text-white`}
             >
-                {ScoutingData.auto.leave > 0 ? "Left" : "Not Left"}
+                Leave?
             </Button>
 
             {popup.visible && (

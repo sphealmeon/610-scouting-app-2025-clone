@@ -32,7 +32,7 @@ const Leave = ({ leaveState, setLeaveState }: {
                     leaveState > 0 ? "bg-green-500" : "bg-red-500"
                 } text-white`}
             >
-                {leaveState > 0 ? "Left" : "Not Left"}
+                Leave?
             </Button>
 
                 Alliance: {ScoutingData.start.alliance}

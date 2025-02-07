@@ -54,7 +54,9 @@ interface ReefScores {
   };
 }
 
-const ReefMR = () => {
+const ReefMR = ({ setLeaveState }: { 
+    setLeaveState: (value: number) => void 
+}) => {
   const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
   const [scores, setScores] = useState<ReefScores>({
     droppedCoral: ScoutingData.auto.droppedCoral,
@@ -152,6 +154,10 @@ const ReefMR = () => {
       slotData.made = slotData.made > 0 ? 0 : 1;
       showPopup(`${slotData.made ? 'Made' : 'Unmade'} at Level ${level}, Slot ${slot}`);
     }
+    if (ScoutingData.auto.leave === 0) {
+      ScoutingData.auto.leave = 1;
+    }
+    setLeaveState(1);
   };
 
   const handleDroppedCoral = (level: string, slot: string) => {
