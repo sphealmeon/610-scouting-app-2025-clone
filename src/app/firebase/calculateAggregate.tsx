@@ -135,6 +135,12 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       l1D: ScoutingData.auto.l1D,
       l1E: ScoutingData.auto.l1E,
       l1F: ScoutingData.auto.l1F,
+      algaeA: ScoutingData.auto.algaeA,
+      algaeB: ScoutingData.auto.algaeB,
+      algaeC: ScoutingData.auto.algaeC,
+      algaeD: ScoutingData.auto.algaeD,
+      algaeE: ScoutingData.auto.algaeE,
+      algaeF: ScoutingData.auto.algaeF,
       processor: ScoutingData.auto.processor,
       barge: ScoutingData.auto.barge,
     },
@@ -253,7 +259,8 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.auto.l1 * 3 +
       totalData.auto.leave * 2 +
       totalData.auto.processor * 6 +
-      totalData.auto.barge * 4,
+      totalData.auto.barge * 4, 
+      // Not actually tracking barge
     teleopPPG:
       totalData.teleop.l4Scored * 5 +
       totalData.teleop.l3Scored * 4 +

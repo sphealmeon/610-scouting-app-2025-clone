@@ -25,10 +25,10 @@ const Leave = () => {
                 Leave
             </label>
 
-            <img 
+            {/* <img 
                 src = "field2.png"
                 className="w-full h-full"
-            />
+            /> */}
 
         </div>
     );

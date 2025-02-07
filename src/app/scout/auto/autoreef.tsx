@@ -10,12 +10,12 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     message: "",
   });
 
-  // Define the slots in clockwise order starting from A
+  // Define the slots in counter-clockwise order starting from left (A)
   const slots = {
-    L1: ["A", "B", "C", "D", "E", "F"],
-    L2: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
-    L3: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
-    L4: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+    L1: ["C", "B", "A", "F", "E", "D"],
+    L2: ["G", "F", "E", "D", "C", "B", "A", "L", "K", "J", "I", "H"],
+    L3: ["G", "F", "E", "D", "C", "B", "A", "L", "K", "J", "I", "H"],
+    L4: ["G", "F", "E", "D", "C", "B", "A", "L", "K", "J", "I", "H"],
   };
 
   function handleCoral () {
@@ -46,6 +46,7 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
   const handleHexagonClick = (level: string, slot: string) => {
     const slotKey = `${level}-${slot}`;
     const newActiveSlots = new Set(activeSlots);
+    handleScore(level as 'L1' | 'L2' | 'L3' | 'L4');
     
     if (activeSlots.has(slotKey)) {
       newActiveSlots.delete(slotKey);
@@ -203,7 +204,11 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
           <svg viewBox="0 0 100 100" className="w-full h-full">
             {slots[level].map((slot, index) => {
               const totalSlots = slots[level].length;
-              const angle = (index * (360 / totalSlots));
+              // For L2-L4, use hexagon shape
+              const isHexagon = level !== 'L1';
+              const angle = isHexagon ? 
+                (index * (360 / totalSlots)): 
+                (index * (360 / totalSlots)) + 30;       // Regular shape for L1
               const startAngle = angle * (Math.PI / 180);
               const endAngle = (angle + (360 / totalSlots)) * (Math.PI / 180);
               const centerX = 50;

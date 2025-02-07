@@ -12,11 +12,11 @@ const Algae = ({setMatchState}: {setMatchState: Function}) => {
 
   // Define which slots can have algae for each level
   const algaePositions = {
-    'L2-L3': new Set(['A', 'E', 'I']),
-    'L3-L4': new Set(['C', 'G', 'J']),
+    'L2-L3': new Set(['A', 'E', 'C']),
+    'L3-L4': new Set(['F', 'D', 'B']),
   };
 
-  const slots = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+  const slots = ["C", "B", "A", "F", "E", "D"];
 
   const handleHexagonClick = (level: string, slot: string) => {
     if (!algaePositions[level as keyof typeof algaePositions].has(slot)) return;
@@ -33,31 +33,25 @@ const Algae = ({setMatchState}: {setMatchState: Function}) => {
       if (level === 'L2-L3') {
         switch(slot) {
           case 'A':
-            ScoutingData.auto.l2A++;
-            ScoutingData.auto.l3A++;
+            ScoutingData.auto.algaeA++;
             break;
           case 'E':
-            ScoutingData.auto.l2E++;
-            ScoutingData.auto.l3E++;
+            ScoutingData.auto.algaeE++;
             break;
-          case 'I':
-            ScoutingData.auto.l2I++;
-            ScoutingData.auto.l3I++;
+          case 'C':
+            ScoutingData.auto.algaeC++;
             break;
         }
       } else { // L3-L4
         switch(slot) {
-          case 'C':
-            ScoutingData.auto.l3C++;
-            ScoutingData.auto.l4C++;
+          case 'B':
+            ScoutingData.auto.algaeB++;
             break;
-          case 'G':
-            ScoutingData.auto.l3G++;
-            ScoutingData.auto.l4G++;
+          case 'F':
+            ScoutingData.auto.algaeF++;
             break;
-          case 'J':
-            ScoutingData.auto.l3J++;
-            ScoutingData.auto.l4J++;
+          case 'D':
+            ScoutingData.auto.algaeD++;
             break;
         }
       }
@@ -93,7 +87,7 @@ const Algae = ({setMatchState}: {setMatchState: Function}) => {
           <svg viewBox="0 0 100 100" className="w-full h-full">
             {slots.map((slot, index) => {
               const totalSlots = slots.length;
-              const angle = (index * (360 / totalSlots));
+              const angle = (index * (360 / totalSlots)) + 30;
               const startAngle = angle * (Math.PI / 180);
               const endAngle = (angle + (360 / totalSlots)) * (Math.PI / 180);
               const centerX = 50;

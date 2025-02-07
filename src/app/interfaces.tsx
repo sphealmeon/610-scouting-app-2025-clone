@@ -59,6 +59,13 @@ export interface Data{
         l1D: number;
         l1E: number;
         l1F: number;
+        algaeA: number;
+        algaeB: number;
+        algaeC: number;
+        algaeD: number;
+        algaeE: number;
+        algaeF: number;
+        
         processor: number;
         barge: number;
     };
