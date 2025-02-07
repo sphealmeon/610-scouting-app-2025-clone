@@ -11,7 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import { AggregateData } from "@/app/interfaces";
 import { setCookie } from "@/app/cookies/cookies";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -69,7 +69,14 @@ export default function AutoTable({ teamData }: { teamData: AggregateData[] }) {
                   className="bg-gray-200 hover:bg-gray-300 text-black w-full rounded-none h-full" 
                   onClick={() => sortData(key as keyof typeof sortKeys)}
                 >
-                  {key.charAt(0).toUpperCase() + key.slice(1)} <ArrowUpDown className="ml-2 h-4 w-4" />
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                  {sortConfig.key === key ? (
+                    sortConfig.direction === 'asc' 
+                      ? <ArrowUpIcon className="ml-2 h-4 w-4" />
+                      : <ArrowDownIcon className="ml-2 h-4 w-4" />
+                  ) : (
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  )}
                 </Button>
               </TableHead>
             ))}
@@ -87,20 +94,20 @@ export default function AutoTable({ teamData }: { teamData: AggregateData[] }) {
             >
               <TableCell className="font-medium">{data.team}</TableCell>
               <TableCell>{data.autoPPG.toFixed(2)}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.coral}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.algae}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.droppedCoral}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.droppedAlgae}</TableCell>
+              <TableCell>{data.matchAggregateData.auto.coral.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.auto.algae.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.auto.droppedCoral.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.auto.droppedAlgae.toFixed(2)}</TableCell>
               <TableCell>{(data.autoL1Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.autoL2Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.autoL3Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.autoL4Accuracy * 100).toFixed(1)}%</TableCell>
-              <TableCell>{data.matchAggregateData.auto.l4}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.l3}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.l2}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.l1}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.processor}</TableCell>
-              <TableCell>{data.matchAggregateData.auto.barge}</TableCell>
+              <TableCell>{data.matchAggregateData.auto.l4.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.auto.l3.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.auto.l2.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.auto.l1.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.auto.processor.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.auto.barge.toFixed(2)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

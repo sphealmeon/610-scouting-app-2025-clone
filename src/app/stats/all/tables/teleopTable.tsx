@@ -11,7 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import { AggregateData } from "@/app/interfaces";
 import { setCookie } from "@/app/cookies/cookies";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -68,7 +68,14 @@ export default function TeleopTable({ teamData }: { teamData: AggregateData[] })
                   className="bg-gray-200 hover:bg-gray-300 text-black w-full rounded-none h-full" 
                   onClick={() => sortData(key as keyof typeof sortKeys)}
                 >
-                  {key.charAt(0).toUpperCase() + key.slice(1)} <ArrowUpDown className="ml-2 h-4 w-4" />
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                  {sortConfig.key === key ? (
+                    sortConfig.direction === 'asc' 
+                      ? <ArrowUpIcon className="ml-2 h-4 w-4" />
+                      : <ArrowDownIcon className="ml-2 h-4 w-4" />
+                  ) : (
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  )}
                 </Button>
               </TableHead>
             ))}
@@ -86,19 +93,19 @@ export default function TeleopTable({ teamData }: { teamData: AggregateData[] })
             >
               <TableCell className="font-medium">{data.team}</TableCell>
               <TableCell>{data.teleopPPG.toFixed(2)}</TableCell>
-              <TableCell>{data.coralCyclesScored}</TableCell>
-              <TableCell>{data.algaeCyclesScored}</TableCell>
+              <TableCell>{data.coralCyclesScored.toFixed(2)}</TableCell>
+              <TableCell>{data.algaeCyclesScored.toFixed(2)}</TableCell>
               <TableCell>{(data.teleopL1Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopL2Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopL3Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopL4Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopBargeAccuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopProcessorAccuracy * 100).toFixed(1)}%</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.coralPickup}</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.coralPickupFromStation}</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.pickupAlgae}</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.pickupAlgaeFromReef}</TableCell>
-              <TableCell>{data.matchAggregateData.teleop.algaeRemoved}</TableCell>
+              <TableCell>{data.matchAggregateData.teleop.coralPickup.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.teleop.coralPickupFromStation.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.teleop.pickupAlgae.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.teleop.pickupAlgaeFromReef.toFixed(2)}</TableCell>
+              <TableCell>{data.matchAggregateData.teleop.algaeRemoved.toFixed(2)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -11,7 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import { AggregateData } from "@/app/interfaces";
 import { setCookie } from "@/app/cookies/cookies";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function EndgameTable({ teamData }: { teamData: AggregateData[] }) {
@@ -58,7 +58,14 @@ export default function EndgameTable({ teamData }: { teamData: AggregateData[] }
                   className="bg-gray-200 hover:bg-gray-300 text-black w-full rounded-none h-full" 
                   onClick={() => sortData(key as keyof typeof sortKeys)}
                 >
-                  {key.charAt(0).toUpperCase() + key.slice(1)} <ArrowUpDown className="ml-2 h-4 w-4" />
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                  {sortConfig.key === key ? (
+                    sortConfig.direction === 'asc' 
+                      ? <ArrowUpIcon className="ml-2 h-4 w-4" />
+                      : <ArrowDownIcon className="ml-2 h-4 w-4" />
+                  ) : (
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  )}
                 </Button>
               </TableHead>
             ))}
