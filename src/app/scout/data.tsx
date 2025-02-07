@@ -1,5 +1,14 @@
-import { Data } from "@/app/interfaces";
+import { Data, HumanPlayerData } from "@/app/interfaces";
 
+export const HPData: HumanPlayerData = {
+    match: 0,
+    redTeam: "",
+    blueTeam: "",
+    blueScored: 0,
+    redScored: 0,
+    blueMissed: 0,
+    redMissed: 0,
+};
 export const ScoutingData: Data = {
     start: {
         preload: 0,
@@ -97,12 +106,6 @@ export const ScoutingData: Data = {
         general: "",
         reason: "",
         explanation: "",
-    },
-    humanPlayer: {
-        blueScored: 0,
-        redScored: 0,
-        blueMissed: 0,
-        redMissed: 0,
     },
 };
 

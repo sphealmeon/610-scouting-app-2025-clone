@@ -173,12 +173,6 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       reason: ScoutingData.teleop.reason,
       explanation: ScoutingData.teleop.explanation,
     },
-    humanPlayer: {
-      blueScored: ScoutingData.humanPlayer.blueScored,
-      redScored: ScoutingData.humanPlayer.redScored,
-      blueMissed: ScoutingData.humanPlayer.blueMissed,
-      redMissed: ScoutingData.humanPlayer.redMissed,
-    }
   };
   const ignoreBrokenVar: boolean = await getIgnoreBroken();
   let useLast4MatchesVar: boolean = await getUseLast4Matches();

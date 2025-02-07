@@ -1,33 +1,44 @@
-import { key, teams, useApi } from "../globalVars";
+import { key, useApi } from "../globalVars";
 
-export const FetchTeams = ({ setTeams }: { setTeams: Function }) => {
+interface MatchTeams {
+    red: number[];
+    blue: number[];
+}
+
+export const FetchTeamsInMatch = async ({ match }: { match: number }): Promise<MatchTeams | null> => {
     if (useApi) {
-        fetch("https://www.thebluealliance.com/api/v3/event/" + key + "/matches", {
-            method: "GET",
-            headers: {
-              "X-TBA-Auth-Key":
-                "ZsbRGTknrkbJAl3OBXVaRh8loiP9ecki3Ag2q1DpExs7yRg9g0RVsXTY3edbMBQO",
-            },
-          })
-          .then((response) => {
+        try {
+            const response = await fetch(`https://www.thebluealliance.com/api/v3/event/${key}/matches`, {
+              method: "GET",
+              headers: {
+                "X-TBA-Auth-Key":
+                  "ZsbRGTknrkbJAl3OBXVaRh8loiP9ecki3Ag2q1DpExs7yRg9g0RVsXTY3edbMBQO",
+              },
+            });
+            
             if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error('Network response was not ok');
             }
-            return response.json();
-          })
-          .then((data) => {
-            const allTeams: string[] = [];
-            for (let index = 0; index < data.length; index++) {
-              allTeams.push(data[index].team_number + "");
+
+            const data = await response.json();
+            console.log("Match data:", data);
+            
+            const matchData = data.find((m: any) => m.match_number === match && m.comp_level === "qm");
+            console.log("Found match:", matchData);
+            
+            if (matchData) {
+                const teams = {
+                    red: matchData.alliances.red.team_keys.map((key: string) => parseInt(key.slice(3))),
+                    blue: matchData.alliances.blue.team_keys.map((key: string) => parseInt(key.slice(3)))
+                };
+                console.log("Returning teams:", teams);
+                return teams;
             }
-            setTeams(allTeams);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-    } else {
-        setTeams(teams);
+        } catch (error) {
+            console.error("Error fetching match teams:", error);
+        }
     }
+    return null;
 };
 
 export const FetchAlliance = async (matchNumber: number, teamNumber: number) => {

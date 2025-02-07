@@ -224,46 +224,12 @@ export interface Data{
         reason: string;
         explanation: string;
     };
-    humanPlayer: {
-        blueScored: number;
-        redScored: number;
-        blueMissed: number;
-        redMissed: number;
-    };
 }
 
-interface TeleopData {
-    floorPickup: number;
-    sourcePickup: number;
-    pickupAlgae: number;
-    pickupAlgaeFromReef: number;
-    pickupCoral: number;
-    pickupCoralFromStation: number;
-    l4Scored: number;
-    l3Scored: number;
-    l2Scored: number;
-    l1Scored: number;
-    l4Dropped: number;
-    l3Dropped: number;
-    l2Dropped: number;
-    l1Dropped: number;
-    processorScored: number;
-    processorDropped: number;
-    bargeScored: number;
-    bargeDropped: number;
-    algaeRemoved: number;
-    isCoop: number;
-    park: number;
-    shallow: number;
-    deep: number;
-    missedshallow: number;
-    misseddeep: number;
-    general: string;
-    reason: string;
-    explanation: string;
-}
-
-interface HumanPlayerData {
+export interface HumanPlayerData {
+    match: number;
+    redTeam: string;
+    blueTeam: string;
     blueScored: number;
     redScored: number;
     blueMissed: number;
