@@ -263,10 +263,9 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.auto.l3 * 6 +
       totalData.auto.l2 * 4 +
       totalData.auto.l1 * 3 +
-      totalData.auto.leave * 2 +
+      totalData.auto.leave * 3 +
       totalData.auto.processor * 6 +
       totalData.auto.barge * 4, 
-      // Not actually tracking barge
     teleopPPG:
       totalData.teleop.l4Scored * 5 +
       totalData.teleop.l3Scored * 4 +

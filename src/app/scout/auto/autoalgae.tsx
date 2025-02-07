@@ -144,8 +144,8 @@ const Algae = ({setMatchState}: {setMatchState: Function}) => {
       </div>
 
       <div className="flex gap-4 mt-4">
-        <Button onClick={() => setMatchState(0)}>Back to Start</Button>
-        <Button onClick={() => setMatchState(2)}>To Teleop</Button>
+        <Button onClick={() => ScoutingData.auto.barge++}>Barge Scored</Button>
+        <Button onClick={() => ScoutingData.auto.processor++}>Processor Scored</Button>
       </div>
 
       {popup.visible && (
