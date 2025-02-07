@@ -81,7 +81,7 @@ export default function AutoTable({ teamData }: { teamData: AggregateData[] }) {
               key={data.team}
               className="cursor-pointer hover:bg-muted/50"
               onClick={() => {
-                router.push("/stats/team");
+                router.push("/stats/teams");
                 setCookie("Team", data.team.toString());
               }}
             >

@@ -28,6 +28,8 @@ export default function TeleopTable({ teamData }: { teamData: AggregateData[] })
   const sortKeys = {
     team: (data: AggregateData) => data.team,
     teleopPPG: (data: AggregateData) => data.teleopPPG,
+    coralCyclesScored: (data: AggregateData) => data.coralCyclesScored,
+    algaeCyclesScored: (data: AggregateData) => data.algaeCyclesScored,
     l1Accuracy: (data: AggregateData) => data.teleopL1Accuracy,
     l2Accuracy: (data: AggregateData) => data.teleopL2Accuracy,
     l3Accuracy: (data: AggregateData) => data.teleopL3Accuracy,
@@ -78,12 +80,14 @@ export default function TeleopTable({ teamData }: { teamData: AggregateData[] })
               key={data.team}
               className="cursor-pointer hover:bg-muted/50"
               onClick={() => {
-                router.push("/stats/team");
+                router.push("/stats/teams");
                 setCookie("Team", data.team.toString());
               }}
             >
               <TableCell className="font-medium">{data.team}</TableCell>
               <TableCell>{data.teleopPPG.toFixed(2)}</TableCell>
+              <TableCell>{data.coralCyclesScored}</TableCell>
+              <TableCell>{data.algaeCyclesScored}</TableCell>
               <TableCell>{(data.teleopL1Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopL2Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopL3Accuracy * 100).toFixed(1)}%</TableCell>
