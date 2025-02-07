@@ -56,6 +56,7 @@ const AlgaeMR = ({ setLeaveState }: {
       ScoutingData.auto.algae++;
       if (ScoutingData.auto.leave === 0) {
         ScoutingData.auto.leave = 1;
+        setLeaveState(1);
       }
       
       if (level === 'L2-L3') {
@@ -75,7 +76,6 @@ const AlgaeMR = ({ setLeaveState }: {
       if (ScoutingData.auto.leave === 0) {
         ScoutingData.auto.leave = 1;
       }
-      setLeaveState(1);
     } else {
       ScoutingData.auto.algae--;
       if (level === 'L2-L3') {

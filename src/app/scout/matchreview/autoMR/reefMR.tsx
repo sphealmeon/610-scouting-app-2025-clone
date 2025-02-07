@@ -148,16 +148,22 @@ const ReefMR = ({ setLeaveState }: {
   const handleHexagonClick = (level: string, slot: string) => {
     const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
     const slotData = ScoutingData.auto[slotKey];
-    handleScore(level as 'L1' | 'L2' | 'L3' | 'L4');
     
     if (typeof slotData === 'object' && 'made' in slotData) {
-      slotData.made = slotData.made > 0 ? 0 : 1;
-      showPopup(`${slotData.made ? 'Made' : 'Unmade'} at Level ${level}, Slot ${slot}`);
+      if (slotData.made === 0) {
+        slotData.made = 1;
+        // Only set leave when scoring, not when unscoring
+        if (ScoutingData.auto.leave === 0) {
+          ScoutingData.auto.leave = 1;
+          setLeaveState(1);
+        }
+        handleScore(level as 'L1' | 'L2' | 'L3' | 'L4');
+        showPopup(`Scored at Level ${level}, Slot ${slot}`);
+      } else {
+        slotData.made = 0;
+        showPopup(`Removed score at Level ${level}, Slot ${slot}`);
+      }
     }
-    if (ScoutingData.auto.leave === 0) {
-      ScoutingData.auto.leave = 1;
-    }
-    setLeaveState(1);
   };
 
   const handleDroppedCoral = (level: string, slot: string) => {
