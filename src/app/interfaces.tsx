@@ -17,48 +17,174 @@ export interface Data{
         l3: number;
         l2: number;
         l1: number;
-        l4A: number;
-        l4B: number;
-        l4C: number;
-        l4D: number;
-        l4E: number;
-        l4F: number;
-        l4G: number;
-        l4H: number;
-        l4I: number;
-        l4J: number;
-        l4K: number;
-        l4L: number;
-        l3A: number;
-        l3B: number;
-        l3C: number;
-        l3D: number;
-        l3E: number;
-        l3F: number;
-        l3G: number;
-        l3H: number;
-        l3I: number;
-        l3J: number;
-        l3K: number;
-        l3L: number;
-        l2A: number;
-        l2B: number;
-        l2C: number;
-        l2D: number;
-        l2E: number;
-        l2F: number;
-        l2G: number;
-        l2H: number;
-        l2I: number;
-        l2J: number;
-        l2K: number;
-        l2L: number;
-        l1A: number;
-        l1B: number;
-        l1C: number;
-        l1D: number;
-        l1E: number;
-        l1F: number;
+        l4A: {
+            made: number;
+            dropped: number;
+        };
+        l4B: {
+            made: number;
+            dropped: number;
+        };
+        l4C: {
+            made: number;
+            dropped: number;
+        };
+        l4D: {
+            made: number;
+            dropped: number;
+        };
+        l4E: {
+            made: number;
+            dropped: number;
+        };
+        l4F: {
+            made: number;
+            dropped: number;
+        };
+        l4G: {
+            made: number;   
+            dropped: number;
+        };
+        l4H: {
+            made: number;
+            dropped: number;
+        };
+        l4I: {
+            made: number;
+            dropped: number;
+        };
+        l4J: {
+            made: number;
+            dropped: number;
+        };
+        l4K: {
+            made: number;
+            dropped: number;
+        };
+        l4L: {
+            made: number;
+            dropped: number;
+        };
+        l3A: {
+            made: number;
+            dropped: number;
+        };
+        l3B: {
+            made: number;
+            dropped: number;
+        };
+        l3C: {
+            made: number;
+            dropped: number;
+        };
+        l3D: {
+            made: number;
+            dropped: number;
+        };
+        l3E: {
+            made: number;
+            dropped: number;
+        };
+        l3F: {
+            made: number;
+            dropped: number;
+        };
+        l3G: {
+            made: number;
+            dropped: number;
+        };
+        l3H: {
+            made: number;
+            dropped: number;
+        };
+        l3I: {
+            made: number;
+            dropped: number;
+        };
+        l3J: {
+            made: number;
+            dropped: number;
+        };
+        l3K: {
+            made: number;
+            dropped: number;
+        };
+        l3L: {
+            made: number;
+            dropped: number;
+        };
+        l2A: {
+            made: number;
+            dropped: number;
+        };
+        l2B: {
+            made: number;
+            dropped: number;
+        };  
+        l2C: {
+            made: number;
+            dropped: number;
+        };
+        l2D: {
+            made: number;
+            dropped: number;
+        };
+        l2E: {
+            made: number;
+            dropped: number;
+        };
+        l2F: {
+            made: number;
+            dropped: number;
+        };
+        l2G: {
+            made: number;
+            dropped: number;
+        };
+        l2H: {
+            made: number;
+            dropped: number;
+        };
+        l2I: {
+            made: number;
+            dropped: number;
+        };
+        l2J: {
+            made: number;
+            dropped: number;
+        };
+        l2K: {
+            made: number;
+            dropped: number;
+        };
+        l2L: {
+            made: number;
+            dropped: number;
+        };
+        l1A: {
+            made: number;
+            dropped: number;
+        };
+        l1B: {
+            made: number;
+            dropped: number;
+        };
+        l1C: {
+            made: number;
+            dropped: number;
+        };
+        l1D: {
+            made: number;
+            dropped: number;
+        };
+        l1E: {
+            made: number;
+            dropped: number;
+        };
+        l1F: {
+            made: number;
+            dropped: number;
+        };
         algaeA: number;
         algaeB: number;
         algaeC: number;
@@ -96,6 +222,12 @@ export interface Data{
         general: string;
         reason: string;
         explanation: string;
+    };
+    humanPlayer: {
+        blueScored: number;
+        redScored: number;
+        blueMissed: number;
+        redMissed: number;
     };
 }
 

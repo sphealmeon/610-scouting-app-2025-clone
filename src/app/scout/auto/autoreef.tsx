@@ -53,60 +53,60 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
       switch(level) {
         case 'L4': 
           switch(slot) {
-            case 'A': ScoutingData.auto.l4A = 0; break;
-            case 'B': ScoutingData.auto.l4B = 0; break;
-            case 'C': ScoutingData.auto.l4C = 0; break;
-            case 'D': ScoutingData.auto.l4D = 0; break;
-            case 'E': ScoutingData.auto.l4E = 0; break;
-            case 'F': ScoutingData.auto.l4F = 0; break;
-            case 'G': ScoutingData.auto.l4G = 0; break;
-            case 'H': ScoutingData.auto.l4H = 0; break;
-            case 'I': ScoutingData.auto.l4I = 0; break;
-            case 'J': ScoutingData.auto.l4J = 0; break;
-            case 'K': ScoutingData.auto.l4K = 0; break;
-            case 'L': ScoutingData.auto.l4L = 0; break;
+            case 'A': ScoutingData.auto.l4A.made = 0; break;
+            case 'B': ScoutingData.auto.l4B.made = 0; break;
+            case 'C': ScoutingData.auto.l4C.made = 0; break;
+            case 'D': ScoutingData.auto.l4D.made = 0; break;
+            case 'E': ScoutingData.auto.l4E.made = 0; break;
+            case 'F': ScoutingData.auto.l4F.made = 0; break;
+            case 'G': ScoutingData.auto.l4G.made = 0; break;
+            case 'H': ScoutingData.auto.l4H.made = 0; break;
+            case 'I': ScoutingData.auto.l4I.made = 0; break;
+            case 'J': ScoutingData.auto.l4J.made = 0; break;
+            case 'K': ScoutingData.auto.l4K.made = 0; break;
+            case 'L': ScoutingData.auto.l4L.made = 0; break;
           }
           break;
         case 'L3':
           switch(slot) {
-            case 'A': ScoutingData.auto.l3A = 0; break;
-            case 'B': ScoutingData.auto.l3B = 0; break;
-            case 'C': ScoutingData.auto.l3C = 0; break;
-            case 'D': ScoutingData.auto.l3D = 0; break;
-            case 'E': ScoutingData.auto.l3E = 0; break;
-            case 'F': ScoutingData.auto.l3F = 0; break;
-            case 'G': ScoutingData.auto.l3G = 0; break;
-            case 'H': ScoutingData.auto.l3H = 0; break;
-            case 'I': ScoutingData.auto.l3I = 0; break;
-            case 'J': ScoutingData.auto.l3J = 0; break;
-            case 'K': ScoutingData.auto.l3K = 0; break;
-            case 'L': ScoutingData.auto.l3L = 0; break;
+            case 'A': ScoutingData.auto.l3A.made = 0; break;
+            case 'B': ScoutingData.auto.l3B.made = 0; break;
+            case 'C': ScoutingData.auto.l3C.made = 0; break;
+            case 'D': ScoutingData.auto.l3D.made = 0; break;
+            case 'E': ScoutingData.auto.l3E.made = 0; break;
+            case 'F': ScoutingData.auto.l3F.made = 0; break;
+            case 'G': ScoutingData.auto.l3G.made = 0; break;
+            case 'H': ScoutingData.auto.l3H.made = 0; break;
+            case 'I': ScoutingData.auto.l3I.made = 0; break;
+            case 'J': ScoutingData.auto.l3J.made = 0; break;
+            case 'K': ScoutingData.auto.l3K.made = 0; break;
+            case 'L': ScoutingData.auto.l3L.made = 0; break;
           }
           break;
         case 'L2':
           switch(slot) {
-            case 'A': ScoutingData.auto.l2A = 0; break;
-            case 'B': ScoutingData.auto.l2B = 0; break;
-            case 'C': ScoutingData.auto.l2C = 0; break;
-            case 'D': ScoutingData.auto.l2D = 0; break;
-            case 'E': ScoutingData.auto.l2E = 0; break;
-            case 'F': ScoutingData.auto.l2F = 0; break;
-            case 'G': ScoutingData.auto.l2G = 0; break;
-            case 'H': ScoutingData.auto.l2H = 0; break;
-            case 'I': ScoutingData.auto.l2I = 0; break;
-            case 'J': ScoutingData.auto.l2J = 0; break;
-            case 'K': ScoutingData.auto.l2K = 0; break;
-            case 'L': ScoutingData.auto.l2L = 0; break;
+            case 'A': ScoutingData.auto.l2A.made = 0; break;
+            case 'B': ScoutingData.auto.l2B.made = 0; break;
+            case 'C': ScoutingData.auto.l2C.made = 0; break;
+            case 'D': ScoutingData.auto.l2D.made = 0; break;
+            case 'E': ScoutingData.auto.l2E.made = 0; break;
+            case 'F': ScoutingData.auto.l2F.made = 0; break;
+            case 'G': ScoutingData.auto.l2G.made = 0; break;
+            case 'H': ScoutingData.auto.l2H.made = 0; break;
+            case 'I': ScoutingData.auto.l2I.made = 0; break;
+            case 'J': ScoutingData.auto.l2J.made = 0; break;
+            case 'K': ScoutingData.auto.l2K.made = 0; break;
+            case 'L': ScoutingData.auto.l2L.made = 0; break;
           }
           break;
         case 'L1':
           switch(slot) {
-            case 'A': ScoutingData.auto.l1A = 0; break;
-            case 'B': ScoutingData.auto.l1B = 0; break;
-            case 'C': ScoutingData.auto.l1C = 0; break;
-            case 'D': ScoutingData.auto.l1D = 0; break;
-            case 'E': ScoutingData.auto.l1E = 0; break;
-            case 'F': ScoutingData.auto.l1F = 0; break;
+            case 'A': ScoutingData.auto.l1A.made = 0; break;
+            case 'B': ScoutingData.auto.l1B.made = 0; break;
+            case 'C': ScoutingData.auto.l1C.made = 0; break;
+            case 'D': ScoutingData.auto.l1D.made = 0; break;
+            case 'E': ScoutingData.auto.l1E.made = 0; break;
+            case 'F': ScoutingData.auto.l1F.made = 0; break;
           }
           break;
       }
@@ -115,60 +115,60 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
       switch(level) {
         case 'L4': 
           switch(slot) {
-            case 'A': ScoutingData.auto.l4A = 1; break;
-            case 'B': ScoutingData.auto.l4B = 1; break;
-            case 'C': ScoutingData.auto.l4C = 1; break;
-            case 'D': ScoutingData.auto.l4D = 1; break;
-            case 'E': ScoutingData.auto.l4E = 1; break;
-            case 'F': ScoutingData.auto.l4F = 1; break;
-            case 'G': ScoutingData.auto.l4G = 1; break;
-            case 'H': ScoutingData.auto.l4H = 1; break;
-            case 'I': ScoutingData.auto.l4I = 1; break;
-            case 'J': ScoutingData.auto.l4J = 1; break;
-            case 'K': ScoutingData.auto.l4K = 1; break;
-            case 'L': ScoutingData.auto.l4L = 1; break;
+            case 'A': ScoutingData.auto.l4A.made = 1; break;
+            case 'B': ScoutingData.auto.l4B.made = 1; break;
+            case 'C': ScoutingData.auto.l4C.made = 1; break;
+            case 'D': ScoutingData.auto.l4D.made = 1; break;
+            case 'E': ScoutingData.auto.l4E.made = 1; break;
+            case 'F': ScoutingData.auto.l4F.made = 1; break;
+            case 'G': ScoutingData.auto.l4G.made = 1; break;
+            case 'H': ScoutingData.auto.l4H.made = 1; break;
+            case 'I': ScoutingData.auto.l4I.made = 1; break;
+            case 'J': ScoutingData.auto.l4J.made = 1; break;
+            case 'K': ScoutingData.auto.l4K.made = 1; break;
+            case 'L': ScoutingData.auto.l4L.made = 1; break;
           }
           break;
         case 'L3':
           switch(slot) {
-            case 'A': ScoutingData.auto.l3A = 1; break;
-            case 'B': ScoutingData.auto.l3B = 1; break;
-            case 'C': ScoutingData.auto.l3C = 1; break;
-            case 'D': ScoutingData.auto.l3D = 1; break;
-            case 'E': ScoutingData.auto.l3E = 1; break;
-            case 'F': ScoutingData.auto.l3F = 1; break;
-            case 'G': ScoutingData.auto.l3G = 1; break;
-            case 'H': ScoutingData.auto.l3H = 1; break;
-            case 'I': ScoutingData.auto.l3I = 1; break;
-            case 'J': ScoutingData.auto.l3J = 1; break;
-            case 'K': ScoutingData.auto.l3K = 1; break;
-            case 'L': ScoutingData.auto.l3L = 1; break;
+            case 'A': ScoutingData.auto.l3A.made = 1; break;
+            case 'B': ScoutingData.auto.l3B.made = 1; break;
+            case 'C': ScoutingData.auto.l3C.made = 1; break;
+            case 'D': ScoutingData.auto.l3D.made = 1; break;
+            case 'E': ScoutingData.auto.l3E.made = 1; break;
+            case 'F': ScoutingData.auto.l3F.made = 1; break;
+            case 'G': ScoutingData.auto.l3G.made = 1; break;
+            case 'H': ScoutingData.auto.l3H.made = 1; break;
+            case 'I': ScoutingData.auto.l3I.made = 1; break;
+            case 'J': ScoutingData.auto.l3J.made = 1; break;
+            case 'K': ScoutingData.auto.l3K.made = 1; break;
+            case 'L': ScoutingData.auto.l3L.made = 1; break;
           }
           break;
         case 'L2':
           switch(slot) {
-            case 'A': ScoutingData.auto.l2A = 1; break;
-            case 'B': ScoutingData.auto.l2B = 1; break;
-            case 'C': ScoutingData.auto.l2C = 1; break;
-            case 'D': ScoutingData.auto.l2D = 1; break;
-            case 'E': ScoutingData.auto.l2E = 1; break;
-            case 'F': ScoutingData.auto.l2F = 1; break;
-            case 'G': ScoutingData.auto.l2G = 1; break;
-            case 'H': ScoutingData.auto.l2H = 1; break;
-            case 'I': ScoutingData.auto.l2I = 1; break;
-            case 'J': ScoutingData.auto.l2J = 1; break;
-            case 'K': ScoutingData.auto.l2K = 1; break;
-            case 'L': ScoutingData.auto.l2L = 1; break;
+            case 'A': ScoutingData.auto.l2A.made = 1; break;
+            case 'B': ScoutingData.auto.l2B.made = 1; break;
+            case 'C': ScoutingData.auto.l2C.made = 1; break;
+            case 'D': ScoutingData.auto.l2D.made = 1; break;
+            case 'E': ScoutingData.auto.l2E.made = 1; break;
+            case 'F': ScoutingData.auto.l2F.made = 1; break;
+            case 'G': ScoutingData.auto.l2G.made = 1; break;
+            case 'H': ScoutingData.auto.l2H.made = 1; break;
+            case 'I': ScoutingData.auto.l2I.made = 1; break;
+            case 'J': ScoutingData.auto.l2J.made = 1; break;
+            case 'K': ScoutingData.auto.l2K.made = 1; break;
+            case 'L': ScoutingData.auto.l2L.made = 1; break;
           }
           break;
         case 'L1':
           switch(slot) {
-            case 'A': ScoutingData.auto.l1A = 1; break;
-            case 'B': ScoutingData.auto.l1B = 1; break;
-            case 'C': ScoutingData.auto.l1C = 1; break;
-            case 'D': ScoutingData.auto.l1D = 1; break;
-            case 'E': ScoutingData.auto.l1E = 1; break;
-            case 'F': ScoutingData.auto.l1F = 1; break;
+            case 'A': ScoutingData.auto.l1A.made = 1; break;
+            case 'B': ScoutingData.auto.l1B.made = 1; break;
+            case 'C': ScoutingData.auto.l1C.made = 1; break;
+            case 'D': ScoutingData.auto.l1D.made = 1; break;
+            case 'E': ScoutingData.auto.l1E.made = 1; break;
+            case 'F': ScoutingData.auto.l1F.made = 1; break;
           }
           break;
       }
@@ -176,6 +176,71 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
     
     setActiveSlots(newActiveSlots);
     showPopup(`${activeSlots.has(slotKey) ? 'Unscored from' : 'Scored in'} Level ${level}, Slot ${slot}`);
+  };
+
+  const handleDropped = (level: string, slot: string) => {
+    const slotKey = `${level}-${slot}`;
+    switch(level) {
+      case 'L4':
+        switch(slot) {
+          case 'A': ScoutingData.auto.l4A.dropped++; break;
+          case 'B': ScoutingData.auto.l4B.dropped++; break;
+          case 'C': ScoutingData.auto.l4C.dropped++; break;
+          case 'D': ScoutingData.auto.l4D.dropped++; break;
+          case 'E': ScoutingData.auto.l4E.dropped++; break;
+          case 'F': ScoutingData.auto.l4F.dropped++; break;
+          case 'G': ScoutingData.auto.l4G.dropped++; break;
+          case 'H': ScoutingData.auto.l4H.dropped++; break;
+          case 'I': ScoutingData.auto.l4I.dropped++; break;
+          case 'J': ScoutingData.auto.l4J.dropped++; break;
+          case 'K': ScoutingData.auto.l4K.dropped++; break;
+          case 'L': ScoutingData.auto.l4L.dropped++; break;
+        }
+        break;
+      case 'L3':
+        switch(slot) {
+          case 'A': ScoutingData.auto.l3A.dropped++; break;
+          case 'B': ScoutingData.auto.l3B.dropped++; break;
+          case 'C': ScoutingData.auto.l3C.dropped++; break;
+          case 'D': ScoutingData.auto.l3D.dropped++; break;
+          case 'E': ScoutingData.auto.l3E.dropped++; break;
+          case 'F': ScoutingData.auto.l3F.dropped++; break;
+          case 'G': ScoutingData.auto.l3G.dropped++; break;
+          case 'H': ScoutingData.auto.l3H.dropped++; break;
+          case 'I': ScoutingData.auto.l3I.dropped++; break;
+          case 'J': ScoutingData.auto.l3J.dropped++; break;
+          case 'K': ScoutingData.auto.l3K.dropped++; break;
+          case 'L': ScoutingData.auto.l3L.dropped++; break;
+        }
+        break;
+      case 'L2':
+        switch(slot) {
+          case 'A': ScoutingData.auto.l2A.dropped++; break;
+          case 'B': ScoutingData.auto.l2B.dropped++; break;
+          case 'C': ScoutingData.auto.l2C.dropped++; break;
+          case 'D': ScoutingData.auto.l2D.dropped++; break;
+          case 'E': ScoutingData.auto.l2E.dropped++; break;
+          case 'F': ScoutingData.auto.l2F.dropped++; break;
+          case 'G': ScoutingData.auto.l2G.dropped++; break;
+          case 'H': ScoutingData.auto.l2H.dropped++; break;
+          case 'I': ScoutingData.auto.l2I.dropped++; break;
+          case 'J': ScoutingData.auto.l2J.dropped++; break;
+          case 'K': ScoutingData.auto.l2K.dropped++; break;
+          case 'L': ScoutingData.auto.l2L.dropped++; break;
+        }
+        break;
+      case 'L1':
+        switch(slot) {
+          case 'A': ScoutingData.auto.l1A.dropped++; break;
+          case 'B': ScoutingData.auto.l1B.dropped++; break;
+          case 'C': ScoutingData.auto.l1C.dropped++; break;
+          case 'D': ScoutingData.auto.l1D.dropped++; break;
+          case 'E': ScoutingData.auto.l1E.dropped++; break;
+          case 'F': ScoutingData.auto.l1F.dropped++; break;
+        }
+        break;
+    }
+    showPopup(`Dropped at Level ${level}, Slot ${slot}`);
   };
 
   const showPopup = (message: string) => {
@@ -204,23 +269,28 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
           <svg viewBox="0 0 100 100" className="w-full h-full">
             {slots[level].map((slot, index) => {
               const totalSlots = slots[level].length;
-              // For L2-L4, use hexagon shape
               const isHexagon = level !== 'L1';
               const angle = isHexagon ? 
                 (index * (360 / totalSlots)): 
-                (index * (360 / totalSlots)) + 30;       // Regular shape for L1
+                (index * (360 / totalSlots)) + 30;
               const startAngle = angle * (Math.PI / 180);
               const endAngle = (angle + (360 / totalSlots)) * (Math.PI / 180);
               const centerX = 50;
               const centerY = 50;
               const radius = 40;
 
+              // Calculate positions for the section and drop button
               const x1 = centerX + radius * Math.cos(startAngle);
               const y1 = centerY + radius * Math.sin(startAngle);
               const x2 = centerX + radius * Math.cos(endAngle);
               const y2 = centerY + radius * Math.sin(endAngle);
 
-              // Use straight lines instead of arc
+              // Calculate drop button position (slightly outside the section)
+              const buttonAngle = (startAngle + endAngle) / 2;
+              const buttonRadius = radius + 5;
+              const buttonX = centerX + buttonRadius * Math.cos(buttonAngle);
+              const buttonY = centerY + buttonRadius * Math.sin(buttonAngle);
+
               const path = `
                 M ${centerX} ${centerY}
                 L ${x1} ${y1}
@@ -231,25 +301,43 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
               const isActive = activeSlots.has(`${level}-${slot}`);
 
               return (
-                <g key={slot} onClick={() => handleHexagonClick(level, slot)}>
-                  <path
-                    d={path}
-                    fill={isActive ? "#22c55e" : "#ef4444"}
+                <g key={slot}>
+                  {/* Section */}
+                  <g onClick={() => handleHexagonClick(level, slot)}>
+                    <path
+                      d={path}
+                      fill={isActive ? "#22c55e" : "#ef4444"}
+                      stroke="black"
+                      strokeWidth="0.5"
+                      className="cursor-pointer hover:opacity-80"
+                    />
+                    <text
+                      x={centerX + (radius * 0.7) * Math.cos(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
+                      y={centerY + (radius * 0.7) * Math.sin(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="white"
+                      fontSize="6"
+                      className="pointer-events-none"
+                    >
+                      {slot}
+                    </text>
+                  </g>
+                  
+                  {/* Drop Button */}
+                  <circle
+                    cx={buttonX}
+                    cy={buttonY}
+                    r="2"
+                    fill="#888888"
                     stroke="black"
                     strokeWidth="0.5"
-                    className="cursor-pointer hover:opacity-80"
+                    className="cursor-pointer hover:fill-red-500"
+                    onClick={() => {
+                      handleDroppedCoral();
+                      showPopup(`Dropped coral at Level ${level}, Slot ${slot}`);
+                    }}
                   />
-                  <text
-                    x={centerX + (radius * 0.7) * Math.cos(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
-                    y={centerY + (radius * 0.7) * Math.sin(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill="white"
-                    fontSize="6"
-                    className="pointer-events-none"
-                  >
-                    {slot}
-                  </text>
                 </g>
               );
             })}

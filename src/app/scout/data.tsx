@@ -18,48 +18,48 @@ export const ScoutingData: Data = {
         l3: 0,
         l2: 0,
         l1: 0,
-        l4A: 0,
-        l4B: 0,
-        l4C: 0,
-        l4D: 0,
-        l4E: 0,
-        l4F: 0,
-        l4G: 0,
-        l4H: 0,
-        l4I: 0,
-        l4J: 0,
-        l4K: 0,
-        l4L: 0,
-        l3A: 0,
-        l3B: 0,
-        l3C: 0,
-        l3D: 0,
-        l3E: 0,
-        l3F: 0,
-        l3G: 0,
-        l3H: 0,
-        l3I: 0,
-        l3J: 0,
-        l3K: 0,
-        l3L: 0,
-        l2A: 0,
-        l2B: 0,
-        l2C: 0,
-        l2D: 0,
-        l2E: 0,
-        l2F: 0,
-        l2G: 0,
-        l2H: 0,
-        l2I: 0,
-        l2J: 0,
-        l2K: 0,
-        l2L: 0,
-        l1A: 0,
-        l1B: 0,
-        l1C: 0,
-        l1D: 0,
-        l1E: 0,
-        l1F: 0,
+        l4A: { made: 0, dropped: 0 },
+        l4B: { made: 0, dropped: 0 },
+        l4C: { made: 0, dropped: 0 },
+        l4D: { made: 0, dropped: 0 },
+        l4E: { made: 0, dropped: 0 },
+        l4F: { made: 0, dropped: 0 },
+        l4G: { made: 0, dropped: 0 },
+        l4H: { made: 0, dropped: 0 },
+        l4I: { made: 0, dropped: 0 },
+        l4J: { made: 0, dropped: 0 },
+        l4K: { made: 0, dropped: 0 },
+        l4L: { made: 0, dropped: 0 },
+        l3A: { made: 0, dropped: 0 },
+        l3B: { made: 0, dropped: 0 },
+        l3C: { made: 0, dropped: 0 },
+        l3D: { made: 0, dropped: 0 },
+        l3E: { made: 0, dropped: 0 },
+        l3F: { made: 0, dropped: 0 },
+        l3G: { made: 0, dropped: 0 },
+        l3H: { made: 0, dropped: 0 },
+        l3I: { made: 0, dropped: 0 },
+        l3J: { made: 0, dropped: 0 },
+        l3K: { made: 0, dropped: 0 },
+        l3L: { made: 0, dropped: 0 },
+        l2A: { made: 0, dropped: 0 },
+        l2B: { made: 0, dropped: 0 },
+        l2C: { made: 0, dropped: 0 },
+        l2D: { made: 0, dropped: 0 },
+        l2E: { made: 0, dropped: 0 },
+        l2F: { made: 0, dropped: 0 },
+        l2G: { made: 0, dropped: 0 },
+        l2H: { made: 0, dropped: 0 },
+        l2I: { made: 0, dropped: 0 },
+        l2J: { made: 0, dropped: 0 },
+        l2K: { made: 0, dropped: 0 },
+        l2L: { made: 0, dropped: 0 },
+        l1A: { made: 0, dropped: 0 },
+        l1B: { made: 0, dropped: 0 },
+        l1C: { made: 0, dropped: 0 },
+        l1D: { made: 0, dropped: 0 },
+        l1E: { made: 0, dropped: 0 },
+        l1F: { made: 0, dropped: 0 },
         algaeA: 0,
         algaeB: 0,
         algaeC: 0,
@@ -121,48 +121,54 @@ export const resetData = () => {
     ScoutingData.auto.l3 = 0;
     ScoutingData.auto.l2 = 0;
     ScoutingData.auto.l1 = 0;
-    ScoutingData.auto.l4A = 0;
-    ScoutingData.auto.l4B = 0;
-    ScoutingData.auto.l4C = 0;
-    ScoutingData.auto.l4D = 0;
-    ScoutingData.auto.l4E = 0;
-    ScoutingData.auto.l4F = 0;
-    ScoutingData.auto.l4G = 0;
-    ScoutingData.auto.l4H = 0;
-    ScoutingData.auto.l4I = 0;
-    ScoutingData.auto.l4J = 0;
-    ScoutingData.auto.l4K = 0;
-    ScoutingData.auto.l4L = 0;
-    ScoutingData.auto.l3A = 0;
-    ScoutingData.auto.l3B = 0;
-    ScoutingData.auto.l3C = 0;
-    ScoutingData.auto.l3D = 0;
-    ScoutingData.auto.l3E = 0;
-    ScoutingData.auto.l3F = 0;
-    ScoutingData.auto.l3G = 0;
-    ScoutingData.auto.l3H = 0;
-    ScoutingData.auto.l3I = 0;
-    ScoutingData.auto.l3J = 0;
-    ScoutingData.auto.l3K = 0;
-    ScoutingData.auto.l3L = 0;
-    ScoutingData.auto.l2A = 0;
-    ScoutingData.auto.l2B = 0;
-    ScoutingData.auto.l2C = 0;
-    ScoutingData.auto.l2D = 0;
-    ScoutingData.auto.l2E = 0;
-    ScoutingData.auto.l2F = 0;
-    ScoutingData.auto.l2G = 0;
-    ScoutingData.auto.l2H = 0;
-    ScoutingData.auto.l2I = 0;
-    ScoutingData.auto.l2J = 0;
-    ScoutingData.auto.l2K = 0;
-    ScoutingData.auto.l2L = 0;
-    ScoutingData.auto.l1A = 0;
-    ScoutingData.auto.l1B = 0;
-    ScoutingData.auto.l1C = 0;
-    ScoutingData.auto.l1D = 0;
-    ScoutingData.auto.l1E = 0;
-    ScoutingData.auto.l1F = 0;
+    ScoutingData.auto.l4A = { made: 0, dropped: 0 };
+    ScoutingData.auto.l4B = { made: 0, dropped: 0 };
+    ScoutingData.auto.l4C = { made: 0, dropped: 0 };
+    ScoutingData.auto.l4D = { made: 0, dropped: 0 };
+    ScoutingData.auto.l4E = { made: 0, dropped: 0 };
+    ScoutingData.auto.l4F = { made: 0, dropped: 0 };
+    ScoutingData.auto.l4G = { made: 0, dropped: 0 };
+    ScoutingData.auto.l4H = { made: 0, dropped: 0 };
+    ScoutingData.auto.l4I = { made: 0, dropped: 0 };
+    ScoutingData.auto.l4J = { made: 0, dropped: 0 };
+    ScoutingData.auto.l4K = { made: 0, dropped: 0 };
+    ScoutingData.auto.l4L = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3A = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3B = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3C = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3D = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3E = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3F = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3G = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3H = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3I = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3J = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3K = { made: 0, dropped: 0 };
+    ScoutingData.auto.l3L = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2A = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2B = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2C = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2D = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2E = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2F = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2G = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2H = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2I = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2J = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2K = { made: 0, dropped: 0 };
+    ScoutingData.auto.l2L = { made: 0, dropped: 0 };
+    ScoutingData.auto.l1A = { made: 0, dropped: 0 };
+    ScoutingData.auto.l1B = { made: 0, dropped: 0 };
+    ScoutingData.auto.l1C = { made: 0, dropped: 0 };
+    ScoutingData.auto.l1D = { made: 0, dropped: 0 };
+    ScoutingData.auto.l1E = { made: 0, dropped: 0 };
+    ScoutingData.auto.l1F = { made: 0, dropped: 0 };
+    ScoutingData.auto.algaeA = 0;
+    ScoutingData.auto.algaeB = 0;
+    ScoutingData.auto.algaeC = 0;
+    ScoutingData.auto.algaeD = 0;
+    ScoutingData.auto.algaeE = 0;
+    ScoutingData.auto.algaeF = 0;
     ScoutingData.auto.processor = 0;
     ScoutingData.auto.barge = 0;
 
