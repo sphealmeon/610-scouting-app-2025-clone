@@ -2,11 +2,20 @@ import { ScoutingData } from "../../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
+interface AlgaeScores {
+  barge: number;
+  processor: number;
+}
+
 const AlgaeMR = () => {
   const [level, setLevel] = useState<'L2-L3' | 'L3-L4'>('L2-L3');
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
     visible: false,
     message: "",
+  });
+  const [scores, setScores] = useState<AlgaeScores>({
+    barge: ScoutingData.auto.barge,
+    processor: ScoutingData.auto.processor,
   });
 
   const slots = ScoutingData.start.alliance === "red" 
@@ -83,6 +92,14 @@ const AlgaeMR = () => {
   const showPopup = (message: string) => {
     setPopup({ visible: true, message });
     setTimeout(() => setPopup({ visible: false, message: "" }), 2000);
+  };
+
+  const handleScoreChange = (key: keyof AlgaeScores, increment: number) => {
+    setScores(prev => ({
+      ...prev,
+      [key]: Math.max(0, prev[key] + increment)
+    }));
+    ScoutingData.auto[key] = Math.max(0, ScoutingData.auto[key] + increment);
   };
 
   return (
@@ -166,18 +183,14 @@ const AlgaeMR = () => {
         <div className="flex flex-col items-center">
           <div className="flex gap-2">
             <Button 
-              onClick={() => {
-                if (ScoutingData.auto.barge > 0) {
-                  ScoutingData.auto.barge--;
-                }
-              }}
+              onClick={() => handleScoreChange('barge', -1)}
               variant="outline"
             >
               -
             </Button>
-            <span className="font-bold">Barge: {ScoutingData.auto.barge}</span>
+            <div className="font-bold">Barge: {scores.barge}</div>
             <Button 
-              onClick={() => ScoutingData.auto.barge++}
+              onClick={() => handleScoreChange('barge', 1)}
               variant="outline"
             >
               +
@@ -188,18 +201,14 @@ const AlgaeMR = () => {
         <div className="flex flex-col items-center">
           <div className="flex gap-2">
             <Button 
-              onClick={() => {
-                if (ScoutingData.auto.processor > 0) {
-                  ScoutingData.auto.processor--;
-                }
-              }}
+              onClick={() => handleScoreChange('processor', -1)}
               variant="outline"
             >
               -
             </Button>
-            <span className="font-bold">Processor: {ScoutingData.auto.processor}</span>
+            <div className="font-bold">Processor: {scores.processor}</div>
             <Button 
-              onClick={() => ScoutingData.auto.processor++}
+              onClick={() => handleScoreChange('processor', 1)}
               variant="outline"
             >
               +

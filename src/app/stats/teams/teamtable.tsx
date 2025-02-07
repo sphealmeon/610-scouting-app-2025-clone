@@ -27,38 +27,47 @@ export const columns: ColumnDef<AggregateData>[] = [
     {
         accessorKey: "autoPPG",
         header: "Auto PPG",
+        cell: ({ row }) => (row.getValue("autoPPG") as number).toFixed(2)
     },
     {
         accessorKey: "teleopPPG",
         header: "Teleop PPG",
+        cell: ({ row }) => (row.getValue("teleopPPG") as number).toFixed(2)
     },
     {
         accessorKey: "endgamePPG",
         header: "Endgame PPG",
+        cell: ({ row }) => (row.getValue("endgamePPG") as number).toFixed(2)
     },
     {
         accessorKey: "coralCyclesScored",
         header: "# of Coral Cycles/Game",
+        cell: ({ row }) => (row.getValue("coralCyclesScored") as number).toFixed(2)
     },
     {
         accessorKey: "algaeCyclesScored",
         header: "# of Algae Cycles/Game",
+        cell: ({ row }) => (row.getValue("algaeCyclesScored") as number).toFixed(2)
     },
     {
         accessorKey: "teleopL1Accuracy",
         header: "Teleop L1 Accuracy",
+        cell: ({ row }) => ((row.getValue("teleopL1Accuracy") as number) * 100).toFixed(1) + "%"
     },
     {
         accessorKey: "teleopL2Accuracy",
         header: "Teleop L2 Accuracy",
+        cell: ({ row }) => ((row.getValue("teleopL2Accuracy") as number) * 100).toFixed(1) + "%"
     },
     {
         accessorKey: "teleopL3Accuracy",
         header: "Teleop L3 Accuracy",
+        cell: ({ row }) => ((row.getValue("teleopL3Accuracy") as number) * 100).toFixed(1) + "%"
     },
     {
         accessorKey: "teleopL4Accuracy",
         header: "Teleop L4 Accuracy",
+        cell: ({ row }) => ((row.getValue("teleopL4Accuracy") as number) * 100).toFixed(1) + "%"
     },
 ]
 

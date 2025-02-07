@@ -2,8 +2,107 @@ import { ScoutingData } from "../../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
+interface ReefDropped {
+  l1A: number;
+  l1B: number;
+  l1C: number;
+  l1D: number;
+  l1E: number;
+  l1F: number;
+  l2A: number;
+  l2B: number;
+  l2C: number;
+  l2D: number;
+  l2E: number;
+  l2F: number;
+  l2G: number;
+  l2H: number;
+  l2I: number;
+  l2J: number;
+  l2K: number;
+  l2L: number;
+  l3A: number;
+  l3B: number;
+  l3C: number;
+  l3D: number;
+  l3E: number;
+  l3F: number;
+  l3G: number;
+  l3H: number;
+  l3I: number;
+  l3J: number;
+  l3K: number;
+  l3L: number;
+  l4A: number;
+  l4B: number;
+  l4C: number;
+  l4D: number;
+  l4E: number;
+  l4F: number;
+  l4G: number;
+  l4H: number;
+  l4I: number;
+  l4J: number;
+  l4K: number;
+  l4L: number;
+}
+
+interface ReefScores {
+  droppedCoral: number;
+  slots: {
+    [key: string]: { dropped: number };
+  };
+}
+
 const ReefMR = () => {
   const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
+  const [scores, setScores] = useState<ReefScores>({
+    droppedCoral: ScoutingData.auto.droppedCoral,
+    slots: {
+      l1A: { dropped: ScoutingData.auto.l1A.dropped },
+      l1B: { dropped: ScoutingData.auto.l1B.dropped },
+      l1C: { dropped: ScoutingData.auto.l1C.dropped },
+      l1D: { dropped: ScoutingData.auto.l1D.dropped },
+      l1E: { dropped: ScoutingData.auto.l1E.dropped },
+      l1F: { dropped: ScoutingData.auto.l1F.dropped },
+      l2A: { dropped: ScoutingData.auto.l2A.dropped },
+      l2B: { dropped: ScoutingData.auto.l2B.dropped },
+      l2C: { dropped: ScoutingData.auto.l2C.dropped },
+      l2D: { dropped: ScoutingData.auto.l2D.dropped },
+      l2E: { dropped: ScoutingData.auto.l2E.dropped },
+      l2F: { dropped: ScoutingData.auto.l2F.dropped },
+      l2G: { dropped: ScoutingData.auto.l2G.dropped },
+      l2H: { dropped: ScoutingData.auto.l2H.dropped },
+      l2I: { dropped: ScoutingData.auto.l2I.dropped },
+      l2J: { dropped: ScoutingData.auto.l2J.dropped },
+      l2K: { dropped: ScoutingData.auto.l2K.dropped },
+      l2L: { dropped: ScoutingData.auto.l2L.dropped },
+      l3A: { dropped: ScoutingData.auto.l3A.dropped },
+      l3B: { dropped: ScoutingData.auto.l3B.dropped },
+      l3C: { dropped: ScoutingData.auto.l3C.dropped },
+      l3D: { dropped: ScoutingData.auto.l3D.dropped },
+      l3E: { dropped: ScoutingData.auto.l3E.dropped },
+      l3F: { dropped: ScoutingData.auto.l3F.dropped },
+      l3G: { dropped: ScoutingData.auto.l3G.dropped },
+      l3H: { dropped: ScoutingData.auto.l3H.dropped },
+      l3I: { dropped: ScoutingData.auto.l3I.dropped },
+      l3J: { dropped: ScoutingData.auto.l3J.dropped },
+      l3K: { dropped: ScoutingData.auto.l3K.dropped },
+      l3L: { dropped: ScoutingData.auto.l3L.dropped },
+      l4A: { dropped: ScoutingData.auto.l4A.dropped },
+      l4B: { dropped: ScoutingData.auto.l4B.dropped },
+      l4C: { dropped: ScoutingData.auto.l4C.dropped },
+      l4D: { dropped: ScoutingData.auto.l4D.dropped },
+      l4E: { dropped: ScoutingData.auto.l4E.dropped },
+      l4F: { dropped: ScoutingData.auto.l4F.dropped },
+      l4G: { dropped: ScoutingData.auto.l4G.dropped },
+      l4H: { dropped: ScoutingData.auto.l4H.dropped },
+      l4I: { dropped: ScoutingData.auto.l4I.dropped },
+      l4J: { dropped: ScoutingData.auto.l4J.dropped },
+      l4K: { dropped: ScoutingData.auto.l4K.dropped },
+      l4L: { dropped: ScoutingData.auto.l4L.dropped },
+    }
+  });
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
     visible: false,
     message: "",
@@ -56,6 +155,15 @@ const ReefMR = () => {
   };
 
   const handleDroppedCoral = (level: string, slot: string) => {
+    const slotKey = `${level.toLowerCase()}${slot}`;
+    setScores(prev => ({
+      ...prev,
+      droppedCoral: prev.droppedCoral + 1,
+      slots: {
+        ...prev.slots,
+        [slotKey]: { dropped: prev.slots[slotKey].dropped + 1 }
+      }
+    }));
     ScoutingData.auto.droppedCoral++;
     switch(level) {
       case 'L4':
@@ -134,18 +242,27 @@ const ReefMR = () => {
 
   // Add this helper function
   const getSlotDropped = (level: string, slot: string) => {
-    const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
-    const slotData = ScoutingData.auto[slotKey];
-    return typeof slotData === 'object' && 'dropped' in slotData ? slotData.dropped : 0;
+    const slotKey = `${level.toLowerCase()}${slot}`;
+    return scores.slots[slotKey].dropped;
   };
 
   // Add decrement handler
   const handleDecrementDropped = (level: string, slot: string) => {
     const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
-    const slotData = ScoutingData.auto[slotKey];
-    if (typeof slotData === 'object' && 'dropped' in slotData && slotData.dropped > 0) {
-      slotData.dropped--;
+    if (scores.slots[slotKey].dropped > 0) {
+      setScores(prev => ({
+        ...prev,
+        droppedCoral: prev.droppedCoral - 1,
+        slots: {
+          ...prev.slots,
+          [slotKey]: { dropped: prev.slots[slotKey].dropped - 1 }
+        }
+      }));
       ScoutingData.auto.droppedCoral--;
+      const slotData = ScoutingData.auto[slotKey];
+      if (typeof slotData === 'object' && 'dropped' in slotData) {
+        slotData.dropped--;
+      }
     }
   };
 
