@@ -4,13 +4,11 @@ import { useState } from "react";
 
 const AlgaeMR = () => {
   const [level, setLevel] = useState<'L2-L3' | 'L3-L4'>('L2-L3');
-  const [activeSlots, setActiveSlots] = useState<Set<string>>(new Set());
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
     visible: false,
     message: "",
   });
 
-  // Define which slots can have algae for each level
   const algaePositions = {
     'L2-L3': new Set(['A', 'E', 'C']),
     'L3-L4': new Set(['F', 'D', 'B']),
@@ -18,47 +16,66 @@ const AlgaeMR = () => {
 
   const slots = ["C", "B", "A", "F", "E", "D"];
 
+  const getSlotKnocked = (level: string, slot: string) => {
+    if (level === 'L2-L3') {
+      switch(slot) {
+        case 'A': return ScoutingData.auto.algaeA > 0;
+        case 'E': return ScoutingData.auto.algaeE > 0;
+        case 'C': return ScoutingData.auto.algaeC > 0;
+        default: return false;
+      }
+    } else {
+      switch(slot) {
+        case 'B': return ScoutingData.auto.algaeB > 0;
+        case 'F': return ScoutingData.auto.algaeF > 0;
+        case 'D': return ScoutingData.auto.algaeD > 0;
+        default: return false;
+      }
+    }
+  };
+
   const handleHexagonClick = (level: string, slot: string) => {
     if (!algaePositions[level as keyof typeof algaePositions].has(slot)) return;
     
-    const slotKey = `${level}-${slot}`;
-    const newActiveSlots = new Set(activeSlots);
+    const isKnocked = getSlotKnocked(level, slot);
     
-    if (activeSlots.has(slotKey)) {
-      newActiveSlots.delete(slotKey);
-    } else {
-      newActiveSlots.add(slotKey);
+    if (!isKnocked) {
       ScoutingData.auto.algae++;
+      if (ScoutingData.auto.leave === 0) {
+        ScoutingData.auto.leave = 1;
+      }
       
       if (level === 'L2-L3') {
         switch(slot) {
-          case 'A':
-            ScoutingData.auto.algaeA++;
-            break;
-          case 'E':
-            ScoutingData.auto.algaeE++;
-            break;
-          case 'C':
-            ScoutingData.auto.algaeC++;
-            break;
+          case 'A': ScoutingData.auto.algaeA++; break;
+          case 'E': ScoutingData.auto.algaeE++; break;
+          case 'C': ScoutingData.auto.algaeC++; break;
         }
-      } else { // L3-L4
+      } else {
         switch(slot) {
-          case 'B':
-            ScoutingData.auto.algaeB++;
-            break;
-          case 'F':
-            ScoutingData.auto.algaeF++;
-            break;
-          case 'D':
-            ScoutingData.auto.algaeD++;
-            break;
+          case 'B': ScoutingData.auto.algaeB++; break;
+          case 'F': ScoutingData.auto.algaeF++; break;
+          case 'D': ScoutingData.auto.algaeD++; break;
         }
       }
+      showPopup(`Knocked off algae at ${level}, Slot ${slot}`);
+    } else {
+      ScoutingData.auto.algae--;
+      if (level === 'L2-L3') {
+        switch(slot) {
+          case 'A': ScoutingData.auto.algaeA = 0; break;
+          case 'E': ScoutingData.auto.algaeE = 0; break;
+          case 'C': ScoutingData.auto.algaeC = 0; break;
+        }
+      } else {
+        switch(slot) {
+          case 'B': ScoutingData.auto.algaeB = 0; break;
+          case 'F': ScoutingData.auto.algaeF = 0; break;
+          case 'D': ScoutingData.auto.algaeD = 0; break;
+        }
+      }
+      showPopup(`Removed algae at ${level}, Slot ${slot}`);
     }
-    
-    setActiveSlots(newActiveSlots);
-    showPopup(`${activeSlots.has(slotKey) ? 'Removed' : 'Knocked off'} algae at ${level}, Slot ${slot}`);
   };
 
   const showPopup = (message: string) => {
@@ -107,10 +124,10 @@ const AlgaeMR = () => {
               `;
 
               const hasAlgae = algaePositions[level].has(slot);
-              const isActive = activeSlots.has(`${level}-${slot}`);
-              const fillColor = !hasAlgae ? "#9ca3af" : // grey for non-algae spots
-                              isActive ? "#22c55e" : // green for knocked off
-                              "#ef4444"; // red for algae not knocked off
+              const isActive = getSlotKnocked(level, slot);
+              const fillColor = !hasAlgae ? "#9ca3af" : 
+                              isActive ? "#22c55e" : 
+                              "#ef4444";
 
               return (
                 <g 
