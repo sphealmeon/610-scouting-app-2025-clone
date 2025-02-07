@@ -287,6 +287,27 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.teleop.bargeScored +
       totalData.teleop.processorScored,
 
+    autoL1Accuracy:
+      totalData.auto.l1A.made == 0
+        ? 0
+        : totalData.auto.l1A.made /
+          (totalData.auto.l1A.made + totalData.auto.l1A.dropped),
+    autoL2Accuracy:
+      totalData.auto.l2A.made == 0
+        ? 0
+        : totalData.auto.l2A.made /
+          (totalData.auto.l2A.made + totalData.auto.l2A.dropped),
+    autoL3Accuracy:
+      totalData.auto.l3A.made == 0
+        ? 0
+        : totalData.auto.l3A.made /
+          (totalData.auto.l3A.made + totalData.auto.l3A.dropped),
+    autoL4Accuracy:
+      totalData.auto.l4A.made == 0
+        ? 0
+        : totalData.auto.l4A.made /
+          (totalData.auto.l4A.made + totalData.auto.l4A.dropped),
+          
     teleopL1Accuracy:
       totalData.teleop.l1Scored == 0
         ? 0

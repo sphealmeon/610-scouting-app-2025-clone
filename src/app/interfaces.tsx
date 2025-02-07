@@ -278,6 +278,10 @@ export interface AggregateData {
     teleopPPG: number;
     coralCyclesScored: number;
     algaeCyclesScored: number;
+    autoL1Accuracy: number;
+    autoL2Accuracy: number;
+    autoL3Accuracy: number;
+    autoL4Accuracy: number;
     teleopL1Accuracy: number;
     teleopL2Accuracy: number;
     teleopL3Accuracy: number;
