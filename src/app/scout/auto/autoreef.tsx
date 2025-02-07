@@ -2,7 +2,10 @@ import { ScoutingData } from "../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const Reef = ({setMatchState}: {setMatchState: Function}) => {
+const Reef = ({ setMatchState, setLeaveState }: { 
+    setMatchState: Function,
+    setLeaveState: (value: number) => void 
+}) => {
   const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
   const [activeSlots, setActiveSlots] = useState<Set<string>>(new Set());
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
@@ -56,6 +59,7 @@ const Reef = ({setMatchState}: {setMatchState: Function}) => {
         if (ScoutingData.auto.leave === 0) {
           ScoutingData.auto.leave = 1;
         }
+        setLeaveState(1);
         handleScore(level as 'L1' | 'L2' | 'L3' | 'L4');
         showPopup(`Scored at Level ${level}, Slot ${slot}`);
       } else {

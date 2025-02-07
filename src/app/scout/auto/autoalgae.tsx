@@ -2,7 +2,9 @@ import { ScoutingData } from "../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const Algae = () => {
+const Algae = ({ setLeaveState }: { 
+    setLeaveState: (value: number) => void 
+}) => {
   const [level, setLevel] = useState<'L2-L3' | 'L3-L4'>('L2-L3');
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
     visible: false,
@@ -47,6 +49,8 @@ const Algae = () => {
       if (ScoutingData.auto.leave === 0) {
         ScoutingData.auto.leave = 1;
       }
+      setLeaveState(1);
+
       
       if (level === 'L2-L3') {
         switch(slot) {
