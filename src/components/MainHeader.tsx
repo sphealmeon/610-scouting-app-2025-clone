@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faBarChart, faCodeCompare, faClockRotateLeft, faClipboardList, faListOl} from '@fortawesome/free-solid-svg-icons';
 
 const links = [
   { link: "/scout", label: "Scout" },
@@ -19,7 +19,22 @@ export function MainHeader() {
       className="px-3 py-2 hover:bg-green-200 text-lg flex items-center gap-2"
     >
       {link.label === "Scout" && (
-        <FontAwesomeIcon icon={faHouse} className="w-5 h-5" />
+        <FontAwesomeIcon icon={faHouse} className="w-4 h-4" />
+      )}
+      {link.label === "Stats" && (
+        <FontAwesomeIcon icon={faBarChart} className="w-4 h-4" />
+      )}
+      {link.label === "Compare" && (
+        <FontAwesomeIcon icon={faCodeCompare} className="w-4 h-4" />
+      )}
+      {link.label === "History" && (
+        <FontAwesomeIcon icon={faClockRotateLeft} className="w-4 h-4" />
+      )}
+      {link.label === "Match Summary" && (
+        <FontAwesomeIcon icon={faClipboardList} className="w-4 h-4" />
+      )}
+      {link.label === "Team Summary" && (
+        <FontAwesomeIcon icon={faListOl} className="w-4 h-4" />
       )}
       {link.label}
     </a>

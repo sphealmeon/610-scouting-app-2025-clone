@@ -11,12 +11,12 @@ export default function RobotPosition() {
     };
 
     return (
-        <div className="flex flex-row justify-center items-start h-[90vh] ml-4 my-4">
+        <div className="flex flex-row justify-center items-start items-center gap-x-1">
             <div
                 className={`flex-1 ${selectedPosition === 'Far' ? 'bg-green-700' : 'bg-black-300'} 
                 text-gray-300 text-xl flex justify-center items-center cursor-pointer 
                 hover:bg-gray-300 hover:text-black active:opacity-60 transition-colors 
-                border-2 border-gray-300 w-2/3 py-3 rounded-lg`}
+                border-2 border-gray-300 w-20 py-3 rounded-lg`}
                 onClick={() => handleClick('Far')}
             >
                 Far
@@ -25,7 +25,7 @@ export default function RobotPosition() {
                 className={`flex-1 ${selectedPosition === 'Middle' ? 'bg-green-700' : 'bg-black-300'} 
                 text-gray-300 text-xl flex justify-center items-center cursor-pointer 
                 hover:bg-gray-300 hover:text-black active:opacity-60 transition-colors 
-                border-2 border-gray-300 w-2/3 py-3 rounded-lg`}
+                border-2 border-gray-300 w-20 py-3 rounded-lg`}
                 onClick={() => handleClick('Middle')}
             >
                 Middle
@@ -34,7 +34,7 @@ export default function RobotPosition() {
                 className={`flex-1 ${selectedPosition === 'Close' ? 'bg-green-700' : 'bg-black-300'} 
                 text-gray-300 text-xl flex justify-center items-center cursor-pointer 
                 hover:bg-gray-300 hover:text-black active:opacity-60 transition-colors 
-                border-2 border-gray-300 w-2/3 py-3 rounded-lg`}
+                border-2 border-gray-300 w-20 py-3 rounded-lg`}
                 onClick={() => handleClick('Close')}
             >
                 Close
@@ -42,4 +42,3 @@ export default function RobotPosition() {
         </div>
     );
 }
-
