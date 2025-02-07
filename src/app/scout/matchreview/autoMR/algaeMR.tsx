@@ -160,9 +160,50 @@ const AlgaeMR = () => {
         </div>
       </div>
 
-      <div className="flex gap-4 mt-4">
-        <Button onClick={() => ScoutingData.auto.barge++}>Barge Scored</Button>
-        <Button onClick={() => ScoutingData.auto.processor++}>Processor Scored</Button>
+      <div className="flex gap-8 mt-4">
+        <div className="flex flex-col items-center">
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => {
+                if (ScoutingData.auto.barge > 0) {
+                  ScoutingData.auto.barge--;
+                }
+              }}
+              variant="outline"
+            >
+              -
+            </Button>
+            <span className="font-bold">Barge: {ScoutingData.auto.barge}</span>
+            <Button 
+              onClick={() => ScoutingData.auto.barge++}
+              variant="outline"
+            >
+              +
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center">
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => {
+                if (ScoutingData.auto.processor > 0) {
+                  ScoutingData.auto.processor--;
+                }
+              }}
+              variant="outline"
+            >
+              -
+            </Button>
+            <span className="font-bold">Processor: {ScoutingData.auto.processor}</span>
+            <Button 
+              onClick={() => ScoutingData.auto.processor++}
+              variant="outline"
+            >
+              +
+            </Button>
+          </div>
+        </div>
       </div>
 
       {popup.visible && (
