@@ -60,18 +60,18 @@ export default function TeleopReview() {
         <h2 className="text-xl font-bold mb-2">Scoring - {category}</h2>
         {items.map((item) => (
           <div key={item as string} className="flex items-center justify-between mb-2">
-            <span className="text-lg">{item.replace(/([A-Z])/g, ' $1')}</span>
+            <span className="text-lg">{String(item).replace(/([A-Z])/g, ' $1')}</span>
             <div className="flex items-center gap-2">
               <Button
                 className="bg-red-500 hover:bg-red-400"
-                onClick={() => handleScoreChange(category, item, -1)}
+                onClick={() => handleScoreChange(category, item as keyof Scores[T], -1)}
               >
                 -
               </Button>
-              <span>{scores[category][item]}</span>
+              <span>{scores[category][item as keyof Scores[T]]}</span>
               <Button
                 className="bg-green-500 hover:bg-green-400"
-                onClick={() => handleScoreChange(category, item, 1)}
+                onClick={() => handleScoreChange(category, item as keyof Scores[T], 1)}
               >
                 +
               </Button>
