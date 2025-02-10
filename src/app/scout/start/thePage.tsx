@@ -7,8 +7,7 @@ import ScoutSelect from "./scoutselect";
 import ScoutHeader from "../components/scoutHeader";
 import ChangeButton from "../components/changeButton";
 import { ScoutingData } from "../data";
-import logo from "@/components/assets/610 logo.png"; // Adjust the path as necessary
-
+import Image from "next/image";
 
 export default function StartPage({setMatchState}: {setMatchState: Function}){
     const [isReady, setIsReady] = useState(false);
@@ -35,13 +34,13 @@ export default function StartPage({setMatchState}: {setMatchState: Function}){
 
     return(
         <>
-        {/* <ScoutHeader name={"Start"}/> */}
-        <div className="relative flex flex-col items-center space-y-8 p-8">
-            <MatchSelect />
-            <RobotPosition />
-            <ScoutSelect setMatchState={setMatchState} />
-        </div>
-    </>
+            {/* <ScoutHeader name={"Start"}/> */}
+            <div className="relative flex flex-col items-center space-y-8 p-8">
+                <MatchSelect />
+                <RobotPosition />
+                <ScoutSelect setMatchState={setMatchState} />
+            </div>
+        </>
     );
 }
 

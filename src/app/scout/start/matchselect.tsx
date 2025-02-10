@@ -5,6 +5,8 @@ import { key } from "@/app/globalVars"; // Assuming `key` contains the event key
 import { useApi } from "@/app/globalVars"; // Assuming `useApi` determines if the API should be used
 import { ScoutingData } from "@/app/scout/data";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import logo from "@/components/assets/logo.png";
 
 export default function MatchSelect() {
     const [matches, setMatches] = useState<any[]>([]); // Store match data
@@ -63,7 +65,7 @@ export default function MatchSelect() {
 
     const handleMatchNumberChange = (value: string) => {
         //Write to data: match number
-        ScoutingData.start.match=parseInt(value);
+        ScoutingData.start.match = parseInt(value);
 
         setMatchNumber(value);
         setSelectedTeam("");
@@ -99,7 +101,7 @@ export default function MatchSelect() {
 
     const handleTeamSelection = (value: string) => {
         //Write to data: team number
-        ScoutingData.start.team=parseInt(value);
+        ScoutingData.start.team = parseInt(value);
 
         setSelectedTeam(value);
         setError(""); // Clear any error when a valid team is selected
@@ -116,13 +118,14 @@ export default function MatchSelect() {
 
     return (
         <div className="w-1/2 flex flex-col items-center justify-center text-white">
+            <Image src={logo} alt="610 Logo" width={188} height={100} className="mx-auto" />
             <p className="text-2xl mb-6 font-bold">Scouting App</p>
     
             {/* Scout Name Input */}
             <Input
                 type="text"
                 placeholder="Enter Scout Name"
-                className="mb-6 w-full bg-gray-600 text-white placeholder-gray-400"
+                className="mb-6 w-1/3 bg-gray-600 text-white placeholder-gray-400 py-6"
                 onChange={(e) => {
                     ScoutingData.start.scoutName = e.target.value;
                 }}
@@ -132,7 +135,7 @@ export default function MatchSelect() {
                 // API-based dropdowns
                 <>
                     <Select onValueChange={handleMatchNumberChange}>
-                        <SelectTrigger className="mb-6 w-full bg-gray-600 text-white">
+                        <SelectTrigger className="mb-6 w-1/3 bg-gray-600 text-white py-6">
                             <SelectValue placeholder="Select Match Number" />
                         </SelectTrigger>
                         <SelectContent className="bg-gray-600 text-white">
@@ -151,7 +154,7 @@ export default function MatchSelect() {
                         onValueChange={handleTeamSelection}
                         disabled={!matchNumber}
                     >
-                        <SelectTrigger className="mb-6 w-full bg-gray-600 text-white">
+                        <SelectTrigger className="mb-6 w-1/3 bg-gray-600 text-white py-6">
                             <SelectValue placeholder={matchNumber ? "Select Team" : "Select a Match First"} />
                         </SelectTrigger>
                         <SelectContent className="bg-gray-600 text-white">
@@ -170,21 +173,21 @@ export default function MatchSelect() {
                         min="1"
                         type="number"
                         placeholder="Enter Match Number"
-                        className="mb-6 w-full bg-gray-600 text-white placeholder-gray-400"
+                        className="mb-6 w-full bg-gray-600 text-white placeholder-gray-400 py-8"
                         onChange={(e) => handleMatchNumberChange(e.target.value)}
                     />
                     <Input
                         min="1"
                         type="number"
                         placeholder="Enter Team Number"
-                        className="mb-6 w-full bg-gray-600 text-white placeholder-gray-400"
+                        className="mb-6 w-full bg-gray-600 text-white placeholder-gray-400 py-8"
                         onChange={(e) => handleTeamSelection(e.target.value)}
                     />
                 </>
             )}
     
             {/* Container for checkbox and label */}
-            <div className="flex items-center mb-6">
+            <div className="flex items-center mb-4">
                 <Checkbox id="preload" />
                 <label htmlFor="preload" className="text-sm font-medium leading-none ml-2 text-white">
                     Preload?
@@ -194,7 +197,7 @@ export default function MatchSelect() {
             {/* Optional: Add visual feedback about selection state */}
             {!matchverify() && (
                 <p className="text-sm text-gray-300 mt-2">
-                    Please select both a match and team to continue
+                    Select match and team to continue
                 </p>
             )}
         </div>

@@ -20,16 +20,16 @@ export default function ScoutSelect({ setMatchState }: { setMatchState: Function
     }, []);
 
     return (
-        <div className="flex flex-col justify-center items-center space-y-4">
+        <div className="flex flex-col justify-center items-center">
             <Button
-                className="mb-20 text-xl py-6 px-8 bg-green-900 text-white hover:bg-green-800 disabled:bg-gray-500"
+                className={`mb-7 w-48 text-xl py-6 px-4 bg-green-900 text-white hover:bg-green-800 border-2 border-green-900`}
                 onClick={() => setMatchState(1)}
                 disabled={!isReady}
             >
                 Robot Scout
             </Button>
             <Button
-                className="text-xl py-6 px-8 bg-green-900 text-white hover:bg-green-700"
+                className="w-48 text-xl py-6 px-4 bg-green-900 text-white hover:bg-green-800 border-2 border-green-900"
                 onClick={() => setMatchState(4)}
             >
                 HP Scout
