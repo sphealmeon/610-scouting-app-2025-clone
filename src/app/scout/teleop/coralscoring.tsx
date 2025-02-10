@@ -15,7 +15,7 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
         <div
             className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => {handlePageChange("pickupCoral")
-            ScoutingData.teleop.l4Scored += 1;
+            ++ScoutingData.teleop.l4Scored
             }}
           >
             L4 Made
@@ -23,7 +23,7 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
           <div
             className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => {handlePageChange("pickupCoral")
-            ScoutingData.teleop.l4Dropped += 1;
+            ++ScoutingData.teleop.l4Dropped
             }}
           >
             L4 Missed
@@ -35,7 +35,7 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
           <div
             className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => {handlePageChange("pickupCoral")
-            ScoutingData.teleop.l3Scored += 1;
+            ++ScoutingData.teleop.l3Scored
             }}
           >
             L3 Made
@@ -43,7 +43,7 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
           <div
             className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => {handlePageChange("pickupCoral")
-            ScoutingData.teleop.l3Dropped += 1;
+            ++ScoutingData.teleop.l3Dropped
             }}
           >
             L3 Missed
@@ -55,7 +55,7 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
           <div
             className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => {handlePageChange("pickupCoral")
-            ScoutingData.teleop.l2Scored += 1;
+            ++ScoutingData.teleop.l2Scored
             }}
           >
             L2 Made
@@ -63,7 +63,7 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
           <div
             className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => {handlePageChange("pickupCoral")
-            ScoutingData.teleop.l2Dropped += 1;
+            ++ScoutingData.teleop.l2Dropped
             }}
           >
             L2 Missed
@@ -75,7 +75,7 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
           <div
             className="bg-green-400 hover:bg-green-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => {handlePageChange("pickupCoral")
-            ScoutingData.teleop.l1Scored += 1;
+            ++ScoutingData.teleop.l1Scored
             }}
           >
             L1 Made
@@ -83,7 +83,7 @@ export default function PickupCoral({ handlePageChange }: { handlePageChange: (s
           <div
             className="bg-red-400 hover:bg-red-500 text-white font-bold flex-grow flex items-center justify-center text-center rounded-lg cursor-pointer"
             onClick={() => {handlePageChange("pickupCoral")
-            ScoutingData.teleop.l1Dropped += 1;
+            ++ScoutingData.teleop.l1Dropped
             }}
           >
             L1 Missed
