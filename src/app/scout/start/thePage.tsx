@@ -7,6 +7,7 @@ import ScoutSelect from "./scoutselect";
 import ScoutHeader from "../components/scoutHeader";
 import ChangeButton from "../components/changeButton";
 import { ScoutingData } from "../data";
+import logo from "@/components/assets/610 logo.png"; // Adjust the path as necessary
 
 
 export default function StartPage({setMatchState}: {setMatchState: Function}){
