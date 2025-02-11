@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import { setCookie } from "@/app/cookies/cookies";
+import { AggregateData } from "@/app/interfaces";
 import {
   Table,
   TableBody,
@@ -9,28 +10,65 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
-import { AggregateData } from "@/app/interfaces";
-import { setCookie } from "@/app/cookies/cookies";
+import { useState } from "react";
 
-/**
- * @param teamData an AggregateData array of all the teams data
- * @returns a sortable table containing all data
- */
 export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
   const router = useRouter();
+  const [sortedData, setSortedData] = useState(teamData);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof AggregateData;
+    direction: "ascending" | "descending";
+  } | null>(null);
+
+  const onSort = (key: keyof AggregateData) => {
+    let direction: "ascending" | "descending" = "ascending";
+    if (sortConfig?.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+
+    const sorted = [...sortedData].sort((a, b) => {
+      if (a[key] < b[key]) return direction === "ascending" ? -1 : 1;
+      if (a[key] > b[key]) return direction === "ascending" ? 1 : -1;
+      return 0;
+    });
+
+    setSortedData(sorted);
+    setSortConfig({ key, direction });
+  };
+
+  const getSortIndicator = (key: keyof AggregateData) => {
+    if (sortConfig?.key === key) {
+      return sortConfig.direction === "ascending" ? "▲" : "▼";
+    }
+    return null;
+  };
 
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Team</TableHead>
-            <TableHead>Matches</TableHead>
-            <TableHead>Auto PPG</TableHead>
-            <TableHead>Teleop PPG</TableHead>
-            <TableHead>Endgame PPG</TableHead>
-            <TableHead>Coral Cycles</TableHead>
-            <TableHead>Algae Cycles</TableHead>
+            <TableHead className="w-[100px]" onClick={() => onSort("team")}>
+              Team {getSortIndicator("team")}
+            </TableHead>
+            <TableHead onClick={() => onSort("matchesPlayed")}>
+              Matches {getSortIndicator("matchesPlayed")}
+            </TableHead>
+            <TableHead onClick={() => onSort("autoPPG")}>
+              Auto PPG {getSortIndicator("autoPPG")}
+            </TableHead>
+            <TableHead onClick={() => onSort("teleopPPG")}>
+              Teleop PPG {getSortIndicator("teleopPPG")}
+            </TableHead>
+            <TableHead onClick={() => onSort("endgamePPG")}>
+              Endgame PPG {getSortIndicator("endgamePPG")}
+            </TableHead>
+            <TableHead onClick={() => onSort("coralCyclesScored")}>
+              Coral Cycles {getSortIndicator("coralCyclesScored")}
+            </TableHead>
+            <TableHead onClick={() => onSort("algaeCyclesScored")}>
+              Algae Cycles {getSortIndicator("algaeCyclesScored")}
+            </TableHead>
             <TableHead>L1-L4 Accuracy</TableHead>
             <TableHead>Barge Accuracy</TableHead>
             <TableHead>Processor Accuracy</TableHead>
@@ -40,8 +78,8 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {teamData.map((data) => (
-            <TableRow 
+          {sortedData.map((data) => (
+            <TableRow
               key={data.team}
               className="cursor-pointer hover:bg-muted/50"
               onClick={() => {
@@ -56,7 +94,17 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
               <TableCell>{data.endgamePPG.toFixed(2)}</TableCell>
               <TableCell>{data.coralCyclesScored}</TableCell>
               <TableCell>{data.algaeCyclesScored}</TableCell>
-              <TableCell>{((data.teleopL1Accuracy + data.teleopL2Accuracy + data.teleopL3Accuracy + data.teleopL4Accuracy) / 4 * 100).toFixed(1)}%</TableCell>
+              <TableCell>
+                {(
+                  ((data.teleopL1Accuracy +
+                    data.teleopL2Accuracy +
+                    data.teleopL3Accuracy +
+                    data.teleopL4Accuracy) /
+                    4) *
+                  100
+                ).toFixed(1)}
+                %
+              </TableCell>
               <TableCell>{(data.teleopBargeAccuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopProcessorAccuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.shallowAccuracy * 100).toFixed(1)}%</TableCell>
