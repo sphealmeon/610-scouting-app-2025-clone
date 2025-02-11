@@ -1,13 +1,26 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faBarChart, faCodeCompare, faClockRotateLeft, faClipboardList, faListOl} from '@fortawesome/free-solid-svg-icons';
+"use client"
+
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { 
+  faHouse, 
+  faBarChart, 
+  faCodeCompare, 
+  faClockRotateLeft, 
+  faClipboardList, 
+  faListOl
+} from '@fortawesome/free-solid-svg-icons'
+
+// Prevent fontawesome from dynamically adding its css
+config.autoAddCss = false
 
 const links = [
   { link: "/scout", label: "Scout" },
   { link: "/stats", label: "Stats" },
   { link: "/compare", label: "Compare" },
-  { link: "/history", label: "History" },
   { link: "/matchsummary", label: "Match Summary" },
-  { link: "/compare/custom", label: "Team Summary" }
+  { link: "/stats/teams", label: "Team Stats" }
 ];
 
 export function MainHeader() {
@@ -33,7 +46,7 @@ export function MainHeader() {
       {link.label === "Match Summary" && (
         <FontAwesomeIcon icon={faClipboardList} className="w-4 h-4" />
       )}
-      {link.label === "Team Summary" && (
+      {link.label === "Team Stats" && (
         <FontAwesomeIcon icon={faListOl} className="w-4 h-4" />
       )}
       {link.label}
