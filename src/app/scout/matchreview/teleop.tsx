@@ -3,89 +3,98 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScoutingData } from "../data";
 
-interface Scores {
-  coral: {
-    L4Made: number;
-    L4Missed: number;
-    L3Made: number;
-    L3Missed: number;
-    L2Made: number;
-    L2Missed: number;
-    L1Made: number;
-    L1Missed: number;
-  };
-  algae: {
-    ProcessorMade: number;
-    ProcessorMissed: number;
-    NetMade: number;
-    NetMissed: number;
-    KnockedOffReef: number;
-  };
-}
-
 export default function TeleopReview() {
-  const [scores, setScores] = useState<Scores>({
-    coral: {
-      L4Made: ScoutingData.teleop.l4Scored,
-      L4Missed: ScoutingData.teleop.l4Dropped,
-      L3Made: ScoutingData.teleop.l3Scored,
-      L3Missed: ScoutingData.teleop.l3Dropped,
-      L2Made: ScoutingData.teleop.l2Scored,
-      L2Missed: ScoutingData.teleop.l2Dropped,
-      L1Made: ScoutingData.teleop.l1Scored,
-      L1Missed: ScoutingData.teleop.l1Dropped,
-    },
-    algae: {
-      ProcessorMade: ScoutingData.teleop.processorScored,
-      ProcessorMissed: ScoutingData.teleop.processorDropped,
-      NetMade: ScoutingData.teleop.bargeScored,
-      NetMissed: ScoutingData.teleop.bargeDropped,
-      KnockedOffReef: ScoutingData.teleop.algaeRemoved,
-    },
+  const [scores, setScores] = useState({
+    l4Made: ScoutingData.teleop.l4Scored,
+    l4Missed: ScoutingData.teleop.l4Dropped,
+    l3Made: ScoutingData.teleop.l3Scored,
+    l3Missed: ScoutingData.teleop.l3Dropped,
+    l2Made: ScoutingData.teleop.l2Scored,
+    l2Missed: ScoutingData.teleop.l2Dropped,
+    l1Made: ScoutingData.teleop.l1Scored,
+    l1Missed: ScoutingData.teleop.l1Dropped,
+    processorMade: ScoutingData.teleop.processorScored,
+    processorMissed: ScoutingData.teleop.processorDropped,
+    bargeMade: ScoutingData.teleop.bargeScored,
+    bargeMissed: ScoutingData.teleop.bargeDropped,
+    algaeRemoved: ScoutingData.teleop.algaeRemoved
   });
 
-  const handleScoreChange = (category: keyof Scores, key: keyof Scores["coral" | "algae"], increment: number): void => {
-    setScores((prev: Scores) => ({
+  const handleScoreChange = (key: keyof typeof scores, increment: number) => {
+    setScores(prev => ({
       ...prev,
-      [category]: {
-        ...prev[category],
-        [key]: Math.max(0, prev[category][key] + increment),
-      },
+      [key]: Math.max(0, prev[key] + increment)
     }));
   };
 
-  const renderScoringButtons = <T extends keyof Scores>(category: T, items: Array<keyof Scores[T]>) => (
-    <Card className="mb-4">
-      <CardContent>
-        <h2 className="text-xl font-bold mb-2">Scoring - {category}</h2>
-        {items.map((item) => (
-          <div key={item as string} className="flex items-center justify-between mb-2">
-            <span className="text-lg">{item.replace(/([A-Z])/g, ' $1')}</span>
-            <div className="flex items-center gap-2">
-              <Button
-                className="bg-red-500 hover:bg-red-400"
-                onClick={() => handleScoreChange(category, item, -1)}
-              >
-                -
-              </Button>
-              <span>{scores[category][item]}</span>
-              <Button
-                className="bg-green-500 hover:bg-green-400"
-                onClick={() => handleScoreChange(category, item, 1)}
-              >
-                +
-              </Button>
-            </div>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
-  );
-
   return (
-    <div className="p-4 w-full mx-auto grid grid-cols-2">
-      {renderScoringButtons('coral', Object.keys(scores.coral) as Array<keyof Scores['coral']>)}
-      {renderScoringButtons('algae', Object.keys(scores.algae) as Array<keyof Scores['algae']>)}
+    <div className="p-4 grid grid-cols-2 gap-4">
+      <Card>
+        <CardContent className="pt-6">
+          <h2 className="text-xl font-bold mb-4">Coral Scoring</h2>
+          {[
+            { label: "L4 Made", key: "l4Made" },
+            { label: "L4 Missed", key: "l4Missed" },
+            { label: "L3 Made", key: "l3Made" },
+            { label: "L3 Missed", key: "l3Missed" },
+            { label: "L2 Made", key: "l2Made" },
+            { label: "L2 Missed", key: "l2Missed" },
+            { label: "L1 Made", key: "l1Made" },
+            { label: "L1 Missed", key: "l1Missed" },
+          ].map(({ label, key }) => (
+            <div key={key} className="flex items-center justify-between mb-2">
+              <span>{label}</span>
+              <div className="flex items-center gap-2">
+                <Button 
+                  className="bg-red-500 hover:bg-red-400"
+                  onClick={() => handleScoreChange(key as keyof typeof scores, -1)}
+                >
+                  -
+                </Button>
+                <span>{scores[key as keyof typeof scores]}</span>
+                <Button 
+                  className="bg-green-500 hover:bg-green-400"
+                  onClick={() => handleScoreChange(key as keyof typeof scores, 1)}
+                >
+                  +
+                </Button>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="pt-6">
+          <h2 className="text-xl font-bold mb-4">Algae Scoring</h2>
+          {[
+            { label: "Processor Made", key: "processorMade" },
+            { label: "Processor Missed", key: "processorMissed" },
+            { label: "Barge Made", key: "bargeMade" },
+            { label: "Barge Missed", key: "bargeMissed" },
+            { label: "Algae Removed", key: "algaeRemoved" },
+          ].map(({ label, key }) => (
+            <div key={key} className="flex items-center justify-between mb-2">
+              <span>{label}</span>
+              <div className="flex items-center gap-2">
+                <Button 
+                  className="bg-red-500 hover:bg-red-400"
+                  onClick={() => handleScoreChange(key as keyof typeof scores, -1)}
+                >
+                  -
+                </Button>
+                <span>{scores[key as keyof typeof scores]}</span>
+                <Button 
+                  className="bg-green-500 hover:bg-green-400"
+                  onClick={() => handleScoreChange(key as keyof typeof scores, 1)}
+                >
+                  +
+                </Button>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
     </div>
   );
 }
