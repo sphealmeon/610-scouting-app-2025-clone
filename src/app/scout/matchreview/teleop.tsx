@@ -21,10 +21,28 @@ export default function TeleopReview() {
   });
 
   const handleScoreChange = (key: keyof typeof scores, increment: number) => {
-    setScores(prev => ({
-      ...prev,
-      [key]: Math.max(0, prev[key] + increment)
-    }));
+    setScores(prev => {
+      const newValue = Math.max(0, prev[key] + increment);
+      
+      // Update ScoutingData based on which key changed
+      switch(key) {
+        case 'l4Made': ScoutingData.teleop.l4Scored = newValue; break;
+        case 'l4Missed': ScoutingData.teleop.l4Dropped = newValue; break;
+        case 'l3Made': ScoutingData.teleop.l3Scored = newValue; break;
+        case 'l3Missed': ScoutingData.teleop.l3Dropped = newValue; break;
+        case 'l2Made': ScoutingData.teleop.l2Scored = newValue; break;
+        case 'l2Missed': ScoutingData.teleop.l2Dropped = newValue; break;
+        case 'l1Made': ScoutingData.teleop.l1Scored = newValue; break;
+        case 'l1Missed': ScoutingData.teleop.l1Dropped = newValue; break;
+        case 'processorMade': ScoutingData.teleop.processorScored = newValue; break;
+        case 'processorMissed': ScoutingData.teleop.processorDropped = newValue; break;
+        case 'bargeMade': ScoutingData.teleop.bargeScored = newValue; break;
+        case 'bargeMissed': ScoutingData.teleop.bargeDropped = newValue; break;
+        case 'algaeRemoved': ScoutingData.teleop.algaeRemoved = newValue; break;
+      }
+
+      return { ...prev, [key]: newValue };
+    });
   };
 
   return (
