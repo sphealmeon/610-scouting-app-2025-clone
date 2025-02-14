@@ -195,7 +195,13 @@ export default function MatchSelect() {
     
             {/* Container for checkbox and label */}
             <div className="flex items-center mb-4">
-                <Checkbox id="preload" />
+                <Checkbox 
+                    id="preload" 
+                    onClick={() => {
+                        console.log("here");
+                        ScoutingData.start.preload = ScoutingData.start.preload == 0 ? 1 : 0; // Set to 1 if checked, otherwise 0
+                    }} 
+                />
                 <label htmlFor="preload" className="text-sm font-medium leading-none ml-2 text-white">
                     Preload?
                 </label>
