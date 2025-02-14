@@ -29,13 +29,11 @@ const Leave = ({ leaveState, setLeaveState }: {
             <Button
                 onClick={handleLeaveClick}
                 className={`w-32 h-32 text-2xl rounded-full ${
-                    leaveState > 0 ? "bg-green-500" : "bg-red-500"
+                    leaveState > 0 ? "bg-[#149632]" : "bg-[#C8442E]"
                 } text-white`}
             >
                 Leave?
             </Button>
-
-                Alliance: {ScoutingData.start.alliance}
 
             {popup.visible && (
                 <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2

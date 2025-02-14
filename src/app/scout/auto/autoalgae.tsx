@@ -51,7 +51,6 @@ const Algae = ({ setLeaveState }: {
       }
       setLeaveState(1);
 
-      
       if (level === 'L2-L3') {
         switch(slot) {
           case 'A': ScoutingData.auto.algaeA++; break;
