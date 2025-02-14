@@ -30,7 +30,6 @@ const Reef = ({ setMatchState, setLeaveState }: {
     ScoutingData.auto.coral++;
   }
 
-
   function handleScore(l: 'L1' | 'L2' | 'L3' | 'L4') {
     setLevel(l);
     handleCoral();
@@ -156,6 +155,7 @@ const Reef = ({ setMatchState, setLeaveState }: {
             key={l}
             variant={level === l ? "default" : "outline"}
             onClick={() => setLevel(l)}
+            style={{ backgroundColor: "#149632" }} // Green color
           >
             {l}
           </Button>
@@ -202,7 +202,7 @@ const Reef = ({ setMatchState, setLeaveState }: {
                   <g onClick={() => handleHexagonClick(level, slot)}>
                     <path
                       d={path}
-                      fill={getSlotMade(level, slot) ? "#22c55e" : "#ef4444"}
+                      fill={getSlotMade(level, slot) ? "#149632" : "#C8442E"} // Updated colors
                       stroke="black"
                       strokeWidth="0.5"
                       className="cursor-pointer hover:opacity-80"
@@ -225,7 +225,7 @@ const Reef = ({ setMatchState, setLeaveState }: {
                     cx={buttonX}
                     cy={buttonY}
                     r="2"
-                    fill="#888888"
+                    fill="#4B5563" // Updated to dark grey
                     stroke="black"
                     strokeWidth="0.5"
                     className="cursor-pointer hover:fill-red-500"
@@ -242,8 +242,18 @@ const Reef = ({ setMatchState, setLeaveState }: {
       </div>
 
       <div className="flex gap-4 mt-4">
-        <Button onClick={() => setMatchState(0)}>Back to Start</Button>
-        <Button onClick={() => setMatchState(2)}>To Teleop</Button>
+        <Button 
+            onClick={() => setMatchState(0)} 
+            style={{ backgroundColor: "#149632" }} // Green color
+        >
+            Back to Start
+        </Button>
+        <Button 
+            onClick={() => setMatchState(2)} 
+            style={{ backgroundColor: "#149632" }} // Green color
+        >
+            To Teleop
+        </Button>
       </div>
 
       {popup.visible && (
