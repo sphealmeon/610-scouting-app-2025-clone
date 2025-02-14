@@ -25,21 +25,21 @@ export function StartPos({ matches }: StartPosProps) {
 
     return (
         <div className="flex gap-4 mt-6">
-            <div className="flex-1 border rounded-md p-4 text-center hover:bg-gray-50">
+            <div className="flex-1 border rounded-md p-4 text-center transition-colors hover:bg-gray-950">
                 <div className="font-semibold mb-2">Far</div>
                 <div>{getPercentage('far')}%</div>
                 <div className="text-sm text-gray-500">
                     ({positions['far'] || 0} matches)
                 </div>
             </div>
-            <div className="flex-1 border rounded-md p-4 text-center hover:bg-gray-50">
+            <div className="flex-1 border rounded-md p-4 text-center transition-colors hover:bg-gray-950">
                 <div className="font-semibold mb-2">Middle</div>
                 <div>{getPercentage('middle')}%</div>
                 <div className="text-sm text-gray-500">
                     ({positions['middle'] || 0} matches)
                 </div>
             </div>
-            <div className="flex-1 border rounded-md p-4 text-center hover:bg-gray-50">
+            <div className="flex-1 border rounded-md p-4 text-center transition-colors hover:bg-gray-950">
                 <div className="font-semibold mb-2">Close</div>
                 <div>{getPercentage('close')}%</div>
                 <div className="text-sm text-gray-500">
