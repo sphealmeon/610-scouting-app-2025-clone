@@ -197,6 +197,7 @@ export interface Data{
         barge: number;
     };
     teleop: {
+        droppedOnField: any;
         coralPickup: number;
         coralPickupFromStation: number;
         pickupAlgae: number;
@@ -252,6 +253,7 @@ interface TeleopData {
     bargeScored: number;
     bargeDropped: number;
     algaeRemoved: number;
+    droppedOnField: number;
     isCoop: number;
     park: number;
     shallow: number;

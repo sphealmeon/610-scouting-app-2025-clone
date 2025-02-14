@@ -24,7 +24,7 @@ const Leave = ({ leaveState, setLeaveState }: {
     };
 
     return (
-        <div className="flex flex-col items-center p-4 space-y-4">
+        <div className="flex flex-col items-center w-full max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-6 mb-4">
             <h1 className="text-xl font-bold">Auto Leave</h1>
             <Button
                 onClick={handleLeaveClick}
