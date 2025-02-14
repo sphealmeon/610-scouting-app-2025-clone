@@ -1,7 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
-import { key } from "@/app/globalVars"; // Assuming `key` contains the event key for the API
+import { key, qualificationMatches } from "@/app/globalVars"; // Assuming `key` contains the event key for the API
 import { useApi } from "@/app/globalVars"; // Assuming `useApi` determines if the API should be used
 import { ScoutingData } from "@/app/scout/data";
 import { Input } from "@/components/ui/input";
@@ -57,11 +57,18 @@ export default function MatchSelect() {
                 }
             }
             else {
-                // Handle non-API scenario here
+                // For non-API scenario, set teams from globalVars
+                setTeams(teams);
+                // Set matches from qualificationMatches in globalVars
+                const formattedMatches = qualificationMatches.map(matchNum => ({
+                    match_number: parseInt(matchNum),
+                    comp_level: "qm"
+                }));
+                setMatches(formattedMatches);
             }
         };
 
-        fetchMatches();
+        fetchMatches(); // 1
     }, [useApi]);
 
     const handleMatchNumberChange = async (value: string) => {
@@ -75,32 +82,34 @@ export default function MatchSelect() {
         setSelectedTeam("");
         setError("");
 
-        // Finding teams for selected match
-        const selectedMatch = matches.find(
-            (m: any) => m.match_number === parseInt(value, 10)
-        );
-
-        if (selectedMatch) {
-            const redTeams = selectedMatch.alliances.red.team_keys.map((team: string) =>
-                team.replace("frc", "")
-            ); // Remove "frc" prefix
-            const blueTeams = selectedMatch.alliances.blue.team_keys.map((team: string) =>
-                team.replace("frc", "")
+        if (useApi) {
+            // Finding teams for selected match
+            const selectedMatch = matches.find(
+                (m: any) => m.match_number === parseInt(value, 10)
             );
-            setTeams([...redTeams, ...blueTeams]);
-            console.log("Teams:", ...redTeams, ...blueTeams);
 
-            // Update scouting data with the selected match number
-            setScoutingData(prev => ({
-                ...prev,
-                start: {
-                    ...prev.start,
-                    match: value // Update the match number in ScoutingData
-                }
-            }));
-        } else {
-            setTeams([]);
+            if (selectedMatch) {
+                const redTeams = selectedMatch.alliances.red.team_keys.map((team: string) =>
+                    team.replace("frc", "")
+                );
+                const blueTeams = selectedMatch.alliances.blue.team_keys.map((team: string) =>
+                    team.replace("frc", "")
+                );
+                setTeams([...redTeams, ...blueTeams]);
+            } else {
+                setTeams([]);
+            }
         }
+        // else case not needed as teams are already set in fetchMatches for non-API scenario
+
+        // Update scouting data
+        setScoutingData(prev => ({
+            ...prev,
+            start: {
+                ...prev.start,
+                match: value
+            }
+        }));
     };
 
     const handleTeamSelection = async (value: string) => {
@@ -180,14 +189,14 @@ export default function MatchSelect() {
                         min="1"
                         type="number"
                         placeholder="Enter Match Number"
-                        className="mb-6 w-full bg-gray-600 text-white placeholder-gray-400 py-8"
+                        className="mb-6 w-1/3 bg-gray-600 text-white placeholder-gray-400 py-6"
                         onChange={(e) => handleMatchNumberChange(e.target.value)}
                     />
                     <Input
                         min="1"
                         type="number"
                         placeholder="Enter Team Number"
-                        className="mb-6 w-full bg-gray-600 text-white placeholder-gray-400 py-8"
+                        className="mb-6 w-1/3 bg-gray-600 text-white placeholder-gray-400 py-6"
                         onChange={(e) => handleTeamSelection(e.target.value)}
                     />
                 </>

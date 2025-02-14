@@ -67,11 +67,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       .catch((error) => {
         console.error("Error:", error);
       });
-  } else {
-    const tempAggData: AggregateData = await TeamAggregate({ team: team });
-    standing = tempAggData.standing;
-  }
-
+  } 
   let numMatches: number = 0;
   let timesBroke: number = 0;
 
