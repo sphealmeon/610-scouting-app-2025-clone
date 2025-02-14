@@ -99,6 +99,7 @@ const Algae = ({ setLeaveState }: {
           <Button
             key={l}
             variant={level === l ? "default" : "outline"}
+            style={{ backgroundColor: "#149632" }}
             onClick={() => setLevel(l)}
           >
             {l}
