@@ -4,10 +4,7 @@ import React, { useState, useEffect } from "react";
 import RobotPosition from "./robotposition";
 import MatchSelect from "./matchselect";
 import ScoutSelect from "./scoutselect";
-import ScoutHeader from "../components/scoutHeader";
-import ChangeButton from "../components/changeButton";
 import { ScoutingData } from "../data";
-import Image from "next/image";
 
 export default function StartPage({setMatchState}: {setMatchState: Function}){
     const [isReady, setIsReady] = useState(false);

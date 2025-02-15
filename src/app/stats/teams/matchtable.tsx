@@ -3,7 +3,6 @@
 import { Data } from "@/app/interfaces"
 import { useState, useEffect } from "react"
 import { TeamMatchesData } from "@/app/firebase/teamMatchesData"
-import { StartPos } from "./startpos"
 import {
     ColumnDef,
     flexRender,

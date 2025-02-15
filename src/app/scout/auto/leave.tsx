@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { ScoutingData } from "../data";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 
 const Leave = ({ leaveState, setLeaveState, setMatchState }: { 

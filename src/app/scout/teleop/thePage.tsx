@@ -12,13 +12,6 @@ export default function Home({ setMatchState }: { setMatchState: Function}) {
   const [middlePageState, setMiddlePageState] = useState("pickupAlgae");
   const [rightPageState, setRightPageState] = useState("endGame");
 
-  const handleMiddlePageChange = (state: string) => {
-    setMiddlePageState(state);
-  };
-
-  const handleRightPageChange = (state: string) => {
-    setRightPageState(state);
-  };
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden max-w-7xl mx-auto">

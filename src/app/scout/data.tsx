@@ -71,6 +71,7 @@ export const ScoutingData: Data = {
         barge: 0,
     },
     teleop: {
+        droppedOnField: 0,
         coralPickup: 0,
         coralPickupFromStation: 0,
         pickupAlgae: 0,

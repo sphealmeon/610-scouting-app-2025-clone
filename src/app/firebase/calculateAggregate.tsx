@@ -142,6 +142,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       barge: ScoutingData.auto.barge,
     },
     teleop: {
+      droppedOnField: ScoutingData.teleop.droppedOnField,
       coralPickup: ScoutingData.teleop.coralPickup,
       coralPickupFromStation: ScoutingData.teleop.coralPickupFromStation,
       pickupAlgae: ScoutingData.teleop.pickupAlgae,

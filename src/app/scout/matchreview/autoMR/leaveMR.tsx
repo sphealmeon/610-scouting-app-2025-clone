@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ScoutingData } from "../../data";
 import { Button } from "@/components/ui/button";
 
 const LeaveMR = ({ leaveState, setLeaveState }: { 
