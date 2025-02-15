@@ -99,8 +99,10 @@ const Algae = ({ setLeaveState }: {
           <Button
             key={l}
             variant={level === l ? "default" : "outline"}
-            style={{ backgroundColor: "#17803D" }}
             onClick={() => setLevel(l)}
+            className={`bg-gray-700 hover:bg-gray-200 text-white ${
+              level === l ? "bg-gray-200 text-black" : ""
+          }`}
           >
             {l}
           </Button>

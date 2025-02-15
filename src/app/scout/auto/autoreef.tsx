@@ -52,6 +52,7 @@ const Reef = ({ setLeaveState }: {
     
     if (typeof slotData === 'object' && 'made' in slotData) {
       if (slotData.made === 0) {
+        // Scoring
         slotData.made = 1;
         // Auto-set leave when scoring
         if (ScoutingData.auto.leave === 0) {
@@ -61,7 +62,16 @@ const Reef = ({ setLeaveState }: {
         handleScore(level as 'L1' | 'L2' | 'L3' | 'L4');
         showPopup(`Scored at Level ${level}, Slot ${slot}`);
       } else {
+        // Unscoring - decrement the counters
         slotData.made = 0;
+        ScoutingData.auto.coral--;  // Decrement total coral
+        // Decrement specific level counter
+        switch(level) {
+          case 'L1': ScoutingData.auto.l1--; break;
+          case 'L2': ScoutingData.auto.l2--; break;
+          case 'L3': ScoutingData.auto.l3--; break;
+          case 'L4': ScoutingData.auto.l4--; break;
+        }
         showPopup(`Removed score at Level ${level}, Slot ${slot}`);
       }
     }
@@ -155,7 +165,9 @@ const Reef = ({ setLeaveState }: {
             key={l}
             variant={level === l ? "default" : "outline"}
             onClick={() => setLevel(l)}
-            className="bg-green-700 hover:bg-green-600 border-gray-500 text-white"
+            className={`bg-gray-700 hover:bg-gray-200 text-white ${
+                level === l ? "bg-gray-200 text-black" : ""
+            }`}
           >
             {l}
           </Button>
