@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { ScoutingData, resetData } from "../data";
+import { HPData, resetData } from "../data";
+import { SubmitHP } from "@/app/firebase/submitHP";
 
 export default function HumanPlayerMain({ setMatchState }: { setMatchState: Function }) {
     const handleExit = () => {
@@ -7,20 +8,24 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
         setMatchState(0);
     };
 
+    const handleSubmit = () => {
+        SubmitHP({ team1: HPData.red.team, team2: HPData.blue.team, matchData: HPData });
+    };
+
     const handleBlueScored = () => {
-        ScoutingData.humanPlayer.blueScored++;
+        HPData.blue.blueScored++;
     };
 
     const handleRedScored = () => {
-        ScoutingData.humanPlayer.redScored++;
+        HPData.red.redScored++;
     };
 
     const handleBlueMissed = () => {
-        ScoutingData.humanPlayer.blueMissed++;
+        HPData.blue.blueMissed++;
     };
 
     const handleRedMissed = () => {
-        ScoutingData.humanPlayer.redMissed++;
+        HPData.red.redMissed++;
     };
 
     return (
@@ -54,7 +59,7 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                 <Button className="bg-green-700 hover:bg-green-600 h-20 text-xl font-bold" onClick={handleExit}>
                     Back to Start
                 </Button>
-                <Button className="bg-green-700 hover:bg-green-600 h-20 text-xl font-bold" onClick={handleExit}>
+                <Button className="bg-green-700 hover:bg-green-600 h-20 text-xl font-bold" onClick={handleSubmit}>
                     Submit
                 </Button>
             </div>
