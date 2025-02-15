@@ -1,6 +1,6 @@
 import HumanPlayerMain from "./scoring";
 
-export default function HumanPlayerPage({setMatchState}: {setMatchState: Function}){
+export default function HumanPlayerPage({setMatchState}: {setMatchState: (state: number) => void}){
     return(
         <div className="justify-center items-center">
             <HumanPlayerMain setMatchState={setMatchState}/>

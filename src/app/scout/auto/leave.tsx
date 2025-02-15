@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 const Leave = ({ leaveState, setLeaveState, setMatchState }: { 
     leaveState: number, 
     setLeaveState: (value: number) => void,
-    setMatchState: Function,
+    setMatchState: (state: number) => void,
 }) => {
     const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
         visible: false,

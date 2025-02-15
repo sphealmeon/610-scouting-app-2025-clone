@@ -6,7 +6,7 @@ import AutoReview from "./autoMR/auto";
 import TeleopReview from "./teleop";
 import NotesReview from "./notes";
 
-export default function MatchReviewPage({setMatchState}: {setMatchState: Function}) {
+export default function MatchReviewPage({setMatchState}: {setMatchState: (state: number) => void}) {
     const [pageState, setPageState] = useState("auto");
 
     const handlePageChange = (state: string) => {

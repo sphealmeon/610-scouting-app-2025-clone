@@ -6,10 +6,11 @@ import { MatchTable } from "./matchtable"
 import { StartPos } from "./startpos"
 import { useState } from "react"
 import { TeamMatchesData } from "@/app/firebase/teamMatchesData"
+import { Data } from "@/app/interfaces"
 
 export default function Home() {
     const [selectedTeam, setSelectedTeam] = useState<string>("")
-    const [matchData, setMatchData] = useState<any[]>([])
+    const [matchData, setMatchData] = useState<Data[]>([])
 
     const handleTeamSelect = async (team: string) => {
         setSelectedTeam(team)

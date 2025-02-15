@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ScoutingData } from "@/app/scout/data";
 import { useState, useEffect } from "react";
 
-export default function ScoutSelect({ setMatchState }: { setMatchState: Function }) {
+export default function ScoutSelect({ setMatchState }: { setMatchState: (state: number) => void }) {
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {

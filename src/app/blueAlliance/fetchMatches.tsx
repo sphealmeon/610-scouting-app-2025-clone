@@ -1,10 +1,9 @@
 import { key, qualificationMatches, useApi } from "../globalVars";
 
-
 export let qualMatchLength = 0;
 export let semiMatchLength = 0;
 
-export const FetchMatches = ({ setMatches }: { setMatches?: Function }) => {
+export const FetchMatches = ({ setMatches }: { setMatches?: (matches: string[]) => void }) => {
     if (useApi) {
         fetch("https://www.thebluealliance.com/api/v3/event/" + key + "/matches", {
             method: "GET",
@@ -50,7 +49,7 @@ export const FetchMatches = ({ setMatches }: { setMatches?: Function }) => {
                 if (setMatches)
                     setMatches(allMatches);
             })
-            .catch((error) => {
+            .catch((error: any) => {
                 console.error("Error:", error);
             });
     } else {

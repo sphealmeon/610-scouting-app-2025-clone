@@ -6,7 +6,6 @@ const Reef = ({ setLeaveState }: {
     setLeaveState: (value: number) => void 
 }) => {
   const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
-  const [activeSlots, setActiveSlots] = useState<Set<string>>(new Set());
   const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
     visible: false,
     message: "",

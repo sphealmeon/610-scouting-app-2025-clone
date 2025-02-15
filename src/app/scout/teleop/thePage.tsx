@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useState } from "react";
 import PickupAlgae from "./pickupalgae";
 import CoralScoringSection from "./coralscoring";
 import EndGame from "./endgame";
@@ -8,11 +7,7 @@ import { faGamepad } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/components/ui/button";
 
-export default function Home({ setMatchState }: { setMatchState: Function}) {
-  const [middlePageState, setMiddlePageState] = useState("pickupAlgae");
-  const [rightPageState, setRightPageState] = useState("endGame");
-
-
+export default function Home({ setMatchState }: { setMatchState: (state: number) => void }) {
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden max-w-7xl mx-auto">
       <div className="flex flex-row items-center justify-center gap-8 mb-8">
@@ -30,7 +25,7 @@ export default function Home({ setMatchState }: { setMatchState: Function}) {
           <PickupAlgae />
         </div>
         <div className="flex-1 p-4 ml-5">
-          {rightPageState === "endGame" && <EndGame />}
+           <EndGame />
         </div>
       </div>
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-full max-w-7xl px-4">

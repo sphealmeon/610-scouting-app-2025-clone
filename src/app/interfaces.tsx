@@ -1,5 +1,7 @@
-export interface Data{
-    [x: string]: any;   
+export interface Data {
+    [x: string]: {
+        [x: string]: number | string | boolean | object;
+    };
     start: {
         preload: number;
         team: number;
@@ -197,7 +199,7 @@ export interface Data{
         barge: number;
     };
     teleop: {
-        droppedOnField: any;
+        droppedOnField: number;
         coralPickup: number;
         coralPickupFromStation: number;
         pickupAlgae: number;
@@ -233,44 +235,44 @@ export interface Data{
     };
 }
 
-interface TeleopData {
-    floorPickup: number;
-    sourcePickup: number;
-    pickupAlgae: number;
-    pickupAlgaeFromReef: number;
-    pickupCoral: number;
-    pickupCoralFromStation: number;
-    l4Scored: number;
-    l3Scored: number;
-    l2Scored: number;
-    l1Scored: number;
-    l4Dropped: number;
-    l3Dropped: number;
-    l2Dropped: number;
-    l1Dropped: number;
-    processorScored: number;
-    processorDropped: number;
-    bargeScored: number;
-    bargeDropped: number;
-    algaeRemoved: number;
-    droppedOnField: number;
-    isCoop: number;
-    park: number;
-    shallow: number;
-    deep: number;
-    missedshallow: number;
-    misseddeep: number;
-    general: string;
-    reason: string;
-    explanation: string;
-}
+// interface TeleopData {
+//     floorPickup: number;
+//     sourcePickup: number;
+//     pickupAlgae: number;
+//     pickupAlgaeFromReef: number;
+//     pickupCoral: number;
+//     pickupCoralFromStation: number;
+//     l4Scored: number;
+//     l3Scored: number;
+//     l2Scored: number;
+//     l1Scored: number;
+//     l4Dropped: number;
+//     l3Dropped: number;
+//     l2Dropped: number;
+//     l1Dropped: number;
+//     processorScored: number;
+//     processorDropped: number;
+//     bargeScored: number;
+//     bargeDropped: number;
+//     algaeRemoved: number;
+//     droppedOnField: number;
+//     isCoop: number;
+//     park: number;
+//     shallow: number;
+//     deep: number;
+//     missedshallow: number;
+//     misseddeep: number;
+//     general: string;
+//     reason: string;
+//     explanation: string;
+// }
 
-interface HumanPlayerData {
-    blueScored: number;
-    redScored: number;
-    blueMissed: number;
-    redMissed: number;
-}
+// interface HumanPlayerData {
+//     blueScored: number;
+//     redScored: number;
+//     blueMissed: number;
+//     redMissed: number;
+// }
 
 export interface AggregateData {
     team: number;

@@ -7,7 +7,7 @@ export default function ReviewHeader({
     setMatchState,
     handlePageChange,
 }: {
-    setMatchState: Function;
+    setMatchState: (state: number) => void;
     handlePageChange: (page: string) => void
 }) {
     const [confirm, setConfirm] = useState(false);

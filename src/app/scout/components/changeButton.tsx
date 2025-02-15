@@ -3,7 +3,7 @@ import React from "react";
 
 interface ChangeButtonProps {
     name: string;
-    setMatchState: Function;
+    setMatchState: (state: number) => void;
     disabled?: boolean;
 }
 

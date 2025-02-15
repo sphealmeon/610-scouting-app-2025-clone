@@ -8,21 +8,14 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import logo from "@/components/assets/logo.png";
 import { FetchAlliance } from "@/app/blueAlliance/fetchTeamsInMatch";
+import { Data } from "@/app/interfaces";
+import { BlueAllianceMatch } from '@/app/blueAlliance/types';
 
 export default function MatchSelect() {
-    const [matches, setMatches] = useState<any[]>([]); // Store match data
+    const [matches, setMatches] = useState<BlueAllianceMatch[]>([]);
     const [matchNumber, setMatchNumber] = useState("");
     const [teams, setTeams] = useState<string[]>([]); // Teams for the selected match
     const [selectedTeam, setSelectedTeam] = useState("");
-    const [error, setError] = useState("");
-    const [scoutingData, setScoutingData] = useState({
-        start: {
-            match: "",
-            team: "",
-            scoutName: ""
-        }
-    });
-    
     const matchverify = () : boolean => {
         return selectedTeam !== "" && matchNumber !== "";
     }
@@ -46,10 +39,9 @@ export default function MatchSelect() {
                         throw new Error("Failed to fetch matches from The Blue Alliance.");
                     }
 
-                    const data = await request.json();
+                    const data: BlueAllianceMatch[] = await request.json();
                     setMatches(
-                        data.filter((match: any) => match.comp_level === "qm")
-                        // Qual matches = qm 
+                        data.filter(match => match.comp_level === "qm")
                     );
                 } catch (err) {
                     console.error("Error fetching matches:", err);
@@ -64,12 +56,12 @@ export default function MatchSelect() {
                     match_number: parseInt(matchNum),
                     comp_level: "qm"
                 }));
-                setMatches(formattedMatches);
+                setMatches(formattedMatches as BlueAllianceMatch[]);
             }
         };
 
-        fetchMatches(); // 1
-    }, [useApi]);
+        fetchMatches();
+    }, []);  // Remove useApi from deps since it's not expected to change
 
     const handleMatchNumberChange = async (value: string) => {
         //Write to data: match number
@@ -80,12 +72,11 @@ export default function MatchSelect() {
         }
         setMatchNumber(value);
         setSelectedTeam("");
-        setError("");
 
         if (useApi) {
             // Finding teams for selected match
             const selectedMatch = matches.find(
-                (m: any) => m.match_number === parseInt(value, 10)
+                (m: BlueAllianceMatch) => m.match_number === parseInt(value, 10)
             );
 
             if (selectedMatch) {
@@ -103,13 +94,7 @@ export default function MatchSelect() {
         // else case not needed as teams are already set in fetchMatches for non-API scenario
 
         // Update scouting data
-        setScoutingData(prev => ({
-            ...prev,
-            start: {
-                ...prev.start,
-                match: value
-            }
-        }));
+        ScoutingData.start.match = parseInt(value);
     };
 
     const handleTeamSelection = async (value: string) => {
@@ -120,16 +105,9 @@ export default function MatchSelect() {
             ScoutingData.start.alliance = alliance;
         }
         setSelectedTeam(value);
-        setError(""); // Clear any error when a valid team is selected
 
         // Update scouting data with the selected team
-        setScoutingData(prev => ({
-            ...prev,
-            start: {
-                ...prev.start,
-                team: value // Update the team number in ScoutingData
-            }
-        }));
+        ScoutingData.start.team = parseInt(value);
     };
 
     return (

@@ -62,7 +62,7 @@ export default function TeleopTable({ teamData }: { teamData: AggregateData[] })
       <Table>
         <TableHeader>
           <TableRow>
-            {Object.entries(sortKeys).map(([key, _]) => (
+            {Object.entries(sortKeys).map(([key]) => (
               <TableHead key={key} className="p-0">
                 <Button 
                   className="bg-gray-200 hover:bg-gray-300 text-black w-full rounded-none h-full" 

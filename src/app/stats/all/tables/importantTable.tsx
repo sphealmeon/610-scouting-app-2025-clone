@@ -55,7 +55,7 @@ export default function ImportantTable({ teamData }: { teamData: AggregateData[]
       <Table>
         <TableHeader>
           <TableRow>
-            {Object.entries(sortKeys).map(([key, _]) => (
+            {Object.entries(sortKeys).map(([key]) => (
               <TableHead key={key} className="p-0">
                 <Button 
                   className="bg-[#004d40] hover:bg-[#00695c] text-white w-full rounded-none h-full" 

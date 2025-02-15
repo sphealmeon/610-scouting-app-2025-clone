@@ -8,7 +8,7 @@ import { ScoutingData } from "../data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRobot } from "@fortawesome/free-solid-svg-icons";
 
-export default function AutoPage({setMatchState}: {setMatchState: Function}){
+export default function AutoPage({setMatchState}: {setMatchState: (state: number) => void}){
     const [leaveState, setLeaveState] = useState(ScoutingData.auto.leave);
 
     const handleLeaveChange = (newValue: number) => {

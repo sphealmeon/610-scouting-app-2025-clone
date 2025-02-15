@@ -4,7 +4,6 @@ import { db } from "./firebase";
 import { collection, getDocs, doc, setDoc } from "firebase/firestore";
 import { useApi } from "../globalVars";
 import { key } from "../globalVars";
-import { TeamAggregate } from "./TeamAggregate";
 import { getIgnoreBroken, getUseLast4Matches } from "./aggregateModifiers";
 
 /**
@@ -13,34 +12,9 @@ import { getIgnoreBroken, getUseLast4Matches } from "./aggregateModifiers";
  */
 export const CalculateAggregate = async ({ team }: { team: number }) => {
   let standing: number = 0;
-  let opr: number = 0;
-  let dpr: number = 0;
-
-  //gets opr & dpr from BA or else gets it from saved database
+  
+  //gets standing from BA or else gets it from saved database
   if (useApi) {
-    await fetch(
-      "https://www.thebluealliance.com/api/v3/event/" + key + "/oprs",
-      {
-        method: "GET",
-        headers: {
-          "X-TBA-Auth-Key":
-            "R0slEz1yXDCVyedRLzFMoE5QrgkG4i73OwRuKlNHiw7lVMuO2lBQcwuzdg6iqvAq",
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        opr = data.oprs["frc" + team];
-        dpr = data.dprs["frc" + team];
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
     await fetch(
       "https://www.thebluealliance.com/api/v3/event/" + key + "/rankings",
       {
@@ -67,7 +41,8 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       .catch((error) => {
         console.error("Error:", error);
       });
-  } 
+  }
+
   let numMatches: number = 0;
   let timesBroke: number = 0;
 

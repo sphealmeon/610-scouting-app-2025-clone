@@ -71,13 +71,12 @@ export const columns: ColumnDef<AggregateData>[] = [
     },
 ]
 
-interface DataTableProps<TData, TValue> {
-    teams: number[]
-}
-   
-export function DataTable<TData, TValue>({
+
+export function DataTable({
     teams,
-}: DataTableProps<TData, TValue>) {
+}: {
+    teams: number[]
+}) {
     const [data, setData] = useState<AggregateData[]>([])
     const [loading, setLoading] = useState(true)
 

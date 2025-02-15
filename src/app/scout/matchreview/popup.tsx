@@ -16,7 +16,7 @@ export default function Popup({
     setMatchState,
     }: { 
         setConfirm: React.Dispatch<React.SetStateAction<boolean>>
-        setMatchState: Function
+        setMatchState: () => void
     }) {
     return (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -26,7 +26,7 @@ export default function Popup({
                     <CardDescription>Are you sure you want to proceed?</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p>Click "Yes" to confirm or "No" to cancel.</p>
+                    <p>Click Yes to confirm or No to cancel.</p>
                 </CardContent>
                 <CardFooter className="flex justify-start gap-4">
                     <Button
@@ -39,7 +39,7 @@ export default function Popup({
                         className="bg-green-500 hover:bg-green-400"
                         onClick={() => {
                             SubmitMatch({team: ScoutingData.start.team, match: ScoutingData.start.match, matchData: ScoutingData})
-                            setMatchState(0);
+                            setMatchState();
                             resetData();
                             setConfirm(false);
                         }}

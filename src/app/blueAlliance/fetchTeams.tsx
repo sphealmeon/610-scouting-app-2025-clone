@@ -1,6 +1,6 @@
 import { key, teams, useApi } from "../globalVars";
 
-export const FetchTeams = ({ setTeams }: { setTeams: Function }) => {
+export const FetchTeams = ({ setTeams }: { setTeams: (teams: string[]) => void }) => {
     if (useApi) {
         fetch("https://www.thebluealliance.com/api/v3/event/" + key + "/teams", {
             method: "GET",

@@ -1,1 +1,1 @@
-export const delay = (fn: Function, ms: number) => setTimeout(fn, ms); 
+export const delay = (callback: () => void, ms: number) => setTimeout(callback, ms); 
