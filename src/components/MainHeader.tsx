@@ -29,7 +29,7 @@ export function MainHeader() {
     <a
       key={link.label}
       href={link.link}
-      className="px-3 py-2 hover:bg-green-200 text-lg flex items-center gap-2 rounded"
+      className="px-3 py-2 hover:bg-gray-200 hover:text-black text-lg flex items-center gap-2 rounded text-white transition-colors"
     >
       {link.label === "Scout" && (
         <FontAwesomeIcon icon={faHouse} className="w-4 h-4" />
