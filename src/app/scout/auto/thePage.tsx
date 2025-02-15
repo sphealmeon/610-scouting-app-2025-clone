@@ -1,6 +1,5 @@
 'use client';
 
-import { Checkbox } from "@/components/ui/checkbox";
 import Algae from "./autoalgae";
 import Reef from "./autoreef";
 import Leave from "./leave";
