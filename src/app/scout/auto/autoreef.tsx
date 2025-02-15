@@ -2,8 +2,7 @@ import { ScoutingData } from "../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const Reef = ({ setMatchState, setLeaveState }: { 
-    setMatchState: Function,
+const Reef = ({ setLeaveState }: { 
     setLeaveState: (value: number) => void 
 }) => {
   const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
@@ -146,16 +145,17 @@ const Reef = ({ setMatchState, setLeaveState }: {
   };
 
   return (
-    <div className="flex flex-col items-center w-full max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-6 mb-4">
-      <h1 className="text-xl font-bold">Auto Coral Scoring - Level {level}</h1>
+    <div className="flex flex-col items-center w-full max-w-3xl mx-auto p-6 mb-4 space-y-4">
+      <h1 className="text-xl font-bold mb-2">Auto Coral Scoring</h1>
+      <h2 className="text-lg mb-6">Level {level}</h2>
 
-      <div className="flex space-x-4 mb-4">
+      <div className="flex space-x-4">
         {(['L1', 'L2', 'L3', 'L4'] as const).map((l) => (
           <Button
             key={l}
             variant={level === l ? "default" : "outline"}
             onClick={() => setLevel(l)}
-            style={{ backgroundColor: "#149632" }} // Green color
+            style={{ backgroundColor: "#149632" }}
           >
             {l}
           </Button>
@@ -239,21 +239,6 @@ const Reef = ({ setMatchState, setLeaveState }: {
             })}
           </svg>
         </div>
-      </div>
-
-      <div className="flex gap-4 mt-4">
-        <Button 
-            onClick={() => setMatchState(0)} 
-            style={{ backgroundColor: "#149632" }} // Green color
-        >
-            Back to Start
-        </Button>
-        <Button 
-            onClick={() => setMatchState(2)} 
-            style={{ backgroundColor: "#149632" }} // Green color
-        >
-            To Teleop
-        </Button>
       </div>
 
       {popup.visible && (

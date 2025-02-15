@@ -90,10 +90,11 @@ const Algae = ({ setLeaveState }: {
   };
 
   return (
-    <div className="flex flex-col items-center p-4 space-y-4">
-      <h1 className="text-xl font-bold">Auto Algae Knock Off - {level}</h1>
+    <div className="flex flex-col items-center p-6 mb-4 space-y-4">
+      <h1 className="text-xl font-bold">Auto Algae Knock Off</h1>
+      <h2 className="text-lg mt-0">Level {level}</h2>
 
-      <div className="flex space-x-4 mb-4">
+      <div className="flex space-x-4">
         {(['L2-L3', 'L3-L4'] as const).map((l) => (
           <Button
             key={l}
@@ -171,14 +172,14 @@ const Algae = ({ setLeaveState }: {
         <Button 
             onClick={() => ScoutingData.auto.barge++} 
             style={{ backgroundColor: "#149632" }}
-            className="text-white hover:bg-opacity-80"
+            className="text-white hover:bg-opacity-80 w-40 h-16 text-lg"
         >
             Barge Scored
         </Button>
         <Button 
             onClick={() => ScoutingData.auto.processor++} 
             style={{ backgroundColor: "#149632" }}
-            className="text-white hover:bg-opacity-80"
+            className="text-white hover:bg-opacity-80 w-40 h-16 text-lg"
         >
             Processor Scored
         </Button>
