@@ -20,7 +20,7 @@ export default function CoralScoringSection() {
           <div
             className={`${
               activePickup === 'floor' ? 'bg-gray-400' : 'bg-gray-700 hover:bg-gray-600'
-            } text-white font-bold py-3 rounded-sm cursor-pointer text-center`}
+            } text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}            
             onClick={() => {
               ScoutingData.teleop.coralPickup++;
               setActivePickup('floor');              
@@ -32,7 +32,7 @@ export default function CoralScoringSection() {
           <div
             className={`${
               activePickup === 'station' ? 'bg-gray-400' : 'bg-gray-700 hover:bg-gray-600'
-            } text-white font-bold py-3 rounded-sm cursor-pointer text-center`}
+            } text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
             onClick={() => {
               ScoutingData.teleop.coralPickupFromStation++;
               setActivePickup('station');
