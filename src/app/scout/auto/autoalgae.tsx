@@ -99,7 +99,7 @@ const Algae = ({ setLeaveState }: {
           <Button
             key={l}
             variant={level === l ? "default" : "outline"}
-            style={{ backgroundColor: "#149632" }}
+            style={{ backgroundColor: "#17803D" }}
             onClick={() => setLevel(l)}
           >
             {l}
@@ -134,8 +134,8 @@ const Algae = ({ setLeaveState }: {
               const hasAlgae = algaePositions[level].has(slot);
               const isActive = getSlotKnocked(level, slot);
               const fillColor = !hasAlgae ? "#4B5563" : 
-                              isActive ? "#149632" : 
-                              "#C8442E";
+                              isActive ? "#17803D" : 
+                              "#7F1C1D";
 
               return (
                 <g 
@@ -171,15 +171,13 @@ const Algae = ({ setLeaveState }: {
       <div className="flex gap-4 mt-4">
         <Button 
             onClick={() => ScoutingData.auto.barge++} 
-            style={{ backgroundColor: "#149632" }}
-            className="text-white hover:bg-opacity-80 w-40 h-16 text-lg"
+            className="bg-green-700 hover:bg-green-600 border-gray-500 text-white"
         >
             Barge Scored
         </Button>
         <Button 
             onClick={() => ScoutingData.auto.processor++} 
-            style={{ backgroundColor: "#149632" }}
-            className="text-white hover:bg-opacity-80 w-40 h-16 text-lg"
+            className="bg-green-700 hover:bg-green-600 border-gray-500 text-white"
         >
             Processor Scored
         </Button>

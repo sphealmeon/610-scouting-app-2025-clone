@@ -155,7 +155,7 @@ const Reef = ({ setLeaveState }: {
             key={l}
             variant={level === l ? "default" : "outline"}
             onClick={() => setLevel(l)}
-            style={{ backgroundColor: "#149632" }}
+            className="bg-green-700 hover:bg-green-600 border-gray-500 text-white"
           >
             {l}
           </Button>
@@ -202,9 +202,9 @@ const Reef = ({ setLeaveState }: {
                   <g onClick={() => handleHexagonClick(level, slot)}>
                     <path
                       d={path}
-                      fill={getSlotMade(level, slot) ? "#149632" : "#C8442E"} // Updated colors
-                      stroke="black"
-                      strokeWidth="0.5"
+                      fill={getSlotMade(level, slot) ? "#17803D" : "#7F1C1D"} // Updated colors
+                      stroke="black" // Updated stroke color
+                      strokeWidth="0.5" 
                       className="cursor-pointer hover:opacity-80"
                     />
                     <text
@@ -226,9 +226,9 @@ const Reef = ({ setLeaveState }: {
                     cy={buttonY}
                     r="2"
                     fill="#4B5563" // Updated to dark grey
-                    stroke="black"
-                    strokeWidth="0.5"
-                    className="cursor-pointer hover:fill-red-500"
+                    stroke="gray-700"
+                    strokeWidth="0.5" 
+                    className="cursor-pointer hover:fill-red-800"
                     onClick={() => {
                       handleDroppedCoral(level, slot);
                       showPopup(`Dropped coral at Level ${level}, Slot ${slot}`);

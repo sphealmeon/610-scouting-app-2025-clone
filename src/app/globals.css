@@ -57,7 +57,7 @@ button {
 }
 
 button:hover {
-  @apply bg-primary text-background;
+  @apply bg-primary;
 }
 
 button:disabled {

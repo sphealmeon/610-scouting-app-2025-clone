@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const Leave = ({ leaveState, setLeaveState, setMatchState }: { 
     leaveState: number, 
-    setLeaveState: (value: number) => void 
+    setLeaveState: (value: number) => void,
     setMatchState: Function,
 }) => {
     const [popup, setPopup] = useState<{ visible: boolean; message: string }>({
@@ -30,20 +30,20 @@ const Leave = ({ leaveState, setLeaveState, setMatchState }: {
             <Button
                 onClick={handleLeaveClick}
                 className={`w-32 h-32 mb-8 text-2xl rounded-full ${
-                    leaveState > 0 ? "bg-[#149632]" : "bg-[#C8442E]"
-                } text-white`}
+                    leaveState > 0 ? "bg-green-700 hover:bg-green-600" : "bg-red-900 hover:bg-red-800"
+                } border-gray-500 text-white`}
             >
                 Leave
             </Button>
-            <Button className="w-40 h-16 text-xl mt-6 mb-4"
+            <Button 
+                className="w-40 h-16 text-xl mt-6 mb-4 bg-red-900 hover:bg-red-800 border-gray-500 text-white"
                 onClick={() => setMatchState(0)} 
-                style={{ backgroundColor: "#C8442E" }} // Changed to red color
             >
                 Back to Start
             </Button>
-            <Button className="w-40 h-16 text-xl m-4"
+            <Button 
+                className="w-40 h-16 text-xl m-4 bg-green-700 hover:bg-green-600 border-gray-500 text-white"
                 onClick={() => setMatchState(2)} 
-                style={{ backgroundColor: "#149632" }} // Kept green color
             >
                 To Teleop
             </Button>
