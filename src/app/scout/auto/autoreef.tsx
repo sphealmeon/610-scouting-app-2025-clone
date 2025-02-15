@@ -155,7 +155,9 @@ const Reef = ({ setLeaveState }: {
             key={l}
             variant={level === l ? "default" : "outline"}
             onClick={() => setLevel(l)}
-            className="bg-green-700 hover:bg-green-600 border-gray-500 text-white"
+            className={`bg-gray-700 hover:bg-gray-200 text-white ${
+                level === l ? "bg-gray-200 text-black" : ""
+            }`}
           >
             {l}
           </Button>
