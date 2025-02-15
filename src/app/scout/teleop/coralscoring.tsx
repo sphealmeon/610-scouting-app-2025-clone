@@ -15,7 +15,6 @@ export default function CoralScoringSection() {
       </div>
 
       <div className="flex flex-col gap-4">
-        {/* Pickup Options */}
         <div className="grid grid-cols-2 gap-4">
           <div
             className={`${
@@ -44,9 +43,7 @@ export default function CoralScoringSection() {
           </div>
         </div>
 
-        {/* Scoring Grid */}
         <div className="flex flex-col gap-3">
-          {/* L4 Row */}
           <div className="grid grid-cols-2 gap-3">
             <div
               className="bg-green-700 hover:bg-green-600 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500"
@@ -66,7 +63,6 @@ export default function CoralScoringSection() {
             </div>
           </div>
 
-          {/* L3 Row */}
           <div className="grid grid-cols-2 gap-3">
             <div
               className="bg-green-700 hover:bg-green-600 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500"
@@ -86,7 +82,6 @@ export default function CoralScoringSection() {
             </div>
           </div>
 
-          {/* L2 Row */}
           <div className="grid grid-cols-2 gap-3">
             <div
               className="bg-green-700 hover:bg-green-600 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500"
@@ -106,7 +101,6 @@ export default function CoralScoringSection() {
             </div>
           </div>
 
-          {/* L1 Row */}
           <div className="grid grid-cols-2 gap-3">
             <div
               className="bg-green-700 hover:bg-green-600 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500"
@@ -127,7 +121,6 @@ export default function CoralScoringSection() {
           </div>
         </div>
 
-        {/* Dropped on field */}
         <div
           className="h-16 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-sm cursor-pointer text-center flex items-center justify-center"
           onClick={() => {

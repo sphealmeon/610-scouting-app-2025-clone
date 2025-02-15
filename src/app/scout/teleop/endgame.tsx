@@ -11,12 +11,11 @@ export default function EndGame() {
     const handleEndgameStateChange = (state: string) => {
         setEndgameState(state);
         
-        // Reset all states
         ScoutingData.teleop.park = 0;
         ScoutingData.teleop.shallow = 0;
         ScoutingData.teleop.deep = 0;
 
-        // Set the appropriate state
+        // Set the appropriate state for the endgame       
         switch(state) {
             case "park":
                 ScoutingData.teleop.park = 1;
@@ -97,34 +96,38 @@ export default function EndGame() {
                 <div className="flex flex-col gap-2">
                     <p className="text-lg">Ended on:</p>
                     <div className="grid grid-cols-4 gap-2">
-                        <Button 
-                            variant={endgameState === "none" ? "secondary" : "default"}
+                        <div 
+                            className={`bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500 ${
+                                endgameState === "none" ? "bg-gray-600" : ""
+                            }`}
                             onClick={() => handleEndgameStateChange("none")}
-                            className="p-4"
                         >
                             None
-                        </Button>
-                        <Button 
-                            variant={endgameState === "park" ? "secondary" : "default"}
+                        </div>
+                        <div 
+                            className={`bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500 ${
+                                endgameState === "park" ? "bg-gray-600" : ""
+                            }`}
                             onClick={() => handleEndgameStateChange("park")}
-                            className="p-4"
                         >
                             Park
-                        </Button>
-                        <Button 
-                            variant={endgameState === "shallow" ? "secondary" : "default"}
+                        </div>
+                        <div 
+                            className={`bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500 ${
+                                endgameState === "shallow" ? "bg-gray-600" : ""
+                            }`}
                             onClick={() => handleEndgameStateChange("shallow")}
-                            className="p-4"
                         >
                             Shallow
-                        </Button>
-                        <Button 
-                            variant={endgameState === "deep" ? "secondary" : "default"}
+                        </div>
+                        <div 
+                            className={`bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500 ${
+                                endgameState === "deep" ? "bg-gray-600" : ""
+                            }`}
                             onClick={() => handleEndgameStateChange("deep")}
-                            className="p-4"
                         >
                             Deep
-                        </Button>
+                        </div>
                     </div>
                 </div>
             </div>
