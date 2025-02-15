@@ -26,7 +26,7 @@ const Leave = ({ leaveState, setLeaveState, setMatchState }: {
 
     return (
         <div className="flex flex-col items-center w-full max-w-3xl mx-auto p-6 mb-4">
-            <h1 className="text-xl font-bold">Auto Leave</h1>
+            <h1 className="text-xl mb-4 font-bold">Auto Leave</h1>
             <Button
                 onClick={handleLeaveClick}
                 className={`w-32 h-32 mb-8 text-2xl rounded-full ${
