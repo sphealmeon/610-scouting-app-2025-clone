@@ -26,7 +26,7 @@ export default function Popup({
                     <CardDescription>Are you sure you want to proceed?</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p>Click "Yes" to confirm or "No" to cancel.</p>
+                    <p>Click Yes to confirm or No to cancel.</p>
                 </CardContent>
                 <CardFooter className="flex justify-start gap-4">
                     <Button
