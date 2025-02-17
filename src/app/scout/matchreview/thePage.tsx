@@ -14,27 +14,15 @@ export default function MatchReviewPage({setMatchState}: {setMatchState: Functio
     };
     
     return (
-        <div className="flex flex-col h-screen">
+        <div>
             <ReviewHeader 
                 setMatchState={setMatchState} 
                 handlePageChange={handlePageChange}
             />
-            <div className="flex-1 overflow-y-auto">
-                {pageState === "auto" && (
-                    <div className="h-full">
-                        <AutoReview/>
-                    </div>
-                )}
-                {pageState === "teleop" && (
-                    <div className="h-full">
-                        <TeleopReview/>
-                    </div>
-                )}
-                {pageState === "notes" && (
-                    <div className="h-full">
-                        <NotesReview/>
-                    </div>
-                )}
+            <div>
+                {pageState === "auto" && <AutoReview/>}
+                {pageState === "teleop" && <TeleopReview/>}
+                {pageState === "notes" && <NotesReview/>}
             </div>
         </div>
     );
