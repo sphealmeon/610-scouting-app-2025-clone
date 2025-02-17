@@ -252,7 +252,7 @@ const ReefMR = ({ setLeaveState }: {
 
       <div className="relative w-[400px] h-[400px]">
         <div className="absolute inset-0">
-          <svg viewBox="0 0 100 100" className="w-full h-full">
+          <svg viewBox="-10 -10 120 120" className="w-full h-full">
             {slots[level].map((slot, index) => {
               const totalSlots = slots[level].length;
               const isHexagon = level !== 'L1';
@@ -314,7 +314,7 @@ const ReefMR = ({ setLeaveState }: {
                       y={buttonY}
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      fill="black"
+                      fill="white"
                       fontSize="4"
                       className="cursor-pointer"
                       onClick={() => handleDecrementDropped(level, slot)}
@@ -326,7 +326,7 @@ const ReefMR = ({ setLeaveState }: {
                       y={buttonY}
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      fill="black"
+                      fill="white"
                       fontSize="4"
                     >
                       {getSlotDropped(level, slot)}
@@ -336,7 +336,7 @@ const ReefMR = ({ setLeaveState }: {
                       y={buttonY}
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      fill="black"
+                      fill="white"
                       fontSize="4"
                       className="cursor-pointer"
                       onClick={() => handleDroppedCoral(level, slot)}
