@@ -29,34 +29,34 @@ export function MainHeader() {
     <a
       key={link.label}
       href={link.link}
-      className="px-3 py-2 hover:bg-gray-200 hover:text-black text-lg flex items-center gap-2 rounded text-white transition-colors"
+      className="px-2 sm:px-3 py-1 sm:py-2 hover:bg-gray-200 hover:text-black text-sm sm:text-lg flex items-center gap-1 sm:gap-2 rounded text-white transition-colors whitespace-nowrap"
     >
       {link.label === "Scout" && (
-        <FontAwesomeIcon icon={faHouse} className="w-4 h-4" />
+        <FontAwesomeIcon icon={faHouse} className="w-3 h-3 sm:w-4 sm:h-4" />
       )}
       {link.label === "Stats" && (
-        <FontAwesomeIcon icon={faBarChart} className="w-4 h-4" />
+        <FontAwesomeIcon icon={faBarChart} className="w-3 h-3 sm:w-4 sm:h-4" />
       )}
       {link.label === "Compare" && (
-        <FontAwesomeIcon icon={faCodeCompare} className="w-4 h-4" />
+        <FontAwesomeIcon icon={faCodeCompare} className="w-3 h-3 sm:w-4 sm:h-4" />
       )}
       {link.label === "History" && (
-        <FontAwesomeIcon icon={faClockRotateLeft} className="w-4 h-4" />
+        <FontAwesomeIcon icon={faClockRotateLeft} className="w-3 h-3 sm:w-4 sm:h-4" />
       )}
       {link.label === "Match Summary" && (
-        <FontAwesomeIcon icon={faClipboardList} className="w-4 h-4" />
+        <FontAwesomeIcon icon={faClipboardList} className="w-3 h-3 sm:w-4 sm:h-4" />
       )}
       {link.label === "Team Stats" && (
-        <FontAwesomeIcon icon={faListOl} className="w-4 h-4" />
+        <FontAwesomeIcon icon={faListOl} className="w-3 h-3 sm:w-4 sm:h-4" />
       )}
       {link.label}
     </a>
   ));
 
   return (
-    <header className="border-b border-gray-200 bg-black-300">
-      <div className="max-w-7xl mx-auto px-4">
-        <nav className="flex gap-0 py-2 justify-center">
+    <header className="border-b border-gray-200 bg-black-300 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4">
+        <nav className="flex flex-wrap gap-1 sm:gap-2 py-1 sm:py-2 justify-center items-center">
           {items}
         </nav>
       </div>

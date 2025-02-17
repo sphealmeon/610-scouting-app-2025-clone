@@ -46,8 +46,8 @@ export default function TeleopReview() {
   };
 
   return (
-    <div className="p-4 grid grid-cols-2 gap-4">
-      <Card>
+    <div className="p-4 flex flex-col lg:grid lg:grid-cols-2 gap-4">
+      <Card className="min-w-[300px]">
         <CardContent className="pt-6">
           <h2 className="text-xl font-bold mb-4">Coral Scoring</h2>
           {[
@@ -60,7 +60,7 @@ export default function TeleopReview() {
             { label: "L1 Made", key: "l1Made" },
             { label: "L1 Missed", key: "l1Missed" },
           ].map(({ label, key }) => (
-            <div key={key} className="flex items-center justify-between mb-2">
+            <div key={key} className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-2">
               <span>{label}</span>
               <div className="flex items-center gap-2">
                 <Button 
@@ -69,7 +69,7 @@ export default function TeleopReview() {
                 >
                   -
                 </Button>
-                <span>{scores[key as keyof typeof scores]}</span>
+                <span className="w-8 text-center">{scores[key as keyof typeof scores]}</span>
                 <Button 
                   className="bg-green-500 hover:bg-green-400"
                   onClick={() => handleScoreChange(key as keyof typeof scores, 1)}
@@ -82,7 +82,7 @@ export default function TeleopReview() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="min-w-[300px]">
         <CardContent className="pt-6">
           <h2 className="text-xl font-bold mb-4">Algae Scoring</h2>
           {[
@@ -92,7 +92,7 @@ export default function TeleopReview() {
             { label: "Barge Missed", key: "bargeMissed" },
             { label: "Algae Removed", key: "algaeRemoved" },
           ].map(({ label, key }) => (
-            <div key={key} className="flex items-center justify-between mb-2">
+            <div key={key} className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-2">
               <span>{label}</span>
               <div className="flex items-center gap-2">
                 <Button 
@@ -101,7 +101,7 @@ export default function TeleopReview() {
                 >
                   -
                 </Button>
-                <span>{scores[key as keyof typeof scores]}</span>
+                <span className="w-8 text-center">{scores[key as keyof typeof scores]}</span>
                 <Button 
                   className="bg-green-500 hover:bg-green-400"
                   onClick={() => handleScoreChange(key as keyof typeof scores, 1)}

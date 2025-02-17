@@ -13,15 +13,17 @@ export default function AutoReview() {
     };
 
     return(
-        <div className="grid grid-cols-3 gap-4 p-4 w-full">
-            <div className="col-span-1">
-                <ReefMR setLeaveState={handleLeaveChange} />
-            </div>
-            <div className="col-span-1"> 
-                <LeaveMR leaveState={leaveState} setLeaveState={handleLeaveChange} />
-            </div>
-            <div className="col-span-1">
-                <AlgaeMR setLeaveState={handleLeaveChange} />
+        <div className="flex flex-col gap-8 p-4 w-full overflow-y-auto">
+            <div className="flex flex-col lg:grid lg:grid-cols-3 gap-8">
+                <div className="w-full flex justify-center min-h-[500px]">
+                    <ReefMR setLeaveState={handleLeaveChange} />
+                </div>
+                <div className="w-full flex justify-center min-h-[500px]"> 
+                    <LeaveMR leaveState={leaveState} setLeaveState={handleLeaveChange} />
+                </div>
+                <div className="w-full flex justify-center min-h-[500px]">
+                    <AlgaeMR setLeaveState={handleLeaveChange} />
+                </div>
             </div>
         </div>
     );

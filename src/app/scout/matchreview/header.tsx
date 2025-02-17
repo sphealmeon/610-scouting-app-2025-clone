@@ -17,34 +17,37 @@ export default function ReviewHeader({
     };
 
     return (
-        <div className="bg-gray-200 flex flex-row h-20 w-full items-center justify-center gap-20 border-2 border-green-900">
+        <div className="bg-gray-200 flex flex-col p-4 w-full items-center gap-4 border-2 border-green-900 sticky top-0 z-50">
             <Button
-                className="h-15 w-45 text-3xl bg-red-400 hover:bg-red-300"
+                className="w-40 text-xl sm:text-3xl bg-red-400 hover:bg-red-300 p-2"
                 onClick={() => setMatchState(2)}
             >
                 Return
             </Button>
 
+            <div className="flex flex-col gap-4 justify-center">
+                <Button
+                    className="w-40 text-xl sm:text-3xl bg-gray-500 hover:bg-gray-400 p-2"
+                    onClick={() => handlePageChange("auto")}
+                >
+                    Auto
+                </Button>
+                <Button
+                    className="w-40 text-xl sm:text-3xl bg-gray-500 hover:bg-gray-400 p-2"
+                    onClick={() => handlePageChange("teleop")}
+                >
+                    Teleop
+                </Button>
+                <Button
+                    className="w-40 text-xl sm:text-3xl bg-gray-500 hover:bg-gray-400 p-2"
+                    onClick={() => handlePageChange("notes")}
+                >
+                    Notes
+                </Button>
+            </div>
+
             <Button
-                className="h-15 w-40 text-3xl bg-gray-500 hover:bg-gray-400"
-                onClick={() => handlePageChange("auto")}
-            >
-                Auto
-            </Button>
-            <Button
-                className="h-15 w-40 text-3xl bg-gray-500 hover:bg-gray-400"
-                onClick={() => handlePageChange("teleop")}
-            >
-                Teleop
-            </Button>
-            <Button
-                className="h-15 w-45 text-3xl bg-gray-500 hover:bg-gray-400"
-                onClick={() => handlePageChange("notes")}
-            >
-                Endgame + Notes
-            </Button>
-            <Button
-                className="h-15 w-40 text-3xl bg-green-500 hover:bg-green-400"
+                className="w-40 text-xl sm:text-3xl bg-green-500 hover:bg-green-400 p-2"
                 onClick={() => handleConfirm(true)}
             >
                 Confirm
