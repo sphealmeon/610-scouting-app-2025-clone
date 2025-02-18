@@ -242,6 +242,15 @@ export interface HumanPlayerData {
     }
 }
 
+export interface HumanPlayerStats {
+    team: number;
+    matchesPlayed: number;
+    totalScored: number;
+    totalMissed: number;
+    fieldGoalPercentage: number;
+    pointsPerGame: number;
+}
+
 export interface AggregateData {
     team: number;
     standing: number;

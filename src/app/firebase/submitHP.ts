@@ -17,22 +17,30 @@ export const SubmitHP = async ({
     // Update team1 (red)
     const team1Ref = doc(db, "humanplayers", team1.toString());
     const team1Doc = await getDoc(team1Ref);
-    const team1Data = team1Doc.data() || { totalScored: 0, totalMissed: 0 };
+    const team1Data = team1Doc.data() || { 
+      totalScored: 0, 
+      totalMissed: 0,
+      matchesPlayed: 0,
+      fieldGoalPercentage: 0,
+      pointsPerGame: 0
+    };
     
-    console.log("Team 1 existing data:", team1Data);
-    console.log("Team 1 new match data:", matchData.red);
-    
+    // Calculate new stats for team1
     const redTotal = (team1Data.totalScored || 0) + matchData.red.redScored;
     const redMissed = (team1Data.totalMissed || 0) + matchData.red.redMissed;
-    const redAccuracy = (redTotal + redMissed) > 0 ? 
-      Math.round((redTotal / (redTotal + redMissed)) * 100) : 0;
+    const redMatches = (team1Data.matchesPlayed || 0) + 1;
+    const redFGPercentage = (redTotal + redMissed) > 0 ? 
+      Math.round((redTotal / (redTotal + redMissed)) * 1000) / 10 : 0;
+    const redPPG = redMatches > 0 ? 
+      Math.round((redTotal * 4 / redMatches) * 10) / 10 : 0;
 
     const team1NewData = {
-      accuracy: redAccuracy,
       team: team1,
-      totalMissed: redMissed,
       totalScored: redTotal,
-      matchesPlayed: (team1Data.matchesPlayed || 0) + 1
+      totalMissed: redMissed,
+      matchesPlayed: redMatches,
+      fieldGoalPercentage: redFGPercentage,
+      pointsPerGame: redPPG
     };
 
     console.log("Saving team 1 data:", team1NewData);
@@ -41,22 +49,30 @@ export const SubmitHP = async ({
     // Update team2 (blue)
     const team2Ref = doc(db, "humanplayers", team2.toString());
     const team2Doc = await getDoc(team2Ref);
-    const team2Data = team2Doc.data() || { totalScored: 0, totalMissed: 0 };
+    const team2Data = team2Doc.data() || { 
+      totalScored: 0, 
+      totalMissed: 0,
+      matchesPlayed: 0,
+      fieldGoalPercentage: 0,
+      pointsPerGame: 0
+    };
 
-    console.log("Team 2 existing data:", team2Data);
-    console.log("Team 2 new match data:", matchData.blue);
-
+    // Calculate new stats for team2
     const blueTotal = (team2Data.totalScored || 0) + matchData.blue.blueScored;
     const blueMissed = (team2Data.totalMissed || 0) + matchData.blue.blueMissed;
-    const blueAccuracy = (blueTotal + blueMissed) > 0 ? 
-      Math.round((blueTotal / (blueTotal + blueMissed)) * 100) : 0;
+    const blueMatches = (team2Data.matchesPlayed || 0) + 1;
+    const blueFGPercentage = (blueTotal + blueMissed) > 0 ? 
+      Math.round((blueTotal / (blueTotal + blueMissed)) * 1000) / 10 : 0;
+    const bluePPG = blueMatches > 0 ? 
+      Math.round((blueTotal * 4 / blueMatches) * 10) / 10 : 0;
 
     const team2NewData = {
-      accuracy: blueAccuracy,
       team: team2,
-      totalMissed: blueMissed,
       totalScored: blueTotal,
-      matchesPlayed: (team2Data.matchesPlayed || 0) + 1
+      totalMissed: blueMissed,
+      matchesPlayed: blueMatches,
+      fieldGoalPercentage: blueFGPercentage,
+      pointsPerGame: bluePPG
     };
 
     console.log("Saving team 2 data:", team2NewData);

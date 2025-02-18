@@ -3,13 +3,14 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import AutoTable from "./tables/autoTable";
-import { AggregateData } from "@/app/interfaces";
+import { AggregateData, HumanPlayerStats } from "@/app/interfaces";
 import ImportantTable from "./tables/importantTable";
 import TeleopTable from "./tables/teleopTable";
 import EndgameTable from "./tables/endgameTable";
 import AllTable from "./tables/allTable";
+import HpTable from "./tables/hpTable";
 
-export default function TableTabs({ teamData }: { teamData: AggregateData[] }) {
+export default function TableTabs({ teamData, hpData }: { teamData: AggregateData[], hpData: HumanPlayerStats[] }) {
   return (
     <Tabs defaultValue="importantStats">
       <TabsList>
@@ -18,6 +19,7 @@ export default function TableTabs({ teamData }: { teamData: AggregateData[] }) {
         <TabsTrigger value="teleopStats">Teleop Stats</TabsTrigger>
         <TabsTrigger value="endgameStats">Endgame Stats</TabsTrigger>
         <TabsTrigger value="allStats">All Stats</TabsTrigger>
+        <TabsTrigger value="hpStats">HP Stats</TabsTrigger>
       </TabsList>
 
       <TabsContent value="importantStats">
@@ -34,6 +36,9 @@ export default function TableTabs({ teamData }: { teamData: AggregateData[] }) {
       </TabsContent>
       <TabsContent value="allStats">
         <AllTable teamData={teamData} />
+      </TabsContent>
+      <TabsContent value="hpStats">
+        <HpTable teamData={hpData} />
       </TabsContent>
     </Tabs>
   );
