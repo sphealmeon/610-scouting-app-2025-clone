@@ -14,6 +14,11 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
     const [redTeam, setRedTeam] = useState<string>("");
     const [blueTeam, setBlueTeam] = useState<string>("");
     const [matchTeams, setMatchTeams] = useState<MatchTeams | null>(null);
+    const [feedbackMessage, setFeedbackMessage] = useState<string>("");
+    const [scores, setScores] = useState({
+        red: { redScored: 0, redMissed: 0, team: 0, match: 0 },
+        blue: { blueScored: 0, blueMissed: 0, team: 0, match: 0 }
+    });
 
     useEffect(() => {
         const fetchMatches = async () => {
@@ -61,50 +66,80 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
         setMatchState(0);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!match || !redTeam || !blueTeam) {
             alert("Please select match and teams first");
             return;
         }
         
-        // Update HPData with match and team info
-        HPData.red.team = parseInt(redTeam);
-        HPData.red.match = parseInt(match);
-        HPData.blue.team = parseInt(blueTeam);
-        HPData.blue.match = parseInt(match);
+        const submitData = {
+            red: {
+                ...scores.red,
+                team: parseInt(redTeam),
+                match: parseInt(match)
+            },
+            blue: {
+                ...scores.blue,
+                team: parseInt(blueTeam),
+                match: parseInt(match)
+            }
+        };
         
-        console.log("Submitting HPData:", HPData);
-        
-        SubmitHP({ 
-            team1: HPData.red.team, 
-            team2: HPData.blue.team, 
-            matchData: HPData 
-        });
-        handleExit();
+        try {
+            await SubmitHP({ 
+                team1: parseInt(redTeam), 
+                team2: parseInt(blueTeam), 
+                matchData: submitData 
+            });
+            handleExit();
+        } catch (error) {
+            alert("Error submitting data. Please try again.");
+            console.error(error);
+        }
     };
 
     const handleBlueScored = () => {
-        console.log("Before blue scored:", HPData.blue.blueScored);
-        HPData.blue.blueScored++;
-        console.log("After blue scored:", HPData.blue.blueScored);
+        setScores(prev => ({
+            ...prev,
+            blue: {
+                ...prev.blue,
+                blueScored: prev.blue.blueScored + 1
+            }
+        }));
+        setFeedbackMessage("Blue team scored!");
     };
 
     const handleRedScored = () => {
-        console.log("Before red scored:", HPData.red.redScored);
-        HPData.red.redScored++;
-        console.log("After red scored:", HPData.red.redScored);
+        setScores(prev => ({
+            ...prev,
+            red: {
+                ...prev.red,
+                redScored: prev.red.redScored + 1
+            }
+        }));
+        setFeedbackMessage("Red team scored!");
     };
 
     const handleBlueMissed = () => {
-        console.log("Before blue missed:", HPData.blue.blueMissed);
-        HPData.blue.blueMissed++;
-        console.log("After blue missed:", HPData.blue.blueMissed);
+        setScores(prev => ({
+            ...prev,
+            blue: {
+                ...prev.blue,
+                blueMissed: prev.blue.blueMissed + 1
+            }
+        }));
+        setFeedbackMessage("Blue team missed!");
     };
 
     const handleRedMissed = () => {
-        console.log("Before red missed:", HPData.red.redMissed);
-        HPData.red.redMissed++;
-        console.log("After red missed:", HPData.red.redMissed);
+        setScores(prev => ({
+            ...prev,
+            red: {
+                ...prev.red,
+                redMissed: prev.red.redMissed + 1
+            }
+        }));
+        setFeedbackMessage("Red team missed!");
     };
 
     return (
@@ -152,6 +187,12 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                     </Select>
                 </div>
             </div>
+
+            {feedbackMessage && (
+                <div className="mb-4 text-lg font-semibold text-green-600">
+                    {feedbackMessage}
+                </div>
+            )}
 
             <div className="grid grid-cols-2 gap-4 w-full">
                 <div
