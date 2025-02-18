@@ -1,6 +1,6 @@
 import { HumanPlayerData } from "../interfaces";
 import { db } from "./firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export const SubmitHP = async ({
   team1,
@@ -12,45 +12,48 @@ export const SubmitHP = async ({
   matchData: HumanPlayerData;
 }) => {
   try {
-    // Calculate accuracies
-    const redTotal = matchData.red.redScored + matchData.red.redMissed;
-    const redAccuracy = redTotal > 0 ? 
-      (matchData.red.redScored / redTotal) * 100 : 0;
-
-    const blueTotal = matchData.blue.blueScored + matchData.blue.blueMissed;
-    const blueAccuracy = blueTotal > 0 ? 
-      (matchData.blue.blueScored / blueTotal) * 100 : 0;
+    // Debug logs
+    console.log("Submitting data:", { team1, team2, matchData });
 
     // Update team1 (red)
     const team1Ref = doc(db, team1.toString(), "humanplayer");
+    const team1Doc = await getDoc(team1Ref);
+    const team1Data = team1Doc.data();
+    
+    console.log("Existing team1 data:", team1Data);
+    console.log("New red data:", matchData.red);
+
+    const redTotal = (team1Data?.totalScored || 0) + matchData.red.redScored;
+    const redMissed = (team1Data?.totalMissed || 0) + matchData.red.redMissed;
+    const redAccuracy = (redTotal + redMissed) > 0 ? 
+      Math.round((redTotal / (redTotal + redMissed)) * 100) : 0;
+
+    console.log("Calculated red values:", { redTotal, redMissed, redAccuracy });
+
     await setDoc(team1Ref, {
-      aggregateData: {
-        humanPlayerAccuracy: redAccuracy,
-        matchesPlayed: 1,
-        team: team1
-      },
-      red: {
-        redScored: matchData.red.redScored,
-        redMissed: matchData.red.redMissed,
-        match: matchData.red.match,
-        team: team1
-      }
+      accuracy: redAccuracy,
+      team: team1,
+      totalMissed: redMissed,
+      totalScored: redTotal
     });
 
     // Update team2 (blue)
     const team2Ref = doc(db, team2.toString(), "humanplayer");
+    const team2Doc = await getDoc(team2Ref);
+    const team2Data = team2Doc.data() || { totalScored: 0, totalMissed: 0 };
+
+    // Add new match data to existing totals
+    const blueTotal = team2Data.totalScored + matchData.blue.blueScored;
+    const blueMissed = team2Data.totalMissed + matchData.blue.blueMissed;
+    const blueAccuracy = (blueTotal + blueMissed) > 0 ? 
+      Math.round((blueTotal / (blueTotal + blueMissed)) * 100) : 0;
+
     await setDoc(team2Ref, {
-      aggregateData: {
-        humanPlayerAccuracy: blueAccuracy,
-        matchesPlayed: 1,
-        team: team2
-      },
-      blue: {
-        blueScored: matchData.blue.blueScored,
-        blueMissed: matchData.blue.blueMissed,
-        match: matchData.blue.match,
-        team: team2
-      }
+      totalScored: blueTotal,
+      totalMissed: blueMissed,
+      accuracy: blueAccuracy,
+      team: team2,
+      matchesPlayed: (team2Data.matchesPlayed || 0) + 1
     });
 
   } catch (e) {

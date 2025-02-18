@@ -73,6 +73,8 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
         HPData.blue.team = parseInt(blueTeam);
         HPData.blue.match = parseInt(match);
         
+        console.log("Submitting HPData:", HPData);
+        
         SubmitHP({ 
             team1: HPData.red.team, 
             team2: HPData.blue.team, 
@@ -82,19 +84,27 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
     };
 
     const handleBlueScored = () => {
+        console.log("Before blue scored:", HPData.blue.blueScored);
         HPData.blue.blueScored++;
+        console.log("After blue scored:", HPData.blue.blueScored);
     };
 
     const handleRedScored = () => {
+        console.log("Before red scored:", HPData.red.redScored);
         HPData.red.redScored++;
+        console.log("After red scored:", HPData.red.redScored);
     };
 
     const handleBlueMissed = () => {
+        console.log("Before blue missed:", HPData.blue.blueMissed);
         HPData.blue.blueMissed++;
+        console.log("After blue missed:", HPData.blue.blueMissed);
     };
 
     const handleRedMissed = () => {
+        console.log("Before red missed:", HPData.red.redMissed);
         HPData.red.redMissed++;
+        console.log("After red missed:", HPData.red.redMissed);
     };
 
     return (
