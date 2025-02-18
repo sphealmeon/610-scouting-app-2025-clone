@@ -30,12 +30,6 @@ export default function Popup({
                 </CardContent>
                 <CardFooter className="flex justify-start gap-4">
                     <Button
-                        className="bg-red-400 hover:bg-red-300"
-                        onClick={() => setConfirm(false)}
-                    >
-                        No
-                    </Button>
-                    <Button
                         className="bg-green-500 hover:bg-green-400"
                         onClick={() => {
                             SubmitMatch({team: ScoutingData.start.team, match: ScoutingData.start.match, matchData: ScoutingData})
@@ -45,6 +39,12 @@ export default function Popup({
                         }}
                     >
                         Yes
+                    </Button>
+                    <Button
+                        className="bg-red-400 hover:bg-red-300"
+                        onClick={() => setConfirm(false)}
+                    >
+                        No
                     </Button>
                 </CardFooter>
             </Card>
