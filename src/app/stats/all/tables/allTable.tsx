@@ -56,14 +56,14 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
   });
 
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border border-gray-700 bg-[#121212]">
       <Table>
         <TableHeader>
           <TableRow>
            {Object.entries(sortKeys).map(([key, _]) => (
               <TableHead key={key} className="p-0">
                 <Button 
-                  className="bg-gray-200 hover:bg-gray-300 text-black w-full rounded-none h-full" 
+                  className="bg-[#004d40] hover:bg-[#00695c] text-white w-full rounded-none h-full" 
                   onClick={() => sortData(key as keyof typeof sortKeys)}
                 >
                   {key.charAt(0).toUpperCase() + key.slice(1)}
@@ -83,7 +83,7 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
           {sortedData.map((data) => (
             <TableRow 
               key={data.team}
-              className="cursor-pointer hover:bg-muted/50"
+              className="cursor-pointer hover:bg-gray-800 text-gray-200"
               onClick={() => {
                 router.push("/stats/teams");
                 setCookie("Team", data.team.toString());

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import RobotPosition from "./robotposition";
 import MatchSelect from "./matchselect";
 import ScoutSelect from "./scoutselect";
+import Helper from "./helper";
 import { ScoutingData } from "../data";
 
 export default function StartPage({setMatchState}: {setMatchState: Function}){
@@ -36,6 +37,7 @@ export default function StartPage({setMatchState}: {setMatchState: Function}){
                 <MatchSelect />
                 <RobotPosition />
                 <ScoutSelect setMatchState={setMatchState} />
+                <Helper />
             </div>
         </>
     );

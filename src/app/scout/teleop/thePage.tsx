@@ -33,8 +33,8 @@ export default function Home({ setMatchState }: { setMatchState: Function}) {
           {rightPageState === "endGame" && <EndGame />}
         </div>
       </div>
-      <div className="w-full max-w-7xl mx-auto px-4 mb-4">
-        <div className="flex justify-between gap-4">
+      <div className="w-full max-w-7xl mx-auto px-4 mb-2">
+        <div className="flex justify-between gap-4 mt-2">
           <Button 
             className="bg-red-700 hover:bg-red-800 text-white p-2 sm:p-4 w-[140px] sm:w-[200px] text-sm sm:text-base"
             onClick={() => setMatchState(1)}

@@ -5,6 +5,7 @@ import { ScoutingData } from "../data";
 
 export default function PickupAlgae() {
   const [activePickup, setActivePickup] = useState<string | null>(null);
+  const [popupVisible, setPopupVisible] = useState(false);
 
   const handlePickupClick = (type: string) => {
     // Toggle off if clicking the same button
@@ -25,6 +26,12 @@ export default function PickupAlgae() {
     if (!activePickup) return; // Don't allow scoring if no pickup selected
     action();
     setActivePickup(null); // Clear pickup selection after scoring
+  };
+
+  const handleKnockedOffReef = () => {
+    ScoutingData.teleop.algaeRemoved++;
+    setPopupVisible(true);
+    setTimeout(() => setPopupVisible(false), 2000);
   };
 
   return (
@@ -110,12 +117,17 @@ export default function PickupAlgae() {
         {/* Knocked off reef - Always enabled */}
         <div
           className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500"
-          onClick={() => {
-            ScoutingData.teleop.algaeRemoved++;
-          }}
+          onClick={handleKnockedOffReef}
         >
           Knocked off reef
         </div>
+
+        {/* Popup for feedback */}
+        {popupVisible && (
+          <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded">
+            Algae knocked off the reef!
+          </div>
+        )}
       </div>
     </div>
   );
