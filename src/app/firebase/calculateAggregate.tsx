@@ -5,7 +5,6 @@ import { collection, getDocs, doc, setDoc } from "firebase/firestore";
 import { useApi } from "../globalVars";
 import { key } from "../globalVars";
 import { TeamAggregate } from "./TeamAggregate";
-import { getIgnoreBroken, getUseLast4Matches } from "./aggregateModifiers";
 
 /**
  * calcualtes Aggregate Data for a team
@@ -13,10 +12,6 @@ import { getIgnoreBroken, getUseLast4Matches } from "./aggregateModifiers";
  */
 export const CalculateAggregate = async ({ team }: { team: number }) => {
   let standing: number = 0;
-  let opr: number = 0;
-  let dpr: number = 0;
-
-  //gets opr & dpr from BA or else gets it from saved database
   if (useApi) {
     await fetch(
       "https://www.thebluealliance.com/api/v3/event/" + key + "/oprs",
@@ -33,10 +28,6 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         return response.json();
-      })
-      .then((data) => {
-        opr = data.oprs["frc" + team];
-        dpr = data.dprs["frc" + team];
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -170,87 +161,44 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       reason: ScoutingData.teleop.reason,
       explanation: ScoutingData.teleop.explanation,
     },
-    humanPlayer: {
-      blueScored: ScoutingData.humanPlayer.blueScored,
-      redScored: ScoutingData.humanPlayer.redScored,
-      blueMissed: ScoutingData.humanPlayer.blueMissed,
-      redMissed: ScoutingData.humanPlayer.redMissed,
-    }
   };
-  const ignoreBrokenVar: boolean = await getIgnoreBroken();
-  let useLast4MatchesVar: boolean = await getUseLast4Matches();
-  const last4Matches: string[] = [];
 
   let numMatchesForRawAverage: number = 0;
 
-  //Calculates the average for all raw match values
+  // Calculate averages for all matches
   const querySnapshot = await getDocs(collection(db, team + ""));
-  if (useLast4MatchesVar) {
-    const tempArray: number[] = [];
-    querySnapshot.forEach((document) => {
-      if (!(document.id == "aggregate")) {
-        if (ignoreBrokenVar) {
-          if (document.data().matchData["teleop"]["reason"] == "") {
-            tempArray.push(parseInt(document.id));
-          }
-        } else {
-          tempArray.push(parseInt(document.id));
-        } 
-      }
-    });
-    tempArray.sort(function (a, b) {
-      return b - a;
-    });
-    if (tempArray.length <= 4) {
-      useLast4MatchesVar = false;
-    } else {
-      for (let i = 0; i < 4; i++) {
-        last4Matches.push(tempArray[i] + "");
-      }
-    }
-    console.log(last4Matches);
-  }
   querySnapshot.forEach((document) => {
     if (!(document.id == "aggregate")) {
       if (document.data().matchData["teleop"]["reason"] != "") {
         timesBroke++;
       }
       numMatches++;
-      if (
-        (ignoreBrokenVar &&
-          document.data().matchData["teleop"]["reason"] == "") ||
-        !ignoreBrokenVar
-      ) {
-        if (
-          (useLast4MatchesVar && last4Matches.includes(document.id)) ||
-          !useLast4MatchesVar
-        ) {
-          console.log("team = " + team + "match = " + document.id);
-          const keys = Object.keys(totalData) as Array<keyof typeof totalData>;
-          numMatchesForRawAverage++;
-          keys.forEach((key) => {
-            for (const value in totalData[key]) {
-              if (
-                !(
-                  value == "team" ||
-                  value == "match" ||
-                  value == "position" ||
-                  value == "general" ||
-                  value == "reason" ||
-                  value == "explination"
-                )
-              ) {
-                totalData[key][value] *= numMatchesForRawAverage - 1;
-                totalData[key][value] += document.data().matchData[key][value];
-                totalData[key][value] /= numMatchesForRawAverage;
-              }
-            }
-          });
+      
+      console.log("team = " + team + "match = " + document.id);
+      const keys = Object.keys(totalData) as Array<keyof typeof totalData>;
+      numMatchesForRawAverage++;
+      keys.forEach((key) => {
+        for (const value in totalData[key]) {
+          if (
+            !(
+              value == "team" ||
+              value == "match" ||
+              value == "position" ||
+              value == "general" ||
+              value == "reason" ||
+              value == "explination"
+            )
+          ) {
+            totalData[key][value] *= numMatchesForRawAverage - 1;
+            totalData[key][value] += document.data().matchData[key][value];
+            totalData[key][value] /= numMatchesForRawAverage;
+          }
         }
-      }
+      });
     }
   });
-  //Converts it to an AggregateData object
+
+  // Create aggregate data
   const aggregateData: AggregateData = {
     matchAggregateData: totalData,
     team: team,
@@ -353,15 +301,16 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
     brokePercentage: numMatches === 0 ? 0 : timesBroke / numMatches,
   };
 
-
-  //Sets the new Aggregate Data
-  await setDoc(
-    doc(db, team.toString(), "aggregate"),
-    {
-      aggregateData,
-    },
-    { 
-      merge: true 
-    }
-  );
+  // Set the new Aggregate Data
+  try {
+    await setDoc(
+      doc(db, team.toString(), "aggregate"),
+      {
+        matchData: aggregateData,
+      },
+    );
+    console.log("Successfully updated aggregate data for team", team);
+  } catch (error) {
+    console.error("Error updating aggregate data:", error);
+  }
 };

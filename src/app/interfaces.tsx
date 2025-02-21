@@ -227,7 +227,7 @@ export interface Data{
     };
 }
 
-export interface HumanPlayerData {
+/*export interface HumanPlayerData {
     red: {
         team: number;
         match: number;
@@ -240,7 +240,7 @@ export interface HumanPlayerData {
         blueScored: number;
         blueMissed: number;
     }
-}
+}*/
 
 export interface HumanPlayerStats {
     team: number;
