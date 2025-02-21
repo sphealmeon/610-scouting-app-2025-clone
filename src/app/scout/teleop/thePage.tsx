@@ -14,7 +14,7 @@ export default function Home({ setMatchState }: { setMatchState: Function}) {
 
 
   return (
-    <div className="flex flex-col min-h-screen overflow-x-hidden max-w-full mx-auto px-4">
+    <div className="flex flex-col h-screen overflow-x-hidden max-w-full mx-auto px-4">
       <div className="flex flex-row items-center justify-center gap-4 mb-4 sm:mb-8 mt-4 sm:mt-12">
         <div className="flex items-center gap-2 sm:gap-4">
           <FontAwesomeIcon icon={faGamepad} className="w-12 h-12 sm:w-16 sm:h-16" />
@@ -29,20 +29,20 @@ export default function Home({ setMatchState }: { setMatchState: Function}) {
         <div className="w-full lg:w-1/3 p-2">
           <PickupAlgae />
         </div>
-        <div className="w-full lg:w-1/3 p-2">
+        <div className="w-full lg:w-1/3 p-2 ">
           {rightPageState === "endGame" && <EndGame />}
         </div>
       </div>
-      <div className="w-full max-w-7xl mx-auto px-4 mb-2">
+      <div className="w-full mb-4">
         <div className="flex justify-between gap-4 mt-2">
           <Button 
-            className="bg-red-700 hover:bg-red-800 text-white p-2 sm:p-4 w-[140px] sm:w-[200px] text-sm sm:text-base"
+            className="bg-red-700 hover:bg-red-800 text-white h-24 p-2 sm:p-4 w-[140px] sm:w-[200px] text-sm sm:text-base"
             onClick={() => setMatchState(1)}
           >
             ← Back to Auto
           </Button>
           <Button 
-            className="bg-green-700 hover:bg-green-800 text-white p-2 sm:p-4 w-[140px] sm:w-[200px] text-sm sm:text-base"
+            className="bg-green-700 hover:bg-green-800 text-white h-24 p-2 sm:p-4 w-[140px] sm:w-[200px] text-sm sm:text-base"
             onClick={() => setMatchState(3)}
           >
             Match Review →

@@ -41,7 +41,7 @@ export default function EndGame() {
     };
 
     return (
-        <div className="flex flex-col h-screen overflow-hidden">
+        <div className="flex flex-col overflow-hidden">
             <div className="flex items-center justify-center gap-4 mb-8">
                 <div className="flex-1 h-[1px] bg-white max-w-[80px]"></div>
                 <h1 className="text-xl">Endgame</h1>
