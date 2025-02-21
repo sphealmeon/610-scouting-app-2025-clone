@@ -6,6 +6,7 @@ import { MatchTable } from "./matchtable"
 import { StartPos } from "./startpos"
 import { useState } from "react"
 import { TeamMatchesData } from "@/app/firebase/teamMatchesData"
+import { MainHeader } from "@/components/MainHeader"
 
 export default function Home() {
     const [selectedTeam, setSelectedTeam] = useState<string>("")
@@ -26,6 +27,8 @@ export default function Home() {
     }
 
     return (
+        <>
+        <MainHeader />
         <div className="container mx-auto py-10">
             <TeamSelect onTeamSelect={handleTeamSelect} />
             {selectedTeam && (
@@ -45,5 +48,6 @@ export default function Home() {
                 </div>
             )}
         </div>
+        </>
     )
 }

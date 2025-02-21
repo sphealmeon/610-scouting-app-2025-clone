@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ScoutingData } from '../data';
 
-export default function Helper() {
+export default function Layout() {
     const [isOpen, setIsOpen] = useState(false);
     const [showButton, setShowButton] = useState(false);
 
