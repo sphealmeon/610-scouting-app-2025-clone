@@ -8,6 +8,7 @@ export default function ScoutSelect({ setMatchState }: { setMatchState: Function
     useEffect(() => {
         const checkReadyState = () => {
             const ready = (
+                ScoutingData.start.scoutName !== "" &&
                 ScoutingData.start.position !== "" &&
                 ScoutingData.start.match !== 0 &&
                 ScoutingData.start.team !== 0
