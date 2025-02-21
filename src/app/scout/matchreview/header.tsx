@@ -17,7 +17,7 @@ export default function ReviewHeader({
     };
 
     return (
-        <div className="bg-black flex flex-col p-4 w-full items-center gap-4 border-2 border-green-900">
+        <div className="bg-black flex flex-col sm:flex-row p-4 w-full items-center gap-4 border-2 border-green-900 justify-center">
             <Button
                 className="w-40 text-xl sm:text-3xl bg-red-400 hover:bg-red-300 p-2"
                 onClick={() => setMatchState(2)}
@@ -25,7 +25,7 @@ export default function ReviewHeader({
                 Return
             </Button>
 
-            <div className="flex flex-col gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                     className="w-40 text-xl sm:text-3xl bg-gray-500 hover:bg-gray-400 p-2"
                     onClick={() => handlePageChange("auto")}
