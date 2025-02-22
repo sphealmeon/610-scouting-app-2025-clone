@@ -10,11 +10,18 @@ import { collection, getDocs } from "firebase/firestore";
 export const TeamMatchesData = async ({ team }: { team: number }) => {
   const querySnapshot = await getDocs(collection(db, team + ""));
   const teamMatches: Data[] = [];
+
   querySnapshot.forEach((document) => {
-    if (document.id == "aggregate") {
-      teamMatches.push(document.data()?.aggregateData.matchAggregateData);
+    if (document.id === "aggregate") {
+      const aggregateData = document.data()?.aggregateData;
+      if (aggregateData?.matchAggregateData) {
+        teamMatches.push(aggregateData.matchAggregateData);
+      }
     } else {
-      teamMatches.push(document.data()?.matchData);
+      const matchData = document.data()?.matchData;
+      if (matchData) {
+        teamMatches.push(matchData);
+      }
     }
   });
 
