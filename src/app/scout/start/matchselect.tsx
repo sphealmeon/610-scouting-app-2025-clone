@@ -137,6 +137,7 @@ export default function MatchSelect() {
             <Image src={logo} alt="610 Logo" width={188} height={100} className="mx-auto" />
             <p className="text-2xl mb-6 font-bold">Scouting App</p>
     
+    
             {/* Scout Name Input */}
             <Input
                 type="text"
@@ -146,6 +147,7 @@ export default function MatchSelect() {
                     ScoutingData.start.scoutName = e.target.value;
                 }}
             />
+    
     
             {useApi ? (
                 // API-based dropdowns
@@ -165,6 +167,7 @@ export default function MatchSelect() {
                             ))}
                         </SelectContent>
                     </Select>
+    
     
                     <Select
                         onValueChange={handleTeamSelection}
@@ -202,6 +205,7 @@ export default function MatchSelect() {
                 </>
             )}
     
+    
             {/* Container for checkbox and label */}
             <div className="flex items-center mb-4">
                 <Checkbox 
@@ -215,6 +219,7 @@ export default function MatchSelect() {
                     Preload?
                 </label>
             </div>
+    
     
             {/* Optional: Add visual feedback about selection state */}
             {!matchverify() && (
