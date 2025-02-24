@@ -37,19 +37,19 @@ const RadarChart = ({ teamsData }: RadarChartProps) => {
         }
 
         const stats = [
-            { key: 'coralCyclesScored', label: 'Teleop Coral Cycles' },
-            { key: 'algaeCyclesScored', label: 'Teleop Algae Cycles' },
-            { key: 'autoPPG', label: 'Auto PPG' },
-            { key: 'teleopPPG', label: 'Teleop PPG' },
-            { key: 'endgamePPG', label: 'Endgame PPG' },
+            { key: 'coralCyclesScored', label: 'Teleop Coral Cycles', multiplier: 3 },
+            { key: 'algaeCyclesScored', label: 'Teleop Algae Cycles', multiplier: 5 },
+            { key: 'autoPPG', label: 'Auto PPG', multiplier: 1 },
+            { key: 'teleopPPG', label: 'Teleop PPG', multiplier: 0.7 },
+            { key: 'endgamePPG', label: 'Endgame PPG', multiplier: 1.2 },
         ];
 
-        return stats.map(({ key, label }) => {
+        return stats.map(({ key, label, multiplier }) => {
             const dataPoint: RadarChartData = { stat: label };
             Object.entries(teamsData).forEach(([teamNumber, teamData]) => {
                 if (teamData && teamData[key as keyof AggregateData] !== undefined) {
                     const value = teamData[key as keyof AggregateData] as number;
-                    dataPoint[`team${teamNumber}`] = value;
+                    dataPoint[`team${teamNumber}`] = value * multiplier;
                 } else {
                     dataPoint[`team${teamNumber}`] = 0;
                 }

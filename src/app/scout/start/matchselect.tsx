@@ -69,29 +69,29 @@ export default function MatchSelect() {
         setSelectedTeam("");
         setError("");
 
-        // Finding teams for selected match
-        const selectedMatch = matches.find(
-            (m: any) => m.match_number === parseInt(value, 10)
-        );
-
-        if (selectedMatch) {
-            const redTeams = selectedMatch.alliances.red.team_keys.map((team: string) =>
-                team.replace("frc", "")
-            ); // Remove "frc" prefix
-            const blueTeams = selectedMatch.alliances.blue.team_keys.map((team: string) =>
-                team.replace("frc", "")
+            // Finding teams for selected match
+            const selectedMatch = matches.find(
+                (m: any) => m.match_number === parseInt(value, 10)
             );
-            setTeams([...redTeams, ...blueTeams]);
+
+            if (selectedMatch) {
+                const redTeams = selectedMatch.alliances.red.team_keys.map((team: string) =>
+                    team.replace("frc", "")
+            ); // Remove "frc" prefix
+                const blueTeams = selectedMatch.alliances.blue.team_keys.map((team: string) =>
+                    team.replace("frc", "")
+                );
+                setTeams([...redTeams, ...blueTeams]);
             console.log("Teams:", ...redTeams, ...blueTeams);
 
             // Update scouting data with the selected match number
-            setScoutingData(prev => ({
-                ...prev,
-                start: {
-                    ...prev.start,
+        setScoutingData(prev => ({
+            ...prev,
+            start: {
+                ...prev.start,
                     match: value // Update the match number in ScoutingData
-                }
-            }));
+            }
+        }));
         } else {
             setTeams([]);
         }
@@ -117,7 +117,7 @@ export default function MatchSelect() {
     return (
         <div className="w-1/2 flex flex-col items-center justify-center">
             <p className="text-2xl mb-6 font-bold">Scouting App</p>
-
+    
             {/* Scout Name Input */}
             <Input
                 type="text"
@@ -127,7 +127,7 @@ export default function MatchSelect() {
                     ScoutingData.start.scoutName = e.target.value;
                 }}
             />
-
+    
             {useApi ? (
                 // API-based dropdowns
                 <>
@@ -145,7 +145,7 @@ export default function MatchSelect() {
                             ))}
                         </SelectContent>
                     </Select>
-
+    
                     <Select
                         onValueChange={handleTeamSelection}
                         disabled={!matchNumber}
@@ -181,7 +181,7 @@ export default function MatchSelect() {
                     />
                 </>
             )}
-
+    
             {/* Container for checkbox and label */}
             <div className="flex items-center mb-6">
                 <Checkbox id="preload" />
@@ -189,7 +189,7 @@ export default function MatchSelect() {
                     Preload?
                 </label>
             </div>
-
+    
             {/* Optional: Add visual feedback about selection state */}
             {!matchverify() && (
                 <p className="text-sm text-gray-500 mt-2">
