@@ -1,4 +1,6 @@
-import { Data, HumanPlayerData } from "@/app/interfaces";
+// import { Data, HumanPlayerData } from "@/app/interfaces";
+import { Data } from "@/app/interfaces";
+
 
 export const ScoutingData: Data = {
     start: {
@@ -101,20 +103,20 @@ export const ScoutingData: Data = {
     },
 };
 
-export const HPData: HumanPlayerData = {
-    red: {
-        team: 0,
-        match: 0,
-        redScored: 0,
-        redMissed: 0,
-    },
-    blue: {
-        team: 0,
-        match: 0,
-        blueScored: 0,
-        blueMissed: 0,
-    }
-};
+// export const HPData: HumanPlayerData = {
+//     red: {
+//         team: 0,
+//         match: 0,
+//         redScored: 0,
+//         redMissed: 0,
+//     },
+//     blue: {
+//         team: 0,
+//         match: 0,
+//         blueScored: 0,
+//         blueMissed: 0,
+//     }
+// };
 
 export const resetData = () => {
     ScoutingData.start.preload = 0;
@@ -211,14 +213,14 @@ export const resetData = () => {
     ScoutingData.teleop.reason = "";
     ScoutingData.teleop.explanation = "";
 
-    HPData.red.team = 0;
-    HPData.red.match = 0;
-    HPData.red.redScored = 0;
-    HPData.red.redMissed = 0;
-    HPData.blue.team = 0;
-    HPData.blue.match = 0;
-    HPData.blue.blueScored = 0;
-    HPData.blue.blueMissed = 0;
+    // HPData.red.team = 0;
+    // HPData.red.match = 0;
+    // HPData.red.redScored = 0;
+    // HPData.red.redMissed = 0;
+    // HPData.blue.team = 0;
+    // HPData.blue.match = 0;
+    // HPData.blue.blueScored = 0;
+    // HPData.blue.blueMissed = 0;
 };
 
 
