@@ -29,12 +29,12 @@ export default function ScoutSelect({ setMatchState }: { setMatchState: Function
             >
                 Robot Scout
             </Button>
-            <Button
+            {/* <Button
                 className="w-48 text-xl py-6 px-4 bg-green-900 text-white hover:bg-green-800 border-2 border-green-900"
                 onClick={() => setMatchState(4)}
             >
                 HP Scout
-            </Button>
+            </Button> */}
         </div>
     );
 }
