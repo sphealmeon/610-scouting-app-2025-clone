@@ -14,20 +14,23 @@ interface RadarChartData {
     [key: string]: any
 }
 
+// Define colors for teams
+const teamColors = [
+    "hsl(152, 100%, 30%)", // Green
+    "hsl(12, 100%, 40%)",  // Red
+    "hsl(200, 100%, 40%)", // Blue
+    "hsl(45, 100%, 45%)",  // Yellow
+    "hsl(280, 100%, 45%)", // Purple
+    "hsl(25, 100%, 45%)"   // Orange
+]
+
 const chartConfig = {
-    // Define a color for each potential team (you can add more)
-    team1: {
-        label: "Team 1",
-        color: "hsl(var(--chart-1))",
-    },
-    team2: {
-        label: "Team 2",
-        color: "hsl(var(--chart-2))",
-    },
-    team3: {
-        label: "Team 3",
-        color: "hsl(var(--chart-3))",
-    },
+    team1: { label: "Team 1", color: teamColors[0] },
+    team2: { label: "Team 2", color: teamColors[1] },
+    team3: { label: "Team 3", color: teamColors[2] },
+    team4: { label: "Team 4", color: teamColors[3] },
+    team5: { label: "Team 5", color: teamColors[4] },
+    team6: { label: "Team 6", color: teamColors[5] },
 } satisfies ChartConfig
 
 const RadarChart = ({ teamsData }: RadarChartProps) => {
@@ -84,8 +87,9 @@ const RadarChart = ({ teamsData }: RadarChartProps) => {
                         key={teamNumber}
                         name={`Team ${teamNumber}`}
                         dataKey={`team${teamNumber}`}
-                        fill={`hsl(var(--chart-${index + 1}))`}
+                        fill={teamColors[index % teamColors.length]}
                         fillOpacity={0.6}
+                        stroke={teamColors[index % teamColors.length]}
                     />
                 ))}
                 <Legend />

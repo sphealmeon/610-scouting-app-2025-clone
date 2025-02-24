@@ -67,3 +67,14 @@ button:disabled {
 input, select {
   @apply bg-card text-foreground px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary;
 }
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

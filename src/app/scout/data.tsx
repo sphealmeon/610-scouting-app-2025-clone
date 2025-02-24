@@ -1,4 +1,6 @@
-import { Data, HumanPlayerData } from "@/app/interfaces";
+// import { Data, HumanPlayerData } from "@/app/interfaces";
+import { Data } from "@/app/interfaces";
+
 
 export const ScoutingData: Data = {
     start: {
