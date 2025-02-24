@@ -1,120 +1,88 @@
 "use client"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useEffect, useState } from "react"
-import { FetchTeams } from "../blueAlliance/fetchTeams"
-import { TeamAggregate } from "../firebase/TeamAggregate"
-import { AggregateData } from "../interfaces"
+import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react"
+import { TeamAggregate } from "@/app/firebase/TeamAggregate"
+import { AggregateData } from "@/app/interfaces"
+import { FetchTeams } from "@/app/blueAlliance/fetchTeams"
 
-export default function SelectXTeams({ onTeamsDataChange }: { onTeamsDataChange: (data: { [key: string]: AggregateData }) => void }) {
-    const [allTeams, setAllTeams] = useState<string[]>([])
-    const [selectedTeams, setSelectedTeams] = useState<string[]>([])
-    const [teamsData, setTeamsData] = useState<{ [key: string]: AggregateData }>({})
-    
-    // Fetch teams on component mount
+interface SelectXTeamsProps {
+    onTeamsDataChange: (data: { [key: string]: AggregateData }) => void;
+}
+
+export default function SelectXTeams({ onTeamsDataChange }: SelectXTeamsProps) {
+    const [teams, setTeams] = useState<string[]>([])
+    const [selectors, setSelectors] = useState<number[]>([0]) // Array of selector IDs
+    const [selectedTeams, setSelectedTeams] = useState<{ [key: number]: string }>({}) // Map of selector ID to selected team
+
     useEffect(() => {
-        FetchTeams({ setTeams: setAllTeams })
+        FetchTeams({ setTeams })
     }, [])
 
-    // Fetch team data when selections change
-    useEffect(() => {
-        const fetchTeamData = async () => {
-            const newTeamsData: { [key: string]: AggregateData } = {}
-            for (const team of selectedTeams) {
-                const data = await TeamAggregate({ team: parseInt(team) })
-                if (data) {
-                    newTeamsData[team] = data
-                }
-            }
-            setTeamsData(newTeamsData)
-            onTeamsDataChange(newTeamsData)
-            console.log("Teams data updated:", newTeamsData)
-        }
-
-        if (selectedTeams.length > 0) {
-            fetchTeamData()
-        } else {
-            setTeamsData({})
-            onTeamsDataChange({})
-        }
-    }, [selectedTeams, onTeamsDataChange])
-
-    // Handle team selection
-    const handleTeamSelect = (value: string, index: number) => {
-        const newSelectedTeams = [...selectedTeams]
-        newSelectedTeams[index] = value
-        // Remove any selections after the current index to maintain consistency
-        newSelectedTeams.length = index + 1
-        setSelectedTeams(newSelectedTeams)
-        
-        console.log("Selected teams:", newSelectedTeams)
-        // TODO: Add aggregateData logging here once implemented
+    const addSelector = () => {
+        // Get the next ID by finding the maximum and adding 1, or use 0 if array is empty
+        const nextId = selectors.length > 0 ? Math.max(...selectors) + 1 : 0
+        setSelectors([...selectors, nextId])
     }
 
-    // Get available teams for each select
-    const getAvailableTeams = (index: number) => {
-        return allTeams.filter(team => !selectedTeams.slice(0, index).includes(team))
+    const removeSelector = (id: number) => {
+        setSelectors(selectors.filter(s => s !== id))
+        const newSelectedTeams = { ...selectedTeams }
+        // Deletes property of the id (which would be the team #)
+        delete newSelectedTeams[id]
+        setSelectedTeams(newSelectedTeams)
+        updateTeamsData(newSelectedTeams)
+    }
+
+    const handleTeamSelect = async (team: string, selectorId: number) => {
+        const newSelectedTeams = { ...selectedTeams, [selectorId]: team }
+        setSelectedTeams(newSelectedTeams)
+        updateTeamsData(newSelectedTeams)
+    }
+
+    const updateTeamsData = async (selections: { [key: number]: string }) => {
+        const newTeamsData: { [key: string]: AggregateData } = {}
+        for (const team of Object.values(selections)) {
+            const data = await TeamAggregate({ team: parseInt(team) })
+            if (data) newTeamsData[team] = data
+        }
+        onTeamsDataChange(newTeamsData)
     }
 
     return (
-        <div className="flex flex-col gap-4">
-            {/* First select */}
-            <Select 
-                value={selectedTeams[0]}
-                onValueChange={(value) => handleTeamSelect(value, 0)}
-            >
-                <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select team" />
-                </SelectTrigger>
-                <SelectContent>
-                    {allTeams.map((team) => (
-                        <SelectItem key={team} value={team}>
-                            Team {team}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-
-            {/* Additional selects */}
-            {selectedTeams.map((selectedTeam, index) => (
-                index < selectedTeams.length && index > 0 ? (
-                    <Select 
-                        key={index}
-                        value={selectedTeams[index]}
-                        onValueChange={(value) => handleTeamSelect(value, index)}
-                    >
+        <div className="space-y-4">
+            {selectors.map((id) => (
+                <div key={id} className="flex items-center gap-2">
+                    <Select onValueChange={(value) => handleTeamSelect(value, id)}>
                         <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Select team" />
+                            <SelectValue placeholder="Select Team" />
                         </SelectTrigger>
                         <SelectContent>
-                            {getAvailableTeams(index).map((team) => (
+                            {teams.map((team) => (
                                 <SelectItem key={team} value={team}>
                                     Team {team}
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
-                ) : null
+                    <Button 
+                        variant="destructive" 
+                        size="icon"
+                        onClick={() => removeSelector(id)}
+                    >
+                        ×
+                    </Button>
+                </div>
             ))}
-
-            {/* Additional select for new selection */}
-            {selectedTeams.length > 0 && selectedTeams[selectedTeams.length - 1] && (
-                <Select 
-                    value={selectedTeams[selectedTeams.length]}
-                    onValueChange={(value) => handleTeamSelect(value, selectedTeams.length)}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select team" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {getAvailableTeams(selectedTeams.length).map((team) => (
-                            <SelectItem key={team} value={team}>
-                                Team {team}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            )}
+            
+            <Button 
+                variant="outline" 
+                onClick={addSelector}
+                className="mt-2"
+            >
+                Add Team
+            </Button>
         </div>
     )
 }
