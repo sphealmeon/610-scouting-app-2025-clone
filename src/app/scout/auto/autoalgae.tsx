@@ -51,7 +51,6 @@ const Algae = ({ setLeaveState }: {
       }
       setLeaveState(1);
 
-      
       if (level === 'L2-L3') {
         switch(slot) {
           case 'A': ScoutingData.auto.algaeA++; break;
@@ -91,15 +90,19 @@ const Algae = ({ setLeaveState }: {
   };
 
   return (
-    <div className="flex flex-col items-center p-4 space-y-4">
-      <h1 className="text-xl font-bold">Auto Algae Knock Off - {level}</h1>
+    <div className="flex flex-col items-center p-6 mb-4 space-y-4">
+      <h1 className="text-xl font-bold">Auto Algae Knock Off</h1>
+      <h2 className="text-lg mt-0">Level {level}</h2>
 
-      <div className="flex space-x-4 mb-4">
+      <div className="flex space-x-4">
         {(['L2-L3', 'L3-L4'] as const).map((l) => (
           <Button
             key={l}
             variant={level === l ? "default" : "outline"}
             onClick={() => setLevel(l)}
+            className={`bg-gray-700 hover:bg-gray-200 text-white ${
+              level === l ? "bg-gray-200 text-black" : ""
+          }`}
           >
             {l}
           </Button>
@@ -132,9 +135,9 @@ const Algae = ({ setLeaveState }: {
 
               const hasAlgae = algaePositions[level].has(slot);
               const isActive = getSlotKnocked(level, slot);
-              const fillColor = !hasAlgae ? "#9ca3af" : 
-                              isActive ? "#22c55e" : 
-                              "#ef4444";
+              const fillColor = !hasAlgae ? "#4B5563" : 
+                              isActive ? "#17803D" : 
+                              "#7F1C1D";
 
               return (
                 <g 
@@ -168,8 +171,18 @@ const Algae = ({ setLeaveState }: {
       </div>
 
       <div className="flex gap-4 mt-4">
-        <Button onClick={() => ScoutingData.auto.barge++}>Barge Scored</Button>
-        <Button onClick={() => ScoutingData.auto.processor++}>Processor Scored</Button>
+        <Button 
+            onClick={() => ScoutingData.auto.barge++} 
+            className="bg-green-700 hover:bg-green-600 border-gray-500 text-white"
+        >
+            Barge Scored
+        </Button>
+        <Button 
+            onClick={() => ScoutingData.auto.processor++} 
+            className="bg-green-700 hover:bg-green-600 border-gray-500 text-white"
+        >
+            Processor Scored
+        </Button>
       </div>
 
       {popup.visible && (

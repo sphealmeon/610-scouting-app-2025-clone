@@ -5,7 +5,6 @@ import { collection, getDocs, doc, setDoc } from "firebase/firestore";
 import { useApi } from "../globalVars";
 import { key } from "../globalVars";
 import { TeamAggregate } from "./TeamAggregate";
-import { getIgnoreBroken, getUseLast4Matches } from "./aggregateModifiers";
 
 /**
  * calcualtes Aggregate Data for a team
@@ -13,10 +12,6 @@ import { getIgnoreBroken, getUseLast4Matches } from "./aggregateModifiers";
  */
 export const CalculateAggregate = async ({ team }: { team: number }) => {
   let standing: number = 0;
-  let opr: number = 0;
-  let dpr: number = 0;
-
-  //gets opr & dpr from BA or else gets it from saved database
   if (useApi) {
     await fetch(
       "https://www.thebluealliance.com/api/v3/event/" + key + "/oprs",
@@ -33,10 +28,6 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         return response.json();
-      })
-      .then((data) => {
-        opr = data.oprs["frc" + team];
-        dpr = data.dprs["frc" + team];
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -67,11 +58,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       .catch((error) => {
         console.error("Error:", error);
       });
-  } else {
-    const tempAggData: AggregateData = await TeamAggregate({ team: team });
-    standing = tempAggData.standing;
-  }
-
+  } 
   let numMatches: number = 0;
   let timesBroke: number = 0;
 
@@ -85,175 +72,133 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       alliance: ScoutingData.start.alliance,
     },
     auto: {
-      leave: ScoutingData.auto.leave,
-      coral: ScoutingData.auto.coral,
-      algae: ScoutingData.auto.algae,
-      droppedCoral: ScoutingData.auto.droppedCoral,
-      droppedAlgae: ScoutingData.auto.droppedAlgae,
-      l4: ScoutingData.auto.l4,
-      l3: ScoutingData.auto.l3,
-      l2: ScoutingData.auto.l2,
-      l1: ScoutingData.auto.l1,
-      l4A: ScoutingData.auto.l4A,
-      l4B: ScoutingData.auto.l4B,
-      l4C: ScoutingData.auto.l4C,
-      l4D: ScoutingData.auto.l4D,
-      l4E: ScoutingData.auto.l4E,
-      l4F: ScoutingData.auto.l4F,
-      l4G: ScoutingData.auto.l4G,
-      l4H: ScoutingData.auto.l4H,
-      l4I: ScoutingData.auto.l4I,
-      l4J: ScoutingData.auto.l4J,
-      l4K: ScoutingData.auto.l4K,
-      l4L: ScoutingData.auto.l4L,
-      l3A: ScoutingData.auto.l3A,
-      l3B: ScoutingData.auto.l3B,
-      l3C: ScoutingData.auto.l3C,
-      l3D: ScoutingData.auto.l3D,
-      l3E: ScoutingData.auto.l3E,
-      l3F: ScoutingData.auto.l3F,
-      l3G: ScoutingData.auto.l3G,
-      l3H: ScoutingData.auto.l3H,
-      l3I: ScoutingData.auto.l3I,
-      l3J: ScoutingData.auto.l3J,
-      l3K: ScoutingData.auto.l3K,
-      l3L: ScoutingData.auto.l3L,
-      l2A: ScoutingData.auto.l2A,
-      l2B: ScoutingData.auto.l2B,
-      l2C: ScoutingData.auto.l2C,
-      l2D: ScoutingData.auto.l2D,
-      l2E: ScoutingData.auto.l2E,
-      l2F: ScoutingData.auto.l2F,
-      l2G: ScoutingData.auto.l2G,
-      l2H: ScoutingData.auto.l2H,
-      l2I: ScoutingData.auto.l2I,
-      l2J: ScoutingData.auto.l2J,
-      l2K: ScoutingData.auto.l2K,
-      l2L: ScoutingData.auto.l2L,
-      l1A: ScoutingData.auto.l1A,
-      l1B: ScoutingData.auto.l1B,
-      l1C: ScoutingData.auto.l1C,
-      l1D: ScoutingData.auto.l1D,
-      l1E: ScoutingData.auto.l1E,
-      l1F: ScoutingData.auto.l1F,
-      algaeA: ScoutingData.auto.algaeA,
-      algaeB: ScoutingData.auto.algaeB,
-      algaeC: ScoutingData.auto.algaeC,
-      algaeD: ScoutingData.auto.algaeD,
-      algaeE: ScoutingData.auto.algaeE,
-      algaeF: ScoutingData.auto.algaeF,
-      processor: ScoutingData.auto.processor,
-      barge: ScoutingData.auto.barge,
+      leave: 0,
+      coral: 0,
+      algae: 0,
+      droppedCoral: 0,
+      droppedAlgae: 0,
+      l4: 0,
+      l3: 0,
+      l2: 0,
+      l1: 0,
+      l4A: { made: 0, dropped: 0 },
+      l4B: { made: 0, dropped: 0 },
+      l4C: { made: 0, dropped: 0 },
+      l4D: { made: 0, dropped: 0 },
+      l4E: { made: 0, dropped: 0 },
+      l4F: { made: 0, dropped: 0 },
+      l4G: { made: 0, dropped: 0 },
+      l4H: { made: 0, dropped: 0 },
+      l4I: { made: 0, dropped: 0 },
+      l4J: { made: 0, dropped: 0 },
+      l4K: { made: 0, dropped: 0 },
+      l4L: { made: 0, dropped: 0 },
+      l3A: { made: 0, dropped: 0 },
+      l3B: { made: 0, dropped: 0 },
+      l3C: { made: 0, dropped: 0 },
+      l3D: { made: 0, dropped: 0 },
+      l3E: { made: 0, dropped: 0 },
+      l3F: { made: 0, dropped: 0 },
+      l3G: { made: 0, dropped: 0 },
+      l3H: { made: 0, dropped: 0 },
+      l3I: { made: 0, dropped: 0 },
+      l3J: { made: 0, dropped: 0 },
+      l3K: { made: 0, dropped: 0 },
+      l3L: { made: 0, dropped: 0 },
+      l2A: { made: 0, dropped: 0 },
+      l2B: { made: 0, dropped: 0 },
+      l2C: { made: 0, dropped: 0 },
+      l2D: { made: 0, dropped: 0 },
+      l2E: { made: 0, dropped: 0 },
+      l2F: { made: 0, dropped: 0 },
+      l2G: { made: 0, dropped: 0 },
+      l2H: { made: 0, dropped: 0 },
+      l2I: { made: 0, dropped: 0 },
+      l2J: { made: 0, dropped: 0 },
+      l2K: { made: 0, dropped: 0 },
+      l2L: { made: 0, dropped: 0 },
+      l1A: { made: 0, dropped: 0 },
+      l1B: { made: 0, dropped: 0 },
+      l1C: { made: 0, dropped: 0 },
+      l1D: { made: 0, dropped: 0 },
+      l1E: { made: 0, dropped: 0 },
+      l1F: { made: 0, dropped: 0 },
+      algaeA: 0,
+      algaeB: 0,
+      algaeC: 0,
+      algaeD: 0,
+      algaeE: 0,
+      algaeF: 0,
+      processor: 0,
+      barge: 0,
     },
     teleop: {
-      coralPickup: ScoutingData.teleop.coralPickup,
-      coralPickupFromStation: ScoutingData.teleop.coralPickupFromStation,
-      pickupAlgae: ScoutingData.teleop.pickupAlgae,
-      pickupAlgaeFromReef: ScoutingData.teleop.pickupAlgaeFromReef,
-      l4Scored: ScoutingData.teleop.l4Scored,
-      l3Scored: ScoutingData.teleop.l3Scored,
-      l2Scored: ScoutingData.teleop.l2Scored,
-      l1Scored: ScoutingData.teleop.l1Scored,
-      l4Dropped: ScoutingData.teleop.l4Dropped,
-      l3Dropped: ScoutingData.teleop.l3Dropped,
-      l2Dropped: ScoutingData.teleop.l2Dropped,
-      l1Dropped: ScoutingData.teleop.l1Dropped,
-      processorScored: ScoutingData.teleop.processorScored,
-      processorDropped: ScoutingData.teleop.processorDropped,
-      bargeScored: ScoutingData.teleop.bargeScored,
-      bargeDropped: ScoutingData.teleop.bargeDropped,
-      algaeRemoved: ScoutingData.teleop.algaeRemoved,
-      isCoop: ScoutingData.teleop.isCoop,
-      park: ScoutingData.teleop.park,
-      shallow: ScoutingData.teleop.shallow,
-      deep: ScoutingData.teleop.deep,
-      missedShallow: ScoutingData.teleop.missedShallow,
-      missedDeep: ScoutingData.teleop.missedDeep,
-      general: ScoutingData.teleop.general,
-      reason: ScoutingData.teleop.reason,
-      explanation: ScoutingData.teleop.explanation,
+      droppedOnField: 0,
+      coralPickup: 0,
+      coralPickupFromStation: 0,
+      pickupAlgae: 0,
+      pickupAlgaeFromReef: 0,
+      l4Scored: 0,
+      l3Scored: 0,
+      l2Scored: 0,
+      l1Scored: 0,
+      l4Dropped: 0,
+      l3Dropped: 0,
+      l2Dropped: 0,
+      l1Dropped: 0,
+      processorScored: 0,
+      processorDropped: 0,
+      bargeScored: 0,
+      bargeDropped: 0,
+      algaeRemoved: 0,
+      isCoop: 0,
+      park: 0,
+      shallow: 0,
+      deep: 0,
+      missedShallow: 0,
+      missedDeep: 0,
+      general: "",
+      reason: "",
+      explanation: "",
     },
-    humanPlayer: {
-      blueScored: ScoutingData.humanPlayer.blueScored,
-      redScored: ScoutingData.humanPlayer.redScored,
-      blueMissed: ScoutingData.humanPlayer.blueMissed,
-      redMissed: ScoutingData.humanPlayer.redMissed,
-    }
   };
-  const ignoreBrokenVar: boolean = await getIgnoreBroken();
-  let useLast4MatchesVar: boolean = await getUseLast4Matches();
-  const last4Matches: string[] = [];
 
   let numMatchesForRawAverage: number = 0;
 
-  //Calculates the average for all raw match values
+  // Calculate averages for all matches
   const querySnapshot = await getDocs(collection(db, team + ""));
-  if (useLast4MatchesVar) {
-    const tempArray: number[] = [];
-    querySnapshot.forEach((document) => {
-      if (!(document.id == "aggregate")) {
-        if (ignoreBrokenVar) {
-          if (document.data().matchData["teleop"]["reason"] == "") {
-            tempArray.push(parseInt(document.id));
-          }
-        } else {
-          tempArray.push(parseInt(document.id));
-        } 
-      }
-    });
-    tempArray.sort(function (a, b) {
-      return b - a;
-    });
-    if (tempArray.length <= 4) {
-      useLast4MatchesVar = false;
-    } else {
-      for (let i = 0; i < 4; i++) {
-        last4Matches.push(tempArray[i] + "");
-      }
-    }
-    console.log(last4Matches);
-  }
   querySnapshot.forEach((document) => {
     if (!(document.id == "aggregate")) {
       if (document.data().matchData["teleop"]["reason"] != "") {
         timesBroke++;
       }
       numMatches++;
-      if (
-        (ignoreBrokenVar &&
-          document.data().matchData["teleop"]["reason"] == "") ||
-        !ignoreBrokenVar
-      ) {
-        if (
-          (useLast4MatchesVar && last4Matches.includes(document.id)) ||
-          !useLast4MatchesVar
-        ) {
-          console.log("team = " + team + "match = " + document.id);
-          const keys = Object.keys(totalData) as Array<keyof typeof totalData>;
-          numMatchesForRawAverage++;
-          keys.forEach((key) => {
-            for (const value in totalData[key]) {
-              if (
-                !(
-                  value == "team" ||
-                  value == "match" ||
-                  value == "position" ||
-                  value == "general" ||
-                  value == "reason" ||
-                  value == "explination"
-                )
-              ) {
-                totalData[key][value] *= numMatchesForRawAverage - 1;
-                totalData[key][value] += document.data().matchData[key][value];
-                totalData[key][value] /= numMatchesForRawAverage;
-              }
-            }
-          });
+      
+      console.log("team = " + team + "match = " + document.id);
+      const keys = Object.keys(totalData) as Array<keyof typeof totalData>;
+      numMatchesForRawAverage++;
+      keys.forEach((key) => {
+        for (const value in totalData[key]) {
+          if (
+            !(
+              value == "team" ||
+              value == "match" ||
+              value == "position" ||
+              value == "general" ||
+              value == "reason" ||
+              value == "explination"
+            )
+          ) {
+            totalData[key][value] *= numMatchesForRawAverage - 1;
+            totalData[key][value] += document.data().matchData[key][value];
+            totalData[key][value] /= numMatchesForRawAverage;
+          }
         }
-      }
+      });
     }
   });
-  //Converts it to an AggregateData object
+
+  // Create aggregate data
   const aggregateData: AggregateData = {
     matchAggregateData: totalData,
     team: team,
@@ -356,15 +301,16 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
     brokePercentage: numMatches === 0 ? 0 : timesBroke / numMatches,
   };
 
-
-  //Sets the new Aggregate Data
-  await setDoc(
-    doc(db, team.toString(), "aggregate"),
-    {
-      aggregateData,
-    },
-    { 
-      merge: true 
-    }
-  );
+  // Set the new Aggregate Data
+  try {
+    await setDoc(
+      doc(db, team.toString(), "aggregate"),
+      {
+        aggregateData,
+      },
+    );
+    console.log("Successfully updated aggregate data for team", team);
+  } catch (error) {
+    console.error("Error updating aggregate data:", error);
+  }
 };

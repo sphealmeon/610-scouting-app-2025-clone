@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
-import { AggregateData } from "@/app/interfaces";
+import { HumanPlayerStats } from "@/app/interfaces";
 import { setCookie } from "@/app/cookies/cookies";
 import { ArrowUpDown, ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
  * @param teamData an AggregateData array of all the teams data
  * @returns a sortable table mostly containing to most important data
  */
-export default function ImportantTable({ teamData }: { teamData: AggregateData[] }) {
+export default function HpTable({ teamData }: { teamData: HumanPlayerStats[] }) {
   const router = useRouter();
   const [sortConfig, setSortConfig] = useState<{
     key: keyof typeof sortKeys;
@@ -26,14 +26,12 @@ export default function ImportantTable({ teamData }: { teamData: AggregateData[]
   }>({ key: 'team', direction: 'asc' });
 
   const sortKeys = {
-    team: (data: AggregateData) => data.team,
-    autoPPG: (data: AggregateData) => data.autoPPG,
-    teleopPPG: (data: AggregateData) => data.teleopPPG,
-    endgamePPG: (data: AggregateData) => data.endgamePPG,
-    coralCycles: (data: AggregateData) => data.coralCyclesScored,
-    algaeCycles: (data: AggregateData) => data.algaeCyclesScored,
-    brokePercentage: (data: AggregateData) => data.brokePercentage,
-    matches: (data: AggregateData) => data.matchesPlayed,
+    team: (data: HumanPlayerStats) => data.team,
+    matchesPlayed: (data: HumanPlayerStats) => data.matchesPlayed,
+    makes: (data: HumanPlayerStats) => data.totalScored,
+    misses: (data: HumanPlayerStats) => data.totalMissed,
+    fgPercentage: (data: HumanPlayerStats) => data.fieldGoalPercentage,
+    ppg: (data: HumanPlayerStats) => data.pointsPerGame,
   };
 
   const sortData = (key: keyof typeof sortKeys) => {
@@ -85,13 +83,11 @@ export default function ImportantTable({ teamData }: { teamData: AggregateData[]
               }}
             >
               <TableCell className="font-medium">{data.team}</TableCell>
-              <TableCell>{data.autoPPG.toFixed(2)}</TableCell>
-              <TableCell>{data.teleopPPG.toFixed(2)}</TableCell>
-              <TableCell>{data.endgamePPG.toFixed(2)}</TableCell>
-              <TableCell>{data.coralCyclesScored.toFixed(2)}</TableCell>
-              <TableCell>{data.algaeCyclesScored.toFixed(2)}</TableCell>
-              <TableCell>{(data.brokePercentage * 100).toFixed(1)}%</TableCell>
               <TableCell>{data.matchesPlayed}</TableCell>
+              <TableCell>{data.totalScored}</TableCell>
+              <TableCell>{data.totalMissed}</TableCell>
+              <TableCell>{data.fieldGoalPercentage.toFixed(1)}%</TableCell>
+              <TableCell>{data.pointsPerGame.toFixed(1)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

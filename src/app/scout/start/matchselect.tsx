@@ -1,10 +1,12 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
-import { key } from "@/app/globalVars"; // Assuming `key` contains the event key for the API
+import { key, qualificationMatches } from "@/app/globalVars"; // Assuming `key` contains the event key for the API
 import { useApi } from "@/app/globalVars"; // Assuming `useApi` determines if the API should be used
 import { ScoutingData } from "@/app/scout/data";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import logo from "@/components/assets/logo.png";
 import { FetchAlliance } from "@/app/blueAlliance/fetchTeamsInMatch";
 
 export default function MatchSelect() {
@@ -55,11 +57,18 @@ export default function MatchSelect() {
                 }
             }
             else {
-                // Handle non-API scenario here
+                // For non-API scenario, set teams from globalVars
+                setTeams(teams);
+                // Set matches from qualificationMatches in globalVars
+                const formattedMatches = qualificationMatches.map(matchNum => ({
+                    match_number: parseInt(matchNum),
+                    comp_level: "qm"
+                }));
+                setMatches(formattedMatches);
             }
         };
 
-        fetchMatches();
+        fetchMatches(); // 1
     }, [useApi]);
 
     const handleMatchNumberChange = async (value: string) => {
@@ -73,32 +82,34 @@ export default function MatchSelect() {
         setSelectedTeam("");
         setError("");
 
-        // Finding teams for selected match
-        const selectedMatch = matches.find(
-            (m: any) => m.match_number === parseInt(value, 10)
-        );
-
-        if (selectedMatch) {
-            const redTeams = selectedMatch.alliances.red.team_keys.map((team: string) =>
-                team.replace("frc", "")
-            ); // Remove "frc" prefix
-            const blueTeams = selectedMatch.alliances.blue.team_keys.map((team: string) =>
-                team.replace("frc", "")
+        if (useApi) {
+            // Finding teams for selected match
+            const selectedMatch = matches.find(
+                (m: any) => m.match_number === parseInt(value, 10)
             );
-            setTeams([...redTeams, ...blueTeams]);
-            console.log("Teams:", ...redTeams, ...blueTeams);
 
-            // Update scouting data with the selected match number
-            setScoutingData(prev => ({
-                ...prev,
-                start: {
-                    ...prev.start,
-                    match: value // Update the match number in ScoutingData
-                }
-            }));
-        } else {
-            setTeams([]);
+            if (selectedMatch) {
+                const redTeams = selectedMatch.alliances.red.team_keys.map((team: string) =>
+                    team.replace("frc", "")
+                );
+                const blueTeams = selectedMatch.alliances.blue.team_keys.map((team: string) =>
+                    team.replace("frc", "")
+                );
+                setTeams([...redTeams, ...blueTeams]);
+            } else {
+                setTeams([]);
+            }
         }
+        // else case not needed as teams are already set in fetchMatches for non-API scenario
+
+        // Update scouting data
+        setScoutingData(prev => ({
+            ...prev,
+            start: {
+                ...prev.start,
+                match: value
+            }
+        }));
     };
 
     const handleTeamSelection = async (value: string) => {
@@ -122,47 +133,52 @@ export default function MatchSelect() {
     };
 
     return (
-        <div className="w-1/2 flex flex-col items-center justify-center">
+        <div className="w-1/2 flex flex-col items-center justify-center text-white">
+            <Image src={logo} alt="610 Logo" width={188} height={100} className="mx-auto" />
             <p className="text-2xl mb-6 font-bold">Scouting App</p>
-
+    
+    
             {/* Scout Name Input */}
             <Input
                 type="text"
                 placeholder="Enter Scout Name"
-                className="mb-6 w-full"
+                className="mb-6 w-1/3 bg-gray-600 text-white placeholder-gray-400 py-6"
                 onChange={(e) => {
                     ScoutingData.start.scoutName = e.target.value;
                 }}
             />
-
+    
+    
             {useApi ? (
                 // API-based dropdowns
                 <>
                     <Select onValueChange={handleMatchNumberChange}>
-                        <SelectTrigger className="mb-6 w-full">
+                        <SelectTrigger className="mb-6 w-1/3 bg-gray-600 text-white py-6">
                             <SelectValue placeholder="Select Match Number" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-gray-600 text-white">
                             {matches
                                 .sort((a, b) => a.match_number - b.match_number)
                                 .map((match) => (
-                                    <SelectItem key={match.match_number} value={String(match.match_number)}>
+                                    <SelectItem key={match.match_number} value={String(match.match_number)}
+                                        className="text-white">
                                         Match {match.match_number}
                                     </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
-
+    
+    
                     <Select
                         onValueChange={handleTeamSelection}
                         disabled={!matchNumber}
                     >
-                        <SelectTrigger className="mb-6 w-full">
+                        <SelectTrigger className="mb-6 w-1/3 bg-gray-600 text-white py-6">
                             <SelectValue placeholder={matchNumber ? "Select Team" : "Select a Match First"} />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-gray-600 text-white">
                             {teams.map((team) => (
-                                <SelectItem key={team} value={team}>
+                                <SelectItem key={team} value={team} className="text-white">
                                     Team {team}
                                 </SelectItem>
                             ))}
@@ -176,31 +192,39 @@ export default function MatchSelect() {
                         min="1"
                         type="number"
                         placeholder="Enter Match Number"
-                        className="mb-6 w-full"
+                        className="mb-6 w-1/3 bg-gray-600 text-white placeholder-gray-400 py-6"
                         onChange={(e) => handleMatchNumberChange(e.target.value)}
                     />
                     <Input
                         min="1"
                         type="number"
                         placeholder="Enter Team Number"
-                        className="mb-6 w-full"
+                        className="mb-6 w-1/3 bg-gray-600 text-white placeholder-gray-400 py-6"
                         onChange={(e) => handleTeamSelection(e.target.value)}
                     />
                 </>
             )}
-
+    
+    
             {/* Container for checkbox and label */}
-            <div className="flex items-center mb-6">
-                <Checkbox id="preload" />
-                <label htmlFor="preload" className="text-sm font-medium leading-none ml-2">
+            <div className="flex items-center mb-4">
+                <Checkbox 
+                    id="preload" 
+                    onClick={() => {
+                        console.log("here");
+                        ScoutingData.start.preload = ScoutingData.start.preload == 0 ? 1 : 0; // Set to 1 if checked, otherwise 0
+                    }} 
+                />
+                <label htmlFor="preload" className="text-sm font-medium leading-none ml-2 text-white">
                     Preload?
                 </label>
             </div>
-
+    
+    
             {/* Optional: Add visual feedback about selection state */}
             {!matchverify() && (
-                <p className="text-sm text-gray-500 mt-2">
-                    Please select both a match and team to continue
+                <p className="text-sm text-gray-300 mt-2">
+                    Select match and team to continue
                 </p>
             )}
         </div>

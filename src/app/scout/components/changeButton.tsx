@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
-import { ScoutingData } from "../data";
 
 interface ChangeButtonProps {
     name: string;

@@ -2,8 +2,7 @@ import { ScoutingData } from "../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const Reef = ({ setMatchState, setLeaveState }: { 
-    setMatchState: Function,
+const Reef = ({ setLeaveState }: { 
     setLeaveState: (value: number) => void 
 }) => {
   const [level, setLevel] = useState<'L1' | 'L2' | 'L3' | 'L4'>('L1');
@@ -30,7 +29,6 @@ const Reef = ({ setMatchState, setLeaveState }: {
     ScoutingData.auto.coral++;
   }
 
-
   function handleScore(l: 'L1' | 'L2' | 'L3' | 'L4') {
     setLevel(l);
     handleCoral();
@@ -54,6 +52,7 @@ const Reef = ({ setMatchState, setLeaveState }: {
     
     if (typeof slotData === 'object' && 'made' in slotData) {
       if (slotData.made === 0) {
+        // Scoring
         slotData.made = 1;
         // Auto-set leave when scoring
         if (ScoutingData.auto.leave === 0) {
@@ -63,7 +62,16 @@ const Reef = ({ setMatchState, setLeaveState }: {
         handleScore(level as 'L1' | 'L2' | 'L3' | 'L4');
         showPopup(`Scored at Level ${level}, Slot ${slot}`);
       } else {
+        // Unscoring - decrement the counters
         slotData.made = 0;
+        ScoutingData.auto.coral--;  // Decrement total coral
+        // Decrement specific level counter
+        switch(level) {
+          case 'L1': ScoutingData.auto.l1--; break;
+          case 'L2': ScoutingData.auto.l2--; break;
+          case 'L3': ScoutingData.auto.l3--; break;
+          case 'L4': ScoutingData.auto.l4--; break;
+        }
         showPopup(`Removed score at Level ${level}, Slot ${slot}`);
       }
     }
@@ -147,15 +155,19 @@ const Reef = ({ setMatchState, setLeaveState }: {
   };
 
   return (
-    <div className="flex flex-col items-center p-4 space-y-4">
-      <h1 className="text-xl font-bold">Auto Coral Scoring - Level {level}</h1>
+    <div className="flex flex-col items-center w-full max-w-3xl mx-auto p-6 mb-4 space-y-4">
+      <h1 className="text-xl font-bold mb-2">Auto Coral Scoring</h1>
+      <h2 className="text-lg mb-6">Level {level}</h2>
 
-      <div className="flex space-x-4 mb-4">
+      <div className="flex space-x-4">
         {(['L1', 'L2', 'L3', 'L4'] as const).map((l) => (
           <Button
             key={l}
             variant={level === l ? "default" : "outline"}
             onClick={() => setLevel(l)}
+            className={`bg-gray-700 hover:bg-gray-200 text-white ${
+                level === l ? "bg-gray-200 text-black" : ""
+            }`}
           >
             {l}
           </Button>
@@ -202,9 +214,9 @@ const Reef = ({ setMatchState, setLeaveState }: {
                   <g onClick={() => handleHexagonClick(level, slot)}>
                     <path
                       d={path}
-                      fill={getSlotMade(level, slot) ? "#22c55e" : "#ef4444"}
-                      stroke="black"
-                      strokeWidth="0.5"
+                      fill={getSlotMade(level, slot) ? "#17803D" : "#7F1C1D"} // Updated colors
+                      stroke="black" // Updated stroke color
+                      strokeWidth="0.5" 
                       className="cursor-pointer hover:opacity-80"
                     />
                     <text
@@ -225,10 +237,10 @@ const Reef = ({ setMatchState, setLeaveState }: {
                     cx={buttonX}
                     cy={buttonY}
                     r="2"
-                    fill="#888888"
-                    stroke="black"
-                    strokeWidth="0.5"
-                    className="cursor-pointer hover:fill-red-500"
+                    fill="#4B5563" // Updated to dark grey
+                    stroke="gray-700"
+                    strokeWidth="0.5" 
+                    className="cursor-pointer hover:fill-red-800"
                     onClick={() => {
                       handleDroppedCoral(level, slot);
                       showPopup(`Dropped coral at Level ${level}, Slot ${slot}`);
@@ -239,11 +251,6 @@ const Reef = ({ setMatchState, setLeaveState }: {
             })}
           </svg>
         </div>
-      </div>
-
-      <div className="flex gap-4 mt-4">
-        <Button onClick={() => setMatchState(0)}>Back to Start</Button>
-        <Button onClick={() => setMatchState(2)}>To Teleop</Button>
       </div>
 
       {popup.visible && (

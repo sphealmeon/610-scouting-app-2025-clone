@@ -4,8 +4,7 @@ import React, { useState, useEffect } from "react";
 import RobotPosition from "./robotposition";
 import MatchSelect from "./matchselect";
 import ScoutSelect from "./scoutselect";
-import ScoutHeader from "../components/scoutHeader";
-import ChangeButton from "../components/changeButton";
+import Layout from "./layout";
 import { ScoutingData } from "../data";
 
 export default function StartPage({setMatchState}: {setMatchState: Function}){
@@ -33,17 +32,12 @@ export default function StartPage({setMatchState}: {setMatchState: Function}){
 
     return(
         <>
-            {/*ScoutHeader name={"Start"}/>*/}
-            <div className="relative grid grid-cols-3 gap-4 p-8">
-                <div className="col-span-1">
-                    <RobotPosition />
-                </div>
-                <div className="col-span-1 flex justify-center">
-                    <MatchSelect />
-                </div>
-                <div className="col-span-1 flex justify-center">
-                    <ScoutSelect setMatchState={setMatchState} />
-                </div>
+            {/* <ScoutHeader name={"Start"}/> */}
+            <div className="relative flex flex-col items-center space-y-8 p-8">
+                <MatchSelect />
+                <RobotPosition />
+                <ScoutSelect setMatchState={setMatchState} />
+                <Layout />
             </div>
         </>
     );

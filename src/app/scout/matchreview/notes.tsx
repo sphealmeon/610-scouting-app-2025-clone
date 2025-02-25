@@ -20,9 +20,9 @@ export default function NotesReview() {
                 <div className="grid gap-4">
                     <label className="flex items-center gap-4">
                         <Checkbox
-                            className="h-6 w-6"
+                            className="h-6 w-6 hover:bg-gray-500"
                             checked={parkChecked}
-                            disabled={shallowChecked || deepChecked} 
+                            disabled={shallowChecked || deepChecked}
                             onCheckedChange={(checked: boolean) => {
                                 setParkChecked(checked);
                                 ScoutingData.teleop.park = checked ? 1 : 0;
@@ -33,7 +33,7 @@ export default function NotesReview() {
 
                     <label className="flex items-center gap-4">
                         <Checkbox 
-                            className="h-6 w-6"
+                            className="h-6 w-6 hover:bg-gray-500"
                             checked={shallowChecked}
                             disabled={parkChecked || missedShallowChecked || deepChecked} 
                             onCheckedChange={(checked: boolean) => {
@@ -46,7 +46,7 @@ export default function NotesReview() {
 
                     <label className="flex items-center gap-4">
                         <Checkbox
-                            className="h-6 w-6"
+                            className="h-6 w-6 hover:bg-gray-500"
                             checked={missedShallowChecked}
                             disabled={shallowChecked} 
                             onCheckedChange={(checked: boolean) => {
@@ -59,7 +59,7 @@ export default function NotesReview() {
 
                     <label className="flex items-center gap-4">
                         <Checkbox
-                            className="h-6 w-6"
+                            className="h-6 w-6 hover:bg-gray-500"
                             checked={deepChecked}
                             disabled={parkChecked || shallowChecked || missedDeepChecked} 
                             onCheckedChange={(checked: boolean) => {
@@ -72,7 +72,7 @@ export default function NotesReview() {
 
                     <label className="flex items-center gap-4">
                         <Checkbox
-                            className="h-6 w-6"
+                            className="h-6 w-6 hover:bg-gray-500"
                             checked={missedDeepChecked}
                             disabled={deepChecked} 
                             onCheckedChange={(checked: boolean) => {

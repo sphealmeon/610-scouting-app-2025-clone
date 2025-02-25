@@ -1,4 +1,6 @@
+// import { Data, HumanPlayerData } from "@/app/interfaces";
 import { Data } from "@/app/interfaces";
+
 
 export const ScoutingData: Data = {
     start: {
@@ -71,6 +73,7 @@ export const ScoutingData: Data = {
         barge: 0,
     },
     teleop: {
+        droppedOnField: 0,
         coralPickup: 0,
         coralPickupFromStation: 0,
         pickupAlgae: 0,
@@ -98,13 +101,22 @@ export const ScoutingData: Data = {
         reason: "",
         explanation: "",
     },
-    humanPlayer: {
-        blueScored: 0,
-        redScored: 0,
-        blueMissed: 0,
-        redMissed: 0,
-    },
 };
+
+// export const HPData: HumanPlayerData = {
+//     red: {
+//         team: 0,
+//         match: 0,
+//         redScored: 0,
+//         redMissed: 0,
+//     },
+//     blue: {
+//         team: 0,
+//         match: 0,
+//         blueScored: 0,
+//         blueMissed: 0,
+//     }
+// };
 
 export const resetData = () => {
     ScoutingData.start.preload = 0;
@@ -201,10 +213,14 @@ export const resetData = () => {
     ScoutingData.teleop.reason = "";
     ScoutingData.teleop.explanation = "";
 
-    ScoutingData.humanPlayer.blueScored = 0;
-    ScoutingData.humanPlayer.redScored = 0;
-    ScoutingData.humanPlayer.blueMissed = 0;
-    ScoutingData.humanPlayer.redMissed = 0;
+    // HPData.red.team = 0;
+    // HPData.red.match = 0;
+    // HPData.red.redScored = 0;
+    // HPData.red.redMissed = 0;
+    // HPData.blue.team = 0;
+    // HPData.blue.match = 0;
+    // HPData.blue.blueScored = 0;
+    // HPData.blue.blueMissed = 0;
 };
 
 
