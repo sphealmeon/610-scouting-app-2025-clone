@@ -1,5 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import { setCookie } from "@/app/cookies/cookies";
+import { AggregateData } from "@/app/interfaces";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,16 +10,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ArrowDownIcon, ArrowUpDown, ArrowUpIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { AggregateData } from "@/app/interfaces";
-import { setCookie } from "@/app/cookies/cookies";
-import { ArrowUpDown, ArrowUpIcon, ArrowDownIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import "./allTable.css";
 
-/**
- * @param teamData an AggregateData array of all the teams data
- * @returns a sortable table containing all data
- */
 export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
   const router = useRouter();
   const [sortConfig, setSortConfig] = useState<{
@@ -80,10 +77,10 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedData.map((data) => (
+          {sortedData.map((data, index) => (
             <TableRow 
               key={data.team}
-              className="cursor-pointer hover:bg-muted/50"
+              className={`cursor-pointer hover:bg-muted/50 ${index % 2 === 0 ? 'even-row' : 'odd-row'}`}
               onClick={() => {
                 router.push("/stats/teams");
                 setCookie("Team", data.team.toString());

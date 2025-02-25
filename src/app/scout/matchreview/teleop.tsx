@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useState } from 'react';
 import { ScoutingData } from "../data";
 
 interface Scores {
@@ -44,17 +44,17 @@ export default function TeleopReview() {
     },
   });
 
-  const handleScoreChange = (category: keyof Scores, key: keyof Scores["coral" | "algae"], increment: number): void => {
+  const handleScoreChange = <T extends keyof Scores>(category: T, key: keyof Scores[T], increment: number): void => {
     setScores((prev: Scores) => ({
       ...prev,
       [category]: {
         ...prev[category],
-        [key]: Math.max(0, prev[category][key] + increment),
+        [key]: Math.max(0, (prev[category][key] as number) + increment),
       },
     }));
   };
 
-  const renderScoringButtons = <T extends keyof Scores>(category: T, items: Array<keyof Scores[T]>) => (
+  const renderScoringButtons = <T extends keyof Scores>(category: T, items: (keyof Scores[T])[]) => (
     <Card className="mb-4">
       <CardContent>
         <h2 className="text-xl font-bold mb-2">Scoring - {category}</h2>
@@ -68,7 +68,7 @@ export default function TeleopReview() {
               >
                 -
               </Button>
-              <span>{scores[category][item as keyof Scores[T]]}</span>
+              <span>{String(scores[category][item as keyof Scores[T]])}</span>
               <Button
                 className="bg-green-500 hover:bg-green-400"
                 onClick={() => handleScoreChange(category, item as keyof Scores[T], 1)}

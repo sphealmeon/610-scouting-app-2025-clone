@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react"
+import { useState } from "react";
+import AutoReview from "./autoMR/autoMR";
 import ReviewHeader from "./header";
-import AutoReview from "./autoMR/auto";
-import TeleopReview from "./teleop";
 import NotesReview from "./notes";
+import TeleopReview from "./teleop";
 
 export default function MatchReviewPage({setMatchState}: {setMatchState: Function}) {
     const [pageState, setPageState] = useState("auto");
@@ -21,13 +21,13 @@ export default function MatchReviewPage({setMatchState}: {setMatchState: Functio
                     handlePageChange={handlePageChange}
                 />
                 {pageState === "auto" && (
-                <AutoReview/>
+                    <AutoReview/>
                 )}
                 {pageState === "teleop" && (
-                <TeleopReview/>
+                    <TeleopReview/>
                 )}
                 {pageState === "notes" && (
-                <NotesReview/>
+                    <NotesReview/>
                 )}
             </div>
         </div>

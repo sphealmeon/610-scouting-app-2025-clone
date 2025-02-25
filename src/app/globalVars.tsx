@@ -8,7 +8,7 @@ export const headerHeight = "10vh";
 export const useApi = true;
 
 //blue alliance key for comp
-export const key = "2024onnew"; 
+export const key = "2025caph"; 
 
 //list of all teams at comp, in case BA is broken
 export const teams = [
