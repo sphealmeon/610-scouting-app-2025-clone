@@ -1,0 +1,30 @@
+import { db } from "@/app/firebase/firebase";
+import { doc, setDoc } from "firebase/firestore";
+
+export interface PitScoutData {
+    robotWeight: number;
+    robotSpeed: number;
+    centerOfGravity: string;
+    drivetrainType: string;
+    defenseComfort: number;
+    algaeCapability: number;
+    coralCapability: number;
+    climbAbility: string;
+    pickupLocation: string;
+}
+
+export const submitPitData = async (team: string, data: PitScoutData) => {
+    try {
+        await setDoc(
+            doc(db, team, "pitscouting"),
+            {
+                ...data,
+                timestamp: new Date().toISOString()
+            }
+        );
+        return { success: true, message: "Pit data submitted successfully" };
+    } catch (error) {
+        console.error("Error submitting pit data:", error);
+        return { success: false, message: "Failed to submit pit data" };
+    }
+};
