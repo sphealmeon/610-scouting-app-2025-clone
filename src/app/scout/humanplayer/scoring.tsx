@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { HPData, resetData } from "../data";
+import { resetData } from "../data";
 import { submitHPData } from "@/app/scout/humanplayer/submitHP";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
