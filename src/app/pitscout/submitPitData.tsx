@@ -16,8 +16,9 @@ export interface PitScoutData {
 export const submitPitData = async (team: string, data: PitScoutData) => {
     try {
         await setDoc(
-            doc(db, team, "pitscouting"),
+            doc(db, "pitscout", team),
             {
+                team: parseInt(team),
                 ...data,
                 timestamp: new Date().toISOString()
             }
