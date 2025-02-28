@@ -276,3 +276,10 @@ export interface AggregateData {
     brokePercentage: number;
 }
 
+
+export interface Picklist {
+    id?: string;
+    name: string;
+    teams: string[];
+    createdAt: number;
+} 
