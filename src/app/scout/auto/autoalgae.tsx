@@ -17,7 +17,7 @@ const Algae = ({ setLeaveState }: {
     'L3-L4': new Set(['F', 'D', 'B']),
   };
 
-  const slots = ScoutingData.start.alliance === "red" 
+  const slots = ScoutingData.start.alliance === "blue" 
     ? ["F", "E", "D", "C", "B", "A"]
     : ["C", "B", "A", "F", "E", "D"];
 
