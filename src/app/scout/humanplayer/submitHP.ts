@@ -21,39 +21,53 @@ export const submitHPData = async (data: HPData) => {
         // Update red team aggregate
         const redTeamRef = doc(db, "humanplayers", data.red.team.toString());
         const redTeamDoc = await getDoc(redTeamRef);
-        const redTeamData = redTeamDoc.data() || { totalScored: 0, totalMissed: 0, matchesPlayed: 0 };
+        const redTeamData = redTeamDoc.data() || { 
+            team: data.red.team,
+            totalScored: 0, 
+            totalMissed: 0, 
+            matchesPlayed: 0 
+        };
 
+        // Calculate new values
         const redNewTotal = redTeamData.totalScored + data.red.redScored;
         const redNewMissed = redTeamData.totalMissed + data.red.redMissed;
-        const redAccuracy = (redNewTotal + redNewMissed) > 0 
-            ? Math.round((redNewTotal / (redNewTotal + redNewMissed)) * 100) 
-            : 0;
+        const redNewMatches = redTeamData.matchesPlayed + 1;
+        const redFGPercentage = ((redNewTotal / (redNewTotal + redNewMissed)) * 100) || 0;
+        const redPPG = redNewTotal / redNewMatches;
 
         await setDoc(redTeamRef, {
-            accuracy: redAccuracy,
             team: data.red.team,
             totalScored: redNewTotal,
             totalMissed: redNewMissed,
-            matchesPlayed: redTeamData.matchesPlayed + 1
+            matchesPlayed: redNewMatches,
+            fieldGoalPercentage: redFGPercentage,
+            pointsPerGame: redPPG
         });
 
         // Update blue team aggregate
         const blueTeamRef = doc(db, "humanplayers", data.blue.team.toString());
         const blueTeamDoc = await getDoc(blueTeamRef);
-        const blueTeamData = blueTeamDoc.data() || { totalScored: 0, totalMissed: 0, matchesPlayed: 0 };
+        const blueTeamData = blueTeamDoc.data() || { 
+            team: data.blue.team,
+            totalScored: 0, 
+            totalMissed: 0, 
+            matchesPlayed: 0 
+        };
 
+        // Calculate new values
         const blueNewTotal = blueTeamData.totalScored + data.blue.blueScored;
         const blueNewMissed = blueTeamData.totalMissed + data.blue.blueMissed;
-        const blueAccuracy = (blueNewTotal + blueNewMissed) > 0 
-            ? Math.round((blueNewTotal / (blueNewTotal + blueNewMissed)) * 100) 
-            : 0;
+        const blueNewMatches = blueTeamData.matchesPlayed + 1;
+        const blueFGPercentage = ((blueNewTotal / (blueNewTotal + blueNewMissed)) * 100) || 0;
+        const bluePPG = blueNewTotal / blueNewMatches;
 
         await setDoc(blueTeamRef, {
-            accuracy: blueAccuracy,
             team: data.blue.team,
             totalScored: blueNewTotal,
             totalMissed: blueNewMissed,
-            matchesPlayed: blueTeamData.matchesPlayed + 1
+            matchesPlayed: blueNewMatches,
+            fieldGoalPercentage: blueFGPercentage,
+            pointsPerGame: bluePPG
         });
 
         return { success: true, message: "HP data submitted for both teams" };

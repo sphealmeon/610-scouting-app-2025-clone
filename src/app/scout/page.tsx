@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import AutoPage from "./auto/thePage";
-// import HumanPlayerPage from "./humanplayer/thePage";
+import HumanPlayerPage from "./humanplayer/thePage";
 import MatchReviewPage from "./matchreview/thePage";
 import Start from "./start/thePage";
 import Teleop from "./teleop/thePage";
