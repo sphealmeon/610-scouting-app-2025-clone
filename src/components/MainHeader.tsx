@@ -22,7 +22,8 @@ const links = [
   { link: "/compare", label: "Compare" },
   { link: "/pitscout", label: "Pit Scouting" },
   { link: "/matchsummary", label: "Match Summary" },
-  { link: "/stats/teams", label: "Team Stats" }
+  { link: "/stats/teams", label: "Team Stats" },
+  { link: "/picklist", label: "Picklist" }
 ];
 
 export function MainHeader() {
