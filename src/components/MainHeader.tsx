@@ -9,7 +9,8 @@ import {
   faCodeCompare, 
   faClockRotateLeft, 
   faClipboardList, 
-  faListOl
+  faListOl,
+  faHammer
 } from '@fortawesome/free-solid-svg-icons'
 
 // Prevent fontawesome from dynamically adding its css
@@ -19,6 +20,7 @@ const links = [
   { link: "/scout", label: "Scout" },
   { link: "/stats", label: "Stats" },
   { link: "/compare", label: "Compare" },
+  { link: "/pitscout", label: "Pit Scouting" },
   { link: "/matchsummary", label: "Match Summary" },
   { link: "/stats/teams", label: "Team Stats" }
 ];
@@ -48,6 +50,9 @@ export function MainHeader() {
       )}
       {link.label === "Team Stats" && (
         <FontAwesomeIcon icon={faListOl} className="w-3 h-3 sm:w-4 sm:h-4" />
+      )}
+      {link.label === "Pit Scouting" && (
+        <FontAwesomeIcon icon={faHammer} className="w-3 h-3 sm:w-4 sm:h-4" />
       )}
       {link.label}
     </a>
