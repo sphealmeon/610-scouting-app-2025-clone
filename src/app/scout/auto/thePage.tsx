@@ -16,7 +16,9 @@ export default function AutoPage({setMatchState}: {setMatchState: Function}){
         ScoutingData.auto.leave = newValue;
     };
 
-    // Get alliance color from ScoutingData
+    if (ScoutingData.start.alliance !== 'red' && ScoutingData.start.alliance !== 'blue') {
+        ScoutingData.start.alliance = 'red'
+    }
     const allianceColor = ScoutingData.start.alliance === 'red' ? 'text-red-500' : 'text-blue-500';
 
     return(
