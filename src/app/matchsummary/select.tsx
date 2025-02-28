@@ -6,33 +6,33 @@ import { collection, getDocs } from "firebase/firestore"
 import { useState, useEffect } from "react"
 
 interface TeamSelectProps {
-    onTeamSelect: (team: string) => void;
+    onTeamSelect: (match: string) => void;
 }
 
-export default function TeamSelect({ onTeamSelect }: TeamSelectProps) {
-    const [teams, setTeams] = useState<string[]>([])
+export default function MatchSelect({ onTeamSelect }: TeamSelectProps) {
+    const [matches, setMatches] = useState<string[]>([])
 
     useEffect(() => {
-        const fetchTeams = async () => {
+        const fetchMatches = async () => {
             const matchesRef = collection(db, "matches")
             const querySnapshot = await getDocs(matchesRef)
-            const uniqueTeams = [...new Set(querySnapshot.docs.map(doc => doc.data().start.team))]
-            setTeams(uniqueTeams.sort((a, b) => a - b).map(String))
+            const uniqueMatches = [...new Set(querySnapshot.docs.map(doc => doc.data().start.match))]
+            setMatches(uniqueMatches.sort((a, b) => a - b).map(String))
         }
-        fetchTeams()
+        fetchMatches()
     }, [])
 
     return (
         <div className="p-4">
-            <label className="block mb-2 bold text-2xl">Select a team</label>
+            <label className="block mb-2 bold text-2xl">Select a match</label>
             <Select onValueChange={onTeamSelect}>
                 <SelectTrigger className="w-[200px]">
-                    <SelectValue placeholder="Select team..." />
+                    <SelectValue placeholder="Select match..." />
                 </SelectTrigger>
                 <SelectContent>
-                    {teams.map((team) => (
-                        <SelectItem key={team} value={team}>
-                            Team {team}
+                    {matches.map((match) => (
+                        <SelectItem key={match} value={match}>
+                            Match {match}
                         </SelectItem>
                     ))}
                 </SelectContent>
