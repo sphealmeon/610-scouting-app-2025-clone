@@ -1,6 +1,7 @@
 import { ScoutingData } from "../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { scoringTableSide } from "@/app/globalVars";
 
 const Algae = ({ setLeaveState }: { 
     setLeaveState: (value: number) => void 
@@ -17,7 +18,7 @@ const Algae = ({ setLeaveState }: {
     'L3-L4': new Set(['F', 'D', 'B']),
   };
 
-  const slots = ScoutingData.start.alliance === "blue" 
+  const slots = (ScoutingData.start.alliance === "blue") !== scoringTableSide
     ? ["F", "E", "D", "C", "B", "A"]
     : ["C", "B", "A", "F", "E", "D"];
 

@@ -8,6 +8,7 @@ export const headerWidth = "100vw";
 export const headerHeight = "10vh";
 //use blue alliance api;
 export const useApi = false;
+export const scoringTableSide = false;
 
 //blue alliance key for comp
 export const key = "2025caph"; 

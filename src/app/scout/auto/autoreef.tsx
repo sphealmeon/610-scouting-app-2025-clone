@@ -1,6 +1,7 @@
 import { ScoutingData } from "../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { scoringTableSide } from "@/app/globalVars";
 
 const Reef = ({ setLeaveState }: { 
     setLeaveState: (value: number) => void 
@@ -12,8 +13,7 @@ const Reef = ({ setLeaveState }: {
     message: "",
   });
 
-  // Define the slots in counter-clockwise order starting from left (A)
-  const slots = ScoutingData.start.alliance === "blue" ? {
+  const slots = (ScoutingData.start.alliance === "blue") !== scoringTableSide ? {
     L1: ["F", "E", "D", "C", "B", "A"],
     L2: ["A", "L", "K", "J", "I", "H", "G", "F", "E", "D", "C", "B"],
     L3: ["A", "L", "K", "J", "I", "H", "G", "F", "E", "D", "C", "B"],
