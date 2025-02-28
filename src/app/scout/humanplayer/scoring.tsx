@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { HPData, resetData } from "../data";
-import { SubmitHP } from "@/app/firebase/submitHP";
+import { submitHPData } from "@/app/scout/humanplayer/submitHP";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { key, useApi } from "@/app/globalVars";
@@ -86,10 +86,19 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
         };
         
         try {
-            await SubmitHP({ 
-                team1: parseInt(redTeam), 
-                team2: parseInt(blueTeam), 
-                matchData: submitData 
+            await submitHPData({ 
+                red: {
+                    team: parseInt(redTeam),
+                    match: parseInt(match),
+                    redScored: scores.red.redScored,
+                    redMissed: scores.red.redMissed
+                },
+                blue: {
+                    team: parseInt(blueTeam),
+                    match: parseInt(match),
+                    blueScored: scores.blue.blueScored,
+                    blueMissed: scores.blue.blueMissed
+                }
             });
             handleExit();
         } catch (error) {
