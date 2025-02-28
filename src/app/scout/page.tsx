@@ -17,14 +17,12 @@ export default function Home() {
         <AutoPage setMatchState={setMatchState}/>
       ) :  matchState == 2 ? (
         <Teleop setMatchState={setMatchState}/>
-      ) : (
+      ) : matchState == 3 ? (
         <MatchReviewPage setMatchState={setMatchState}/>
+      ) : (
+        <HumanPlayerPage setMatchState={setMatchState}/>
       )}
-      {/*
-      // : (
-        // <HumanPlayerPage setMatchState={setMatchState}/>
-      // )}
-      */}
+     
     </div>
   );
 }
