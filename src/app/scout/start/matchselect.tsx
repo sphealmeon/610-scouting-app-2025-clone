@@ -73,9 +73,18 @@ export default function MatchSelect() {
 
     const handleMatchNumberChange = async (value: string) => {
         //Write to data: match number
-        ScoutingData.start.match = parseInt(value);
-        if (ScoutingData.start.team) {
-            const alliance = await FetchAlliance(parseInt(value), ScoutingData.start.team);
+        if (value.startsWith('playoff-')) {
+            const matchNum = parseInt(value.split('-')[1]) + 1000;
+            ScoutingData.start.match = matchNum;
+        } else if (value.startsWith('final-')) {
+            const matchNum = parseInt(value.split('-')[1]) + 1013;
+            ScoutingData.start.match = matchNum;
+        } else {
+            ScoutingData.start.match = parseInt(value);
+        }
+
+        if (ScoutingData.start.team && !value.startsWith('playoff-') && !value.startsWith('final-')) {
+            const alliance = await FetchAlliance(ScoutingData.start.match, ScoutingData.start.team);
             ScoutingData.start.alliance = alliance;
         }
         setMatchNumber(value);
@@ -164,26 +173,64 @@ export default function MatchSelect() {
                                         className="text-white">
                                         Match {match.match_number}
                                     </SelectItem>
+                                ))}
+                            
+                            {/* Playoff Matches */}
+                            {Array.from({length: 13}, (_, i) => i + 1).map((num) => (
+                                <SelectItem 
+                                    key={`playoff-${num}`} 
+                                    value={`playoff-${num}`}
+                                    className="text-white"
+                                >
+                                    Playoff {num}
+                                </SelectItem>
                             ))}
-                        </SelectContent>
-                    </Select>
-    
-    
-                    <Select
-                        onValueChange={handleTeamSelection}
-                        disabled={!matchNumber}
-                    >
-                        <SelectTrigger className="mb-6 w-1/3 bg-gray-600 text-white py-6">
-                            <SelectValue placeholder={matchNumber ? "Select Team" : "Select a Match First"} />
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-600 text-white">
-                            {teams.map((team) => (
-                                <SelectItem key={team} value={team} className="text-white">
-                                    Team {team}
+
+                            {/* Finals Matches */}
+                            {Array.from({length: 3}, (_, i) => i + 1).map((num) => (
+                                <SelectItem 
+                                    key={`final-${num}`} 
+                                    value={`final-${num}`}
+                                    className="text-white"
+                                >
+                                    Final {num}
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
+    
+    
+                    {matchNumber && (
+                        <>
+                            {matchNumber.startsWith('playoff-') || matchNumber.startsWith('final-') ? (
+                                // Manual team input for playoffs/finals
+                                <Input
+                                    min="1"
+                                    type="number"
+                                    placeholder="Enter Team Number"
+                                    className="mb-6 w-1/3 bg-gray-600 text-white placeholder-gray-400 py-6"
+                                    onChange={(e) => handleTeamSelection(e.target.value)}
+                                />
+                            ) : (
+                                // Existing team selection for qualification matches
+                                <Select
+                                    onValueChange={handleTeamSelection}
+                                    disabled={!matchNumber}
+                                >
+                                    <SelectTrigger className="mb-6 w-1/3 bg-gray-600 text-white py-6">
+                                        <SelectValue placeholder={matchNumber ? "Select Team" : "Select a Match First"} />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-gray-600 text-white">
+                                        {teams.map((team) => (
+                                            <SelectItem key={team} value={team} className="text-white">
+                                                Team {team}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        </>
+                    )}
                 </>
             ) : (
                 // Manual input fields
