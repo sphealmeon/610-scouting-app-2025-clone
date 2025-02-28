@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import logo from "@/components/assets/logo.png";
 import { FetchAlliance } from "@/app/blueAlliance/fetchTeamsInMatch";
+import { Switch } from "@/components/ui/switch"
 
 export default function MatchSelect() {
     const [matches, setMatches] = useState<any[]>([]); // Store match data
@@ -22,6 +23,7 @@ export default function MatchSelect() {
             scoutName: ""
         }
     });
+    const [isPlayoff, setIsPlayoff] = useState(false);
     
     const matchverify = () : boolean => {
         return selectedTeam !== "" && matchNumber !== "";
@@ -72,6 +74,9 @@ export default function MatchSelect() {
     }, [useApi]);
 
     const handleMatchNumberChange = async (value: string) => {
+        // Set playoff flag
+        setIsPlayoff(value.startsWith('playoff-') || value.startsWith('final-'));
+
         //Write to data: match number
         if (value.startsWith('playoff-')) {
             const matchNum = parseInt(value.split('-')[1]) + 1000;
@@ -139,6 +144,10 @@ export default function MatchSelect() {
                 team: value // Update the team number in ScoutingData
             }
         }));
+    };
+
+    const handleAllianceToggle = (checked: boolean) => {
+        ScoutingData.start.alliance = checked ? 'blue' : 'red';
     };
 
     return (
@@ -253,18 +262,31 @@ export default function MatchSelect() {
             )}
     
     
+            
+
             {/* Container for checkbox and label */}
-            <div className="flex items-center mb-4">
-                <Checkbox 
-                    id="preload" 
-                    onClick={() => {
-                        console.log("here");
-                        ScoutingData.start.preload = ScoutingData.start.preload == 0 ? 1 : 0; // Set to 1 if checked, otherwise 0
-                    }} 
-                />
-                <label htmlFor="preload" className="text-sm font-medium leading-none ml-2 text-white">
-                    Preload?
-                </label>
+            <div className="flex items-center mb-4 gap-4">
+                <div className="flex items-center justify-center gap-2">
+                    <label htmlFor="preload" className="text-white font-medium leading-none ml-2 text-white">
+                        Preload?
+                    </label>
+                    <Checkbox 
+                        id="preload" 
+                        onClick={() => {
+                            console.log("here");
+                            ScoutingData.start.preload = ScoutingData.start.preload == 0 ? 1 : 0; // Set to 1 if checked, otherwise 0
+                        }} 
+                    />
+                </div>
+                {(!useApi || isPlayoff) && (
+                    <div className="flex items-center gap-2">
+                        <label className="text-white font-medium">Alliance</label>
+                        <Switch 
+                            onCheckedChange={handleAllianceToggle}
+                            className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-red-500"
+                        />
+                    </div>
+                )}
             </div>
     
     
