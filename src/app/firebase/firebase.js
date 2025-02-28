@@ -3,14 +3,18 @@ import { getFirestore } from "firebase/firestore"
 import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
+
+// Port Hueneme Firebase
 const firebaseConfig = {
   apiKey: "<GOOGLE_API_KEY_REDACTED>",
-  authDomain: "isr1-4228a.firebaseapp.com",
-  projectId: "isr1-4228a",
-  storageBucket: "isr1-4228a.firebasestorage.app",
-  messagingSenderId: "694387931748",
-  appId: "1:694387931748:web:788da2edebffa3a28efd71"
+  authDomain: "caph2025.firebaseapp.com",
+  projectId: "caph2025",
+  storageBucket: "caph2025.firebasestorage.app",
+  messagingSenderId: "88225754422",
+  appId: "1:88225754422:web:8a489e4223a7a017fc5797",
+  measurementId: "G-9HYBNV0EQ0"
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
