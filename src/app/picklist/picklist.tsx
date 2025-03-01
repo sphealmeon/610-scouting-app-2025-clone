@@ -57,7 +57,10 @@ const DraggableTeam = ({ team, index, moveTeam, onRemove, onSelect }: {
             }`}
             onClick={onSelect}
         >
-            <span>Team {team}</span>
+            <div className="flex items-center gap-2">
+                <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
+                <span>Team {team}</span>
+            </div>
             <button 
                 onClick={(e) => {
                     e.stopPropagation();
