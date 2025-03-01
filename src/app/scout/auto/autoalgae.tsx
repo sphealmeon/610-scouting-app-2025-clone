@@ -13,6 +13,16 @@ const Algae = ({ setLeaveState }: {
   });
 
   // Define which slots can have algae for each level
+  const handleProcessor = () => {
+    ScoutingData.auto.processor++
+    showPopup("Processor Scored")
+  }
+
+  const handleBarge = () => {
+    ScoutingData.auto.barge
+    showPopup("Barge Scored")
+  }
+
   const algaePositions = {
     'L2-L3': new Set(['A', 'E', 'C']),
     'L3-L4': new Set(['F', 'D', 'B']),
@@ -173,13 +183,13 @@ const Algae = ({ setLeaveState }: {
 
       <div className="flex gap-4 mt-4">
         <Button 
-            onClick={() => ScoutingData.auto.barge++} 
+            onClick={handleBarge} 
             className="bg-green-700 hover:bg-green-600 border-gray-500 text-white"
         >
             Barge Scored
         </Button>
         <Button 
-            onClick={() => ScoutingData.auto.processor++} 
+            onClick={handleProcessor} 
             className="bg-green-700 hover:bg-green-600 border-gray-500 text-white"
         >
             Processor Scored
