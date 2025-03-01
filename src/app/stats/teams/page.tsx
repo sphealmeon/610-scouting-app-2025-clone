@@ -7,6 +7,7 @@ import { StartPos } from "./startpos"
 import { useState } from "react"
 import { TeamMatchesData } from "@/app/firebase/teamMatchesData"
 import { MainHeader } from "@/components/MainHeader"
+import { PitData } from "./pitdata"
 
 export default function Home() {
     const [selectedTeam, setSelectedTeam] = useState<string>("")
@@ -33,6 +34,7 @@ export default function Home() {
             <TeamSelect onTeamSelect={handleTeamSelect} />
             {selectedTeam && (
                 <div className="space-y-8">
+                    
                     <div className="mt-4">
                         <h2 className="text-2xl font-bold mb-4">Team Summary</h2>
                         <DataTable teams={[parseInt(selectedTeam)]} />
@@ -44,6 +46,10 @@ export default function Home() {
                     <div className="mt-4">
                         <h2 className="text-2xl font-bold mb-4">Starting Positions</h2>
                         <StartPos matches={matchData} />
+                    </div>
+                    <div className="mt-4">
+                        <h2 className="text-2xl font-bold mb-4">Pit Data</h2>
+                        <PitData team={parseInt(selectedTeam)} />
                     </div>
                 </div>
             )}
