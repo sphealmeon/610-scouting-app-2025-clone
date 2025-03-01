@@ -160,7 +160,7 @@ export default function MatchSelect() {
             <Input
                 type="text"
                 placeholder="Enter Scout Name"
-                className="mb-6 w-1/3 bg-gray-600 text-white placeholder-gray-400 py-6"
+                className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6"
                 onChange={(e) => {
                     ScoutingData.start.scoutName = e.target.value;
                 }}
@@ -171,7 +171,7 @@ export default function MatchSelect() {
                 // API-based dropdowns
                 <>
                     <Select onValueChange={handleMatchNumberChange}>
-                        <SelectTrigger className="mb-6 w-1/3 bg-gray-600 text-white py-6">
+                        <SelectTrigger className="mb-6 w-64 bg-gray-600 text-white py-6">
                             <SelectValue placeholder="Select Match Number" />
                         </SelectTrigger>
                         <SelectContent className="bg-gray-600 text-white">
@@ -217,7 +217,7 @@ export default function MatchSelect() {
                                     min="1"
                                     type="number"
                                     placeholder="Enter Team Number"
-                                    className="mb-6 w-1/3 bg-gray-600 text-white placeholder-gray-400 py-6"
+                                    className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6"
                                     onChange={(e) => handleTeamSelection(e.target.value)}
                                 />
                             ) : (
@@ -226,7 +226,7 @@ export default function MatchSelect() {
                                     onValueChange={handleTeamSelection}
                                     disabled={!matchNumber}
                                 >
-                                    <SelectTrigger className="mb-6 w-1/3 bg-gray-600 text-white py-6">
+                                    <SelectTrigger className="mb-6 w-64 bg-gray-600 text-white py-6">
                                         <SelectValue placeholder={matchNumber ? "Select Team" : "Select a Match First"} />
                                     </SelectTrigger>
                                     <SelectContent className="bg-gray-600 text-white">
@@ -248,14 +248,14 @@ export default function MatchSelect() {
                         min="1"
                         type="number"
                         placeholder="Enter Match Number"
-                        className="mb-6 w-1/3 bg-gray-600 text-white placeholder-gray-400 py-6"
+                        className="mb-6 w-64  bg-gray-600 text-white placeholder-gray-400 py-6"
                         onChange={(e) => handleMatchNumberChange(e.target.value)}
                     />
                     <Input
                         min="1"
                         type="number"
                         placeholder="Enter Team Number"
-                        className="mb-6 w-1/3 bg-gray-600 text-white placeholder-gray-400 py-6"
+                        className="mb-6 w-64  bg-gray-600 text-white placeholder-gray-400 py-6"
                         onChange={(e) => handleTeamSelection(e.target.value)}
                     />
                 </>
