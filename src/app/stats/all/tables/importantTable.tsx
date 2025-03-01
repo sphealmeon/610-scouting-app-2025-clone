@@ -23,10 +23,11 @@ export default function ImportantTable({ teamData }: { teamData: AggregateData[]
   const [sortConfig, setSortConfig] = useState<{
     key: keyof typeof sortKeys;
     direction: 'asc' | 'desc';
-  }>({ key: 'team', direction: 'asc' });
+  }>({ key: 'totalPPG', direction: 'desc' });
 
   const sortKeys = {
     team: (data: AggregateData) => data.team,
+    totalPPG: (data: AggregateData) => data.autoPPG + data.teleopPPG + data.endgamePPG,
     autoPPG: (data: AggregateData) => data.autoPPG,
     teleopPPG: (data: AggregateData) => data.teleopPPG,
     endgamePPG: (data: AggregateData) => data.endgamePPG,
@@ -85,6 +86,7 @@ export default function ImportantTable({ teamData }: { teamData: AggregateData[]
               }}
             >
               <TableCell className="font-medium">{data.team}</TableCell>
+              <TableCell>{(data.autoPPG + data.teleopPPG + data.endgamePPG).toFixed(2)}</TableCell>
               <TableCell>{data.autoPPG.toFixed(2)}</TableCell>
               <TableCell>{data.teleopPPG.toFixed(2)}</TableCell>
               <TableCell>{data.endgamePPG.toFixed(2)}</TableCell>
