@@ -7,7 +7,7 @@ export const timer: number = 2000;
 export const headerWidth = "100vw";
 export const headerHeight = "10vh";
 //use blue alliance api;
-export const useApi = false;
+export const useApi = true;
 export const scoringTableSide = false;
 
 //blue alliance key for comp
