@@ -10,7 +10,8 @@ import {
   faClockRotateLeft, 
   faClipboardList, 
   faListOl,
-  faHammer
+  faHammer,
+  faChessKing
 } from '@fortawesome/free-solid-svg-icons'
 
 // Prevent fontawesome from dynamically adding its css
@@ -54,6 +55,9 @@ export function MainHeader() {
       )}
       {link.label === "Pit Scouting" && (
         <FontAwesomeIcon icon={faHammer} className="w-3 h-3 sm:w-4 sm:h-4" />
+      )}
+      {link.label === "Picklist" && (
+        <FontAwesomeIcon icon={faChessKing} className="w-3 h-3 sm:w-4 sm:h-4" />
       )}
       {link.label}
     </a>
