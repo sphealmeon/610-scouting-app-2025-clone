@@ -20,6 +20,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { submitPitData } from "./submitPitData";
 import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function PitScoutCategories({ teamNumber }: { teamNumber: string }) {
     const [robotWeight, setRobotWeight] = useState<number>(0);
@@ -31,6 +32,7 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
     const [coralCapability, setCoralCapability] = useState<number>(1);
     const [climbAbility, setClimbAbility] = useState<string>("");
     const [pickupLocation, setPickupLocation] = useState<string>("");
+    const [notes, setNotes] = useState<string>("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async () => {
@@ -50,7 +52,8 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                 algaeCapability,
                 coralCapability,
                 climbAbility,
-                pickupLocation
+                pickupLocation,
+                notes
             });
 
             if (result.success) {
@@ -268,6 +271,19 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                             </Button>
                         ))}
                     </div>
+                </CardContent>
+            </Card>
+
+            {/* Extra Notes Section */}
+            <Card className="w-full">
+                <CardContent className="pt-6">
+                    <Label className="mb-4 block text-lg">Extra Notes</Label>
+                    <Textarea
+                        placeholder="Add any additional observations about the robot..."
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        className="min-h-[100px] bg-gray-700"
+                    />
                 </CardContent>
             </Card>
 

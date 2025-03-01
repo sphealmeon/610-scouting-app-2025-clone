@@ -11,6 +11,7 @@ export interface PitScoutData {
     coralCapability: number;
     climbAbility: string;
     pickupLocation: string;
+    notes: string;
 }
 
 export const submitPitData = async (team: string, data: PitScoutData) => {
