@@ -1,13 +1,21 @@
 import { ScoutingData } from "@/app/scout/data";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { scoringTableSide } from "@/app/globalVars"; // Import the global variable
 
 export default function RobotPosition() {
     const [selectedPosition, setSelectedPosition] = useState<string>("");
 
     // Handle click on position
     const handleClick = (position: string) => {
-        ScoutingData.start.position = position;
-        setSelectedPosition(position);
+        // If scoring table side is true, swap Far and Close
+        if (scoringTableSide && (position === 'Far' || position === 'Close')) {
+            const swappedPosition = position === 'Far' ? 'Close' : 'Far';
+            ScoutingData.start.position = swappedPosition;
+            setSelectedPosition(swappedPosition);
+        } else {
+            ScoutingData.start.position = position;
+            setSelectedPosition(position);
+        }
     };
 
     return (
