@@ -5,6 +5,7 @@ import RobotPosition from "./robotposition";
 import MatchSelect from "./matchselect";
 import ScoutSelect from "./scoutselect";
 import Layout from "./layout";
+import Layout2 from "./layout2";
 import { ScoutingData } from "../data";
 
 export default function StartPage({setMatchState}: {setMatchState: Function}){
@@ -38,6 +39,7 @@ export default function StartPage({setMatchState}: {setMatchState: Function}){
                 <RobotPosition />
                 <ScoutSelect setMatchState={setMatchState} />
                 <Layout />
+                <Layout2 />
             </div>
         </>
     );
