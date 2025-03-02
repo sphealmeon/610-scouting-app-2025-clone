@@ -279,7 +279,7 @@ export default function MatchSummary() {
 
     // Add this function to verify the access code
     const verifyAccessCode = () => {
-        // Simple hardcoded access code - in production, use a more secure approach
+        // Simple hardcoded access code
         if (accessCode === "remyisthebestscoutingappdev") {
             setShowMissedLeaderboard(true);
             setCodeError(false);
@@ -288,9 +288,35 @@ export default function MatchSummary() {
         }
     };
 
-    if (loading || !csvLoaded || !tbaLoaded) return <div>Loading data...</div>;
-    if (error) return <div className="text-red-500">{error}</div>;
-    if (Object.keys(matchSummaries).length === 0) return <div>No match data found in the database.</div>;
+    if (loading || !csvLoaded || !tbaLoaded) return (
+        <>
+            <MainHeader />
+            <div className="container mx-auto py-10">
+                <h1 className="text-3xl font-bold mb-6">Match Summary</h1>
+                <div>Loading data...</div>
+            </div>
+        </>
+    );
+    
+    if (error) return (
+        <>
+            <MainHeader />
+            <div className="container mx-auto py-10">
+                <h1 className="text-3xl font-bold mb-6">Match Summary</h1>
+                <div className="text-red-500">{error}</div>
+            </div>
+        </>
+    );
+    
+    if (Object.keys(matchSummaries).length === 0) return (
+        <>
+            <MainHeader />
+            <div className="container mx-auto py-10">
+                <h1 className="text-3xl font-bold mb-6">Match Summary</h1>
+                <div>No match data found in the database.</div>
+            </div>
+        </>
+    );
 
     return (
         <>
@@ -298,143 +324,139 @@ export default function MatchSummary() {
             <div className="container mx-auto py-10">
                 <h1 className="text-3xl font-bold mb-6">Match Summary</h1>
                 
-                {/* Status */}
-                <div className="mb-8 p-4 border rounded-lg">
-                    <h2 className="text-xl font-semibold mb-2">Data Status</h2>
-                    <div className="flex gap-4">
-                        <p className={csvLoaded ? "text-green-500" : "text-yellow-500"}>
-                            {csvLoaded 
-                                ? `✓ Scout assignments loaded (${Object.keys(scoutAssignments).length} matches)` 
-                                : "Loading scout assignments..."}
+                {!showMissedLeaderboard ? (
+                    <div className="max-w-md mx-auto p-6 border rounded-lg shadow-md">
+                        <h2 className="text-xl font-semibold mb-4">Access Required</h2>
+                        <p className="text-gray-400 mb-4">
+                            Please enter the access code to continue.
                         </p>
-                        <p className={tbaLoaded ? "text-green-500" : "text-yellow-500"}>
-                            {tbaLoaded 
-                                ? `✓ TBA position data loaded (${Object.keys(positionMappings).length} matches)` 
-                                : "Loading TBA position data..."}
-                        </p>
-                    </div>
-                </div>
-                
-                <div className="mb-8 grid grid-cols-2 gap-4">
-                    <div className="p-4 border rounded-lg">
-                        <h2 className="text-xl font-semibold mb-4">Most Missed Matches</h2>
-                        
-                        {!showMissedLeaderboard ? (
-                            <div className="space-y-4">
-                                <p className="text-sm text-gray-400">
-                                    This leaderboard requires an access code to view.
+                        <div className="space-y-4">
+                            <input
+                                type="password"
+                                value={accessCode}
+                                onChange={(e) => setAccessCode(e.target.value)}
+                                placeholder="Enter access code"
+                                className="w-full px-3 py-2 border rounded text-black"
+                                onKeyDown={(e) => e.key === 'Enter' && verifyAccessCode()}
+                            />
+                            <button
+                                onClick={verifyAccessCode}
+                                className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                                Unlock Page
+                            </button>
+                            {codeError && (
+                                <p className="text-red-500 text-sm">
+                                    Invalid access code. Please try again.
                                 </p>
-                                <div className="flex gap-2">
-                                    <input
-                                        type="password"
-                                        value={accessCode}
-                                        onChange={(e) => setAccessCode(e.target.value)}
-                                        placeholder="Enter access code"
-                                        className="px-3 py-2 border rounded text-black"
-                                        onKeyDown={(e) => e.key === 'Enter' && verifyAccessCode()}
-                                    />
-                                    <button
-                                        onClick={verifyAccessCode}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                    >
-                                        Unlock
-                                    </button>
-                                </div>
-                                {codeError && (
-                                    <p className="text-red-500 text-sm">
-                                        Invalid access code. Please try again.
-                                    </p>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="h-64 overflow-y-auto pr-2">
-                                <div className="space-y-2">
-                                    {Object.values(scoutStats)
-                                        .sort((a, b) => b.missed - a.missed)
-                                        .map((scout, index) => (
-                                            <div key={scout.name} className="flex justify-between items-center">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-gray-400 w-5">{index + 1}.</span>
-                                                    <span className="font-medium">{scout.name}</span>
-                                                </div>
-                                                <span className="text-red-500 font-bold">{scout.missed} missed</span>
-                                            </div>
-                                        ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                    
-                    <div className="p-4 border rounded-lg">
-                        <h2 className="text-xl font-semibold mb-4">Most Completed Matches</h2>
-                        <div className="h-64 overflow-y-auto pr-2">
-                            <div className="space-y-2">
-                                {Object.values(scoutStats)
-                                    .sort((a, b) => b.completed - a.completed)
-                                    .map((scout, index) => (
-                                        <div key={scout.name} className="flex justify-between items-center">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-gray-400 w-5">{index + 1}.</span>
-                                                <span className="font-medium">{scout.name}</span>
-                                            </div>
-                                            <span className="text-green-500 font-bold">{scout.completed} completed</span>
-                                        </div>
-                                    ))}
-                            </div>
+                            )}
                         </div>
                     </div>
-                </div>
-                
-                <div className="space-y-4">
-                    {Object.entries(matchSummaries)
-                        .sort(([a], [b]) => parseInt(a) - parseInt(b))
-                        .map(([matchNum, data]) => {
-                            const missingScouts = getMissingScouts(matchNum);
-                            
-                            return (
-                                <div 
-                                    key={matchNum}
-                                    className={`p-4 rounded-lg border ${
-                                        data.totalScouted === 6 
-                                            ? 'border-green-500 bg-green-500/10' 
-                                            : 'border-red-500 bg-red-500/10'
-                                    }`}
-                                >
-                                    <h2 className="text-xl font-semibold mb-2">
-                                        Match {matchNum}
-                                        <span className="ml-2 text-sm font-normal">
-                                            ({data.totalScouted}/6 robots scouted)
-                                        </span>
-                                    </h2>
-                                    <div className="text-green-400 mt-2">
-                                        Scouted teams: {data.teams.join(", ")}
-                                    </div>
-                                    {data.totalScouted < 6 && (
-                                        <div className="text-red-400 mt-2">
-                                            <div className="font-bold">Missing {6 - data.totalScouted} teams</div>
-                                            
-                                            {missingScouts.length > 0 && showMissedLeaderboard ? (
-                                                <div className="mt-1 text-sm">
-                                                    <span className="font-bold">Missing scouts:</span> 
-                                                    <ul className="list-disc pl-5 mt-1">
-                                                        {missingScouts.map((item) => (
-                                                            <li key={item.position}>
-                                                                <span className="font-medium">{item.scout}</span> - {item.position} (Team {item.team})
-                                                            </li>
-                                                        ))}
-                                                    </ul>
+                ) : (
+                    <>
+                        {/* Status */}
+                        <div className="mb-8 p-4 border rounded-lg">
+                            <h2 className="text-xl font-semibold mb-2">Data Status</h2>
+                            <div className="flex gap-4">
+                                <p className="text-green-500">
+                                    ✓ Scout assignments loaded ({Object.keys(scoutAssignments).length} matches)
+                                </p>
+                                <p className="text-green-500">
+                                    ✓ TBA position data loaded ({Object.keys(positionMappings).length} matches)
+                                </p>
+                            </div>
+                        </div>
+                        
+                        {/* Leaderboards */}
+                        <div className="mb-8 grid grid-cols-2 gap-4">
+                            <div className="p-4 border rounded-lg">
+                                <h2 className="text-xl font-semibold mb-4">Most Missed Matches</h2>
+                                <div className="h-64 overflow-y-auto pr-2">
+                                    <div className="space-y-2">
+                                        {Object.values(scoutStats)
+                                            .sort((a, b) => b.missed - a.missed)
+                                            .map((scout, index) => (
+                                                <div key={scout.name} className="flex justify-between items-center">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-gray-400 w-5">{index + 1}.</span>
+                                                        <span className="font-medium">{scout.name}</span>
+                                                    </div>
+                                                    <span className="text-red-500 font-bold">{scout.missed} missed</span>
                                                 </div>
-                                            ) : (
-                                                <div className="mt-1 text-sm italic">
-                                                    Enter access code to see which scouts missed this match
+                                            ))}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="p-4 border rounded-lg">
+                                <h2 className="text-xl font-semibold mb-4">Most Completed Matches</h2>
+                                <div className="h-64 overflow-y-auto pr-2">
+                                    <div className="space-y-2">
+                                        {Object.values(scoutStats)
+                                            .sort((a, b) => b.completed - a.completed)
+                                            .map((scout, index) => (
+                                                <div key={scout.name} className="flex justify-between items-center">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-gray-400 w-5">{index + 1}.</span>
+                                                        <span className="font-medium">{scout.name}</span>
+                                                    </div>
+                                                    <span className="text-green-500 font-bold">{scout.completed} completed</span>
+                                                </div>
+                                            ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Match Cards */}
+                        <div className="space-y-4">
+                            {Object.entries(matchSummaries)
+                                .sort(([a], [b]) => parseInt(a) - parseInt(b))
+                                .map(([matchNum, data]) => {
+                                    const missingScouts = getMissingScouts(matchNum);
+                                    
+                                    return (
+                                        <div 
+                                            key={matchNum}
+                                            className={`p-4 rounded-lg border ${
+                                                data.totalScouted === 6 
+                                                    ? 'border-green-500 bg-green-500/10' 
+                                                    : 'border-red-500 bg-red-500/10'
+                                            }`}
+                                        >
+                                            <h2 className="text-xl font-semibold mb-2">
+                                                Match {matchNum}
+                                                <span className="ml-2 text-sm font-normal">
+                                                    ({data.totalScouted}/6 robots scouted)
+                                                </span>
+                                            </h2>
+                                            <div className="text-green-400 mt-2">
+                                                Scouted teams: {data.teams.join(", ")}
+                                            </div>
+                                            {data.totalScouted < 6 && (
+                                                <div className="text-red-400 mt-2">
+                                                    <div className="font-bold">Missing {6 - data.totalScouted} teams</div>
+                                                    
+                                                    {missingScouts.length > 0 && (
+                                                        <div className="mt-1 text-sm">
+                                                            <span className="font-bold">Missing scouts:</span> 
+                                                            <ul className="list-disc pl-5 mt-1">
+                                                                {missingScouts.map((item) => (
+                                                                    <li key={item.position}>
+                                                                        <span className="font-medium">{item.scout}</span> - {item.position} (Team {item.team})
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
-                                    )}
-                                </div>
-                            );
-                        })}
-                </div>
+                                    );
+                                })}
+                        </div>
+                    </>
+                )}
             </div>
         </>
     );
