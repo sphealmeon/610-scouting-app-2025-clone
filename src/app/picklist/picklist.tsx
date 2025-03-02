@@ -9,7 +9,7 @@ import { MatchTable } from "../stats/teams/matchtable";
 import { StartPos } from "../stats/teams/startpos";
 import { TeamMatchesData } from "@/app/firebase/teamMatchesData";
 import { db } from "@/app/firebase/firebase";
-import { collection, addDoc, getDocs, query, orderBy, setDoc, doc, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, orderBy, setDoc, doc, deleteDoc, getDoc } from "firebase/firestore";
 import { Picklist } from "@/app/interfaces";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -81,6 +81,7 @@ const PicklistPage = () => {
     const [savedLists, setSavedLists] = useState<Picklist[]>([]);
     const [listName, setListName] = useState("");
     const [showSavedLists, setShowSavedLists] = useState(false);
+    const [doNotPickTeams, setDoNotPickTeams] = useState<string[]>([]);
 
     useEffect(() => {
         fetchSavedLists();
@@ -102,6 +103,7 @@ const PicklistPage = () => {
         const newList: Picklist = {
             name: listName,
             teams: selectedTeams,
+            dnpTeams: doNotPickTeams,
             createdAt: Date.now()
         };
 
@@ -120,10 +122,16 @@ const PicklistPage = () => {
 
     const loadList = (list: Picklist) => {
         setSelectedTeams(list.teams);
+        setDoNotPickTeams(list.dnpTeams || []);
         setShowSavedLists(false);
     };
 
     const handleTeamSelect = async (team: string) => {
+        if (doNotPickTeams.includes(team)) {
+            const newDoNotPick = doNotPickTeams.filter(t => t !== team);
+            setDoNotPickTeams(newDoNotPick);
+        }
+        
         if (!selectedTeams.includes(team)) {
             setSelectedTeams([...selectedTeams, team]);
         }
@@ -153,6 +161,21 @@ const PicklistPage = () => {
         newTeams.splice(dragIndex, 1);
         newTeams.splice(hoverIndex, 0, draggedTeam);
         setSelectedTeams(newTeams);
+    };
+
+    const toggleDoNotPick = (team: string) => {
+        if (selectedTeams.includes(team)) {
+            setSelectedTeams(selectedTeams.filter(t => t !== team));
+            if (selectedTeam === team) {
+                setSelectedTeam(null);
+                setMatchData([]);
+            }
+        }
+
+        const newList = doNotPickTeams.includes(team)
+            ? doNotPickTeams.filter(t => t !== team)
+            : [...doNotPickTeams, team];
+        setDoNotPickTeams(newList);
     };
 
     return (
@@ -204,15 +227,15 @@ const PicklistPage = () => {
                                                 <span className="text-sm text-gray-400">
                                                     {list.teams.length} teams
                                                 </span>
-                                                <button 
+                                                <Button 
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         deleteList(list.name);
                                                     }}
                                                     className="text-red-500 hover:text-red-400 px-2"
                                                 >
-                                                    ×
-                                                </button>
+                                                    x
+                                                </Button>
                                             </div>
                                         </div>
                                     ))}
@@ -227,13 +250,23 @@ const PicklistPage = () => {
                         <div className="overflow-y-auto max-h-[70vh]">
                             <ul className="space-y-2">
                                 {teams
-                                    .filter(team => !selectedTeams.includes(team))
+                                    .filter(team => !selectedTeams.includes(team) && !doNotPickTeams.includes(team))
                                     .map((team) => (
                                         <li key={team} 
-                                            onClick={() => handleTeamSelect(team)}
-                                            className="flex items-center w-full p-3 bg-gray-700 rounded hover:bg-gray-600 cursor-pointer"
+                                            className="flex items-center justify-between w-full p-3 bg-gray-700 rounded hover:bg-gray-600 cursor-pointer"
                                         >
-                                            Team {team}
+                                            <span onClick={() => handleTeamSelect(team)}>
+                                                Team {team}
+                                            </span>
+                                            <Button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleDoNotPick(team);
+                                                }}
+                                                className="bg-clear text-gray-400 hover:text-gray-300 px-2"
+                                            >
+                                                DNP
+                                            </Button>
                                         </li>
                                     ))}
                             </ul>
@@ -258,7 +291,32 @@ const PicklistPage = () => {
                         </div>
                     </div>
 
-                    <div className="w-2/4">
+                    <div className="w-1/4">
+                        <h2 className="text-2xl mb-4">Personality</h2>
+                        <div className="overflow-y-auto max-h-[70vh]">
+                            <ul className="space-y-2">
+                                {doNotPickTeams.map((team, index) => (
+                                    <li
+                                        key={team}
+                                        className="flex items-center justify-between w-64 p-2 bg-red-900/50 rounded"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
+                                            <span>Team {team}</span>
+                                        </div>
+                                        <Button 
+                                            onClick={() => toggleDoNotPick(team)}
+                                            className="bg-clear text-red-500 hover:text-red-400 px-2"
+                                        >
+                                            x
+                                        </Button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="w-1/3">
                         <h2 className="text-2xl mb-4">Team Stats - {selectedTeam}</h2>
                         <div className="overflow-y-auto max-h-[70vh]">
                             {selectedTeam ? (

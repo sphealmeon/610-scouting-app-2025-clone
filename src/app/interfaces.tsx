@@ -280,6 +280,7 @@ export interface AggregateData {
 export interface Picklist {
     id?: string;
     name: string;
+    dnpTeams: string[];
     teams: string[];
     createdAt: number;
 } 
