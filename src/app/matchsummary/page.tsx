@@ -413,7 +413,7 @@ export default function MatchSummary() {
                                         <div className="text-red-400 mt-2">
                                             <div className="font-bold">Missing {6 - data.totalScouted} teams</div>
                                             
-                                            {missingScouts.length > 0 && (
+                                            {missingScouts.length > 0 && showMissedLeaderboard ? (
                                                 <div className="mt-1 text-sm">
                                                     <span className="font-bold">Missing scouts:</span> 
                                                     <ul className="list-disc pl-5 mt-1">
@@ -423,6 +423,10 @@ export default function MatchSummary() {
                                                             </li>
                                                         ))}
                                                     </ul>
+                                                </div>
+                                            ) : (
+                                                <div className="mt-1 text-sm italic">
+                                                    Enter access code to see which scouts missed this match
                                                 </div>
                                             )}
                                         </div>
