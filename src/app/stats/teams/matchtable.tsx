@@ -49,6 +49,14 @@ export const columns: ColumnDef<Data>[] = [
         header: "L1 Scored",
     },
     {
+        accessorKey: "teleop.processorScored",
+        header: "Processor Scored",
+    },
+    {
+        accessorKey: "teleop.bargeScored",
+        header: "Barge Scored",
+    },
+    {
         accessorKey: "teleop.deep",
         header: "Deep Hang",
     },

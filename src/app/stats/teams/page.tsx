@@ -9,6 +9,7 @@ import { TeamMatchesData } from "@/app/firebase/teamMatchesData"
 import { MainHeader } from "@/components/MainHeader"
 import { PitData } from "./pitdata"
 import { ScoringDist } from "./scoringdist"
+import { Last5Matches } from "./last5matches"
 
 export default function Home() {
     const [selectedTeam, setSelectedTeam] = useState<string>("")
@@ -52,6 +53,7 @@ export default function Home() {
                             </div>
                         </div>
                         <div>
+                            <Last5Matches matches={matchData} />
                             <h2 className="text-2xl font-bold mb-4">Auto Scoring</h2>
                             <ScoringDist matches={matchData} />
                         </div>
