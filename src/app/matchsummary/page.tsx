@@ -40,6 +40,9 @@ export default function MatchSummary() {
     const [csvLoaded, setCsvLoaded] = useState(false);
     const [tbaLoaded, setTbaLoaded] = useState(false);
     const [scoutStats, setScoutStats] = useState<Record<string, ScoutStats>>({});
+    const [showMissedLeaderboard, setShowMissedLeaderboard] = useState(false);
+    const [accessCode, setAccessCode] = useState("");
+    const [codeError, setCodeError] = useState(false);
 
     // Load the CSV file from public directory on component mount
     useEffect(() => {
@@ -274,6 +277,17 @@ export default function MatchSummary() {
         }
     }, [loading, csvLoaded, tbaLoaded, matchSummaries]);
 
+    // Add this function to verify the access code
+    const verifyAccessCode = () => {
+        // Simple hardcoded access code - in production, use a more secure approach
+        if (accessCode === "remyisthebestscoutingappdev") {
+            setShowMissedLeaderboard(true);
+            setCodeError(false);
+        } else {
+            setCodeError(true);
+        }
+    };
+
     if (loading || !csvLoaded || !tbaLoaded) return <div>Loading data...</div>;
     if (error) return <div className="text-red-500">{error}</div>;
     if (Object.keys(matchSummaries).length === 0) return <div>No match data found in the database.</div>;
@@ -304,21 +318,51 @@ export default function MatchSummary() {
                 <div className="mb-8 grid grid-cols-2 gap-4">
                     <div className="p-4 border rounded-lg">
                         <h2 className="text-xl font-semibold mb-4">Most Missed Matches</h2>
-                        <div className="h-64 overflow-y-auto pr-2">
-                            <div className="space-y-2">
-                                {Object.values(scoutStats)
-                                    .sort((a, b) => b.missed - a.missed)
-                                    .map((scout, index) => (
-                                        <div key={scout.name} className="flex justify-between items-center">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-gray-400 w-5">{index + 1}.</span>
-                                                <span className="font-medium">{scout.name}</span>
-                                            </div>
-                                            <span className="text-red-500 font-bold">{scout.missed} missed</span>
-                                        </div>
-                                    ))}
+                        
+                        {!showMissedLeaderboard ? (
+                            <div className="space-y-4">
+                                <p className="text-sm text-gray-400">
+                                    This leaderboard requires an access code to view.
+                                </p>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="password"
+                                        value={accessCode}
+                                        onChange={(e) => setAccessCode(e.target.value)}
+                                        placeholder="Enter access code"
+                                        className="px-3 py-2 border rounded text-black"
+                                        onKeyDown={(e) => e.key === 'Enter' && verifyAccessCode()}
+                                    />
+                                    <button
+                                        onClick={verifyAccessCode}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                    >
+                                        Unlock
+                                    </button>
+                                </div>
+                                {codeError && (
+                                    <p className="text-red-500 text-sm">
+                                        Invalid access code. Please try again.
+                                    </p>
+                                )}
                             </div>
-                        </div>
+                        ) : (
+                            <div className="h-64 overflow-y-auto pr-2">
+                                <div className="space-y-2">
+                                    {Object.values(scoutStats)
+                                        .sort((a, b) => b.missed - a.missed)
+                                        .map((scout, index) => (
+                                            <div key={scout.name} className="flex justify-between items-center">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-gray-400 w-5">{index + 1}.</span>
+                                                    <span className="font-medium">{scout.name}</span>
+                                                </div>
+                                                <span className="text-red-500 font-bold">{scout.missed} missed</span>
+                                            </div>
+                                        ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                     
                     <div className="p-4 border rounded-lg">
