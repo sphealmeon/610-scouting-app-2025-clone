@@ -67,6 +67,14 @@ export const columns: ColumnDef<Data>[] = [
     {
         accessorKey: "teleop.missedShallow",
         header: "Missed Shallow",
+    },
+    {
+        accessorKey: "teleop.general",
+        header: "General Notes",
+    },
+    {
+        accessorKey: "teleop.reason",
+        header: "Break Notes",
     }
 ]
 
