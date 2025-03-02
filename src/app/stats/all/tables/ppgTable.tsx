@@ -21,6 +21,7 @@ interface TeamPPGStats {
   avgPPG: number;
   topPPG: number;
   lowestPPG: number;
+  spread: number;
   matchCount: number;
 }
 
@@ -54,6 +55,7 @@ export default function PPGTable({ teamData }: { teamData: AggregateData[] }) {
                 avgPPG: 0,
                 topPPG: 0,
                 lowestPPG: 0,
+                spread: 0,
                 matchCount: 0
               };
             }
@@ -100,11 +102,14 @@ export default function PPGTable({ teamData }: { teamData: AggregateData[] }) {
               }
             });
             
+            const avgPPG = matchCount > 0 ? totalPoints / matchCount : 0;
+            
             return {
               team,
-              avgPPG: matchCount > 0 ? totalPoints / matchCount : 0,
+              avgPPG,
               topPPG: maxPoints,
               lowestPPG: minPoints === Infinity ? 0 : minPoints,
+              spread: maxPoints - avgPPG,
               matchCount
             };
           } catch (error) {
@@ -114,13 +119,14 @@ export default function PPGTable({ teamData }: { teamData: AggregateData[] }) {
               avgPPG: 0,
               topPPG: 0,
               lowestPPG: 0,
+              spread: 0,
               matchCount: 0
             };
           }
         });
         
         const results = await Promise.all(statsPromises);
-        setPPGStats(results);
+        setPPGStats(results.filter(Boolean) as TeamPPGStats[]);
       } catch (error) {
         console.error("Error fetching PPG stats:", error);
       } finally {
@@ -136,6 +142,7 @@ export default function PPGTable({ teamData }: { teamData: AggregateData[] }) {
     avgPPG: (data: TeamPPGStats) => data.avgPPG,
     topPPG: (data: TeamPPGStats) => data.topPPG,
     lowestPPG: (data: TeamPPGStats) => data.lowestPPG,
+    spread: (data: TeamPPGStats) => data.spread,
     matchCount: (data: TeamPPGStats) => data.matchCount,
   };
 
@@ -171,6 +178,7 @@ export default function PPGTable({ teamData }: { teamData: AggregateData[] }) {
                   {key === 'avgPPG' ? 'Avg PPG' : 
                    key === 'topPPG' ? 'Top Points' : 
                    key === 'lowestPPG' ? 'Lowest Points' : 
+                   key === 'spread' ? 'Spread' :
                    key === 'matchCount' ? 'Matches' : 
                    'Team'}
                   {sortConfig.key === key ? (
@@ -197,8 +205,9 @@ export default function PPGTable({ teamData }: { teamData: AggregateData[] }) {
             >
               <TableCell className="font-medium">{data.team}</TableCell>
               <TableCell>{data.avgPPG.toFixed(2)}</TableCell>
-              <TableCell>{data.topPPG}</TableCell>
-              <TableCell>{data.lowestPPG === Infinity ? 'N/A' : data.lowestPPG}</TableCell>
+              <TableCell>{data.topPPG || 'N/A'}</TableCell>
+              <TableCell>{data.lowestPPG === Infinity || data.lowestPPG === 0 ? 'N/A' : data.lowestPPG}</TableCell>
+              <TableCell>{data.spread.toFixed(2)}</TableCell>
               <TableCell>{data.matchCount}</TableCell>
             </TableRow>
           ))}
