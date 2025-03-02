@@ -199,8 +199,8 @@ export default function PPGTable({ teamData }: { teamData: AggregateData[] }) {
               key={data.team}
               className="cursor-pointer hover:bg-gray-800 text-gray-200"
               onClick={() => {
-                router.push("/stats/teams");
                 setCookie("Team", data.team.toString());
+                window.open("/stats/teams", "_blank");
               }}
             >
               <TableCell className="font-medium">{data.team}</TableCell>

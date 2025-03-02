@@ -83,8 +83,8 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
               key={data.team}
               className={`cursor-pointer hover:bg-muted/50 ${index % 2 === 0 ? 'even-row' : 'odd-row'}`}
               onClick={() => {
-                router.push("/stats/teams");
                 setCookie("Team", data.team.toString());
+                window.open("/stats/teams", "_blank");
               }}
             >
               <TableCell className="font-medium">{data.team}</TableCell>
