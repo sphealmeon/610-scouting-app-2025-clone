@@ -24,8 +24,8 @@ const Algae = ({ setLeaveState }: {
   }
 
   const algaePositions = {
-    'L2-L3': new Set(['A', 'E', 'C']),
-    'L3-L4': new Set(['F', 'D', 'B']),
+    'L2-L3': new Set(['F', 'D', 'B']),
+    'L3-L4': new Set(['A', 'E', 'C']),
   };
 
   const slots = (ScoutingData.start.alliance === "blue") !== scoringTableSide
