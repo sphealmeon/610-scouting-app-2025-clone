@@ -9,12 +9,14 @@ import TeleopTable from "./tables/teleopTable";
 import EndgameTable from "./tables/endgameTable";
 import AllTable from "./tables/allTable";
 import HpTable from "./tables/hpTable";
+import PPGTable from "./tables/ppgTable";
 
 export default function TableTabs({ teamData, hpData }: { teamData: AggregateData[], hpData: HumanPlayerStats[] }) {
   return (
     <Tabs defaultValue="importantStats">
       <TabsList>
         <TabsTrigger value="importantStats">Important Stats</TabsTrigger>
+        <TabsTrigger value="ppgStats">PPG Stats</TabsTrigger>
         <TabsTrigger value="autoStats">Auto Stats</TabsTrigger>
         <TabsTrigger value="teleopStats">Teleop Stats</TabsTrigger>
         <TabsTrigger value="endgameStats">Endgame Stats</TabsTrigger>
@@ -24,6 +26,9 @@ export default function TableTabs({ teamData, hpData }: { teamData: AggregateDat
 
       <TabsContent value="importantStats">
         <ImportantTable teamData={teamData} />
+      </TabsContent>
+      <TabsContent value="ppgStats">
+        <PPGTable teamData={teamData} />
       </TabsContent>
       <TabsContent value="autoStats">
         <AutoTable teamData={teamData} />
