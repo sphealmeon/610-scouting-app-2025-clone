@@ -34,12 +34,6 @@ const Leave = ({ leaveState, setLeaveState, setMatchState }: {
                 Leave
             </Button>
             <Button 
-                className="w-40 h-16 text-xl mt-6 mb-4 bg-red-900 hover:bg-red-800 border-gray-500 text-white"
-                onClick={() => setMatchState(0)} 
-            >
-                Back to Start
-            </Button>
-            <Button 
                 className="w-40 h-16 text-xl m-4 bg-green-700 hover:bg-green-600 border-gray-500 text-white"
                 onClick={() => setMatchState(2)} 
             >

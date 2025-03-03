@@ -1,10 +1,29 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ScoutingData } from "../data";
 
 export default function CoralScoringSection() {
   const [activePickup, setActivePickup] = useState<string | null>(null);
+  const [hasPreloadedCoral, setHasPreloadedCoral] = useState(false);
+
+  // Check if there's a preloaded coral that wasn't used in auto
+  useEffect(() => {
+    const preloadExists = ScoutingData.start.preload === 1;
+    const coralUsedInAuto = 
+      ScoutingData.auto.coral > 0 || 
+      ScoutingData.auto.droppedCoral > 0 ||
+      ScoutingData.auto.l1 > 0 ||
+      ScoutingData.auto.l2 > 0 ||
+      ScoutingData.auto.l3 > 0 ||
+      ScoutingData.auto.l4 > 0;
+    
+    // If preload exists and wasn't used in auto, set the state
+    if (preloadExists && !coralUsedInAuto) {
+      setHasPreloadedCoral(true);
+      setActivePickup('preload'); // Set a special 'preload' state
+    }
+  }, []);
 
   const handlePickupClick = (type: string) => {
     // Toggle off if clicking the same button
@@ -24,6 +43,12 @@ export default function CoralScoringSection() {
   const handleScoring = (action: () => void) => {
     if (!activePickup) return; // Don't allow scoring if no pickup selected
     action();
+    
+    // If this was a preloaded coral, reset the preload state after scoring
+    if (activePickup === 'preload') {
+      setHasPreloadedCoral(false);
+    }
+    
     setActivePickup(null); // Clear pickup selection after scoring
   };
 
@@ -36,25 +61,34 @@ export default function CoralScoringSection() {
       </div>
 
       <div className="flex flex-col gap-4">
-        {/* Pickup Options */}
-        <div className="grid grid-cols-2 gap-4">
-          <div
-            className={`${
-              activePickup === 'floor' ? 'bg-blue-500' : 'bg-gray-700 hover:bg-gray-600'
-            } text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500 transition-colors`}            
-            onClick={() => handlePickupClick('floor')}
-          >
-            Floor
+        {/* Show pickup options only if there's no preloaded coral */}
+        {!hasPreloadedCoral && (
+          <div className="grid grid-cols-2 gap-4">
+            <div
+              className={`${
+                activePickup === 'floor' ? 'bg-blue-500' : 'bg-gray-700 hover:bg-gray-600'
+              } text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500 transition-colors`}            
+              onClick={() => handlePickupClick('floor')}
+            >
+              Floor
+            </div>
+            <div
+              className={`${
+                activePickup === 'station' ? 'bg-blue-500' : 'bg-gray-700 hover:bg-gray-600'
+              } text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500 transition-colors`}
+              onClick={() => handlePickupClick('station')}
+            >
+              Coral station
+            </div>
           </div>
-          <div
-            className={`${
-              activePickup === 'station' ? 'bg-blue-500' : 'bg-gray-700 hover:bg-gray-600'
-            } text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500 transition-colors`}
-            onClick={() => handlePickupClick('station')}
-          >
-            Coral station
+        )}
+
+        {/* If there's a preloaded coral, show a message */}
+        {hasPreloadedCoral && (
+          <div className="bg-blue-500 text-white font-bold py-3 rounded-sm text-center mb-2">
+            Using Preloaded Coral
           </div>
-        </div>
+        )}
 
         {/* Scoring Grid */}
         <div className="flex flex-col gap-3">
