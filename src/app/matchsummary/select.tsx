@@ -1,42 +1,79 @@
 "use client"
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { db } from "@/app/firebase/firebase"
-import { collection, getDocs } from "firebase/firestore"
 import { useState, useEffect } from "react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useApi, key, qualificationMatches } from "@/app/globalVars"
 
-interface TeamSelectProps {
-    onTeamSelect: (match: string) => void;
-}
-
-export default function MatchSelect({ onTeamSelect }: TeamSelectProps) {
-    const [matches, setMatches] = useState<string[]>([])
+export default function MatchSelect({ onMatchSelect }: { onMatchSelect: (match: string) => void }) {
+    const [matches, setMatches] = useState<any[]>([])
+    const [matchNumber, setMatchNumber] = useState("")
 
     useEffect(() => {
         const fetchMatches = async () => {
-            const matchesRef = collection(db, "matches")
-            const querySnapshot = await getDocs(matchesRef)
-            const uniqueMatches = [...new Set(querySnapshot.docs.map(doc => doc.data().start.match))]
-            setMatches(uniqueMatches.sort((a, b) => a - b).map(String))
-        }
-        fetchMatches()
-    }, [])
+            if (useApi) {
+                try {
+                    const request = await fetch(
+                        "https://www.thebluealliance.com/api/v3/event/" + key + "/matches",
+                        {
+                            method: "GET",
+                            headers: {
+                                "X-TBA-Auth-Key":
+                                    "ZsbRGTknrkbJAl3OBXVaRh8loiP9ecki3Ag2q1DpExs7yRg9g0RVsXTY3edbMBQO",
+                            },
+                        }
+                    );
+
+                    if (!request.ok) {
+                        throw new Error("Failed to fetch matches from The Blue Alliance.");
+                    }
+
+                    const data = await request.json();
+                    setMatches(
+                        data.filter((match: any) => match.comp_level === "qm")
+                    );
+                } catch (err) {
+                    console.error("Error fetching matches:", err);
+                    setMatches([]);
+                }
+            } else {
+                // For non-API scenario, use matches from globalVars
+                const formattedMatches = qualificationMatches.map(matchNum => ({
+                    match_number: parseInt(matchNum),
+                    comp_level: "qm"
+                }));
+                setMatches(formattedMatches);
+            }
+        };
+
+        fetchMatches();
+    }, [useApi]);
+
+    const handleMatchNumberChange = (value: string) => {
+        setMatchNumber(value);
+        onMatchSelect(value);
+    };
 
     return (
-        <div className="p-4">
-            <label className="block mb-2 bold text-2xl">Select a match</label>
-            <Select onValueChange={onTeamSelect}>
-                <SelectTrigger className="w-[200px]">
-                    <SelectValue placeholder="Select match..." />
+        <div className="w-full flex flex-col items-center justify-center mb-8">
+            <h2 className="text-2xl font-bold mb-4">Match Summary</h2>
+            <Select onValueChange={handleMatchNumberChange}>
+                <SelectTrigger className="w-[200px] bg-gray-600 text-white">
+                    <SelectValue placeholder="Select Match" />
                 </SelectTrigger>
-                <SelectContent>
-                    {matches.map((match) => (
-                        <SelectItem key={match} value={match}>
-                            Match {match}
-                        </SelectItem>
-                    ))}
+                <SelectContent className="bg-gray-600 text-white">
+                    {matches
+                        .sort((a, b) => a.match_number - b.match_number)
+                        .map((match) => (
+                            <SelectItem 
+                                key={match.match_number} 
+                                value={String(match.match_number)}
+                                className="text-white"
+                            >
+                                Match {match.match_number}
+                            </SelectItem>
+                        ))}
                 </SelectContent>
             </Select>
         </div>
-    )
+    );
 }
