@@ -4,15 +4,15 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 
-// Port Hueneme Firebase
+// Centennial Firebase
 const firebaseConfig = {
   apiKey: "<GOOGLE_API_KEY_REDACTED>",
-  authDomain: "caph2025.firebaseapp.com",
-  projectId: "caph2025",
-  storageBucket: "caph2025.firebasestorage.app",
-  messagingSenderId: "88225754422",
-  appId: "1:88225754422:web:8a489e4223a7a017fc5797",
-  measurementId: "G-9HYBNV0EQ0"
+  authDomain: "centennial2025-fe024.firebaseapp.com",
+  projectId: "centennial2025-fe024",
+  storageBucket: "centennial2025-fe024.firebasestorage.app",
+  messagingSenderId: "848980441429",
+  appId: "1:848980441429:web:5b279d9b35a8a0282197dc",
+  measurementId: "G-WS1CF9NVES"
 };
 
 
