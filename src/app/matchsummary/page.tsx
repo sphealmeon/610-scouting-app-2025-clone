@@ -5,8 +5,9 @@ import { MainHeader } from "@/components/MainHeader"
 import MatchSelect from "./select"
 import { MatchTable } from "./matchtable"
 import { db } from "@/app/firebase/firebase"
-import { collection, getDocs, query, where } from "firebase/firestore"
+import { collection, getDocs } from "firebase/firestore"
 import { useApi, key } from "@/app/globalVars"
+import { FetchTeamsInMatch } from "@/app/blueAlliance/fetchTeamsInMatch"
 
 export default function MatchSummaryPage() {
     const [selectedMatch, setSelectedMatch] = useState<string>("")
@@ -28,106 +29,50 @@ export default function MatchSummaryPage() {
         console.log("Selected match:", matchNumber)
 
         try {
-            // Get all data for this match from Firebase first
-            const matchesRef = collection(db, "matches")
-            const q = query(matchesRef, where("start.match", "==", matchNumber))
-            console.log("Querying Firebase for match:", matchNumber, "typeof:", typeof matchNumber)
+            // Get teams for this match using your existing function
+            const teamsInMatch = await FetchTeamsInMatch(matchNumber)
+            console.log("Teams in match:", teamsInMatch)
             
-            const querySnapshot = await getDocs(q)
-            console.log("Firebase query completed, docs:", querySnapshot.size)
-            
-            const allMatchData: any[] = []
-            
-            // If we don't get any results, try with a string version of the match number
-            if (querySnapshot.size === 0) {
-                console.log("Trying with string match number")
-                const qString = query(matchesRef, where("start.match", "==", match))
-                const querySnapshotString = await getDocs(qString)
-                console.log("Firebase string query completed, docs:", querySnapshotString.size)
-                
-                querySnapshotString.forEach((doc) => {
-                    const data = doc.data()
-                    console.log("Match data for team:", data.start?.team, "Alliance:", data.start?.alliance)
-                    allMatchData.push(data)
-                })
-            } else {
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data()
-                    console.log("Match data for team:", data.start?.team, "Alliance:", data.start?.alliance)
-                    allMatchData.push(data)
-                })
+            if (teamsInMatch && teamsInMatch.red && teamsInMatch.blue) {
+                setRedTeams(teamsInMatch.red)
+                setBlueTeams(teamsInMatch.blue)
             }
             
+            // Get all match data from Firebase
+            const matchesRef = collection(db, "matches")
+            const querySnapshot = await getDocs(matchesRef)
+            
+            console.log("All Firebase docs:", querySnapshot.size)
+            
+            // Filter for the selected match
+            const allMatchData: any[] = []
+            querySnapshot.forEach((doc) => {
+                const data = doc.data()
+                // Check if this document is for our match
+                if (data.start && data.start.match === matchNumber) {
+                    console.log("Found match data for team:", data.start.team, "Alliance:", data.start.alliance)
+                    allMatchData.push(data)
+                }
+            })
+            
+            console.log("Filtered match data:", allMatchData.length)
             setMatchData(allMatchData)
             
-            // Extract teams from match data
-            const redTeamsFromData = allMatchData
-                .filter(data => data.start?.alliance === 'red')
-                .map(data => data.start.team)
-            
-            const blueTeamsFromData = allMatchData
-                .filter(data => data.start?.alliance === 'blue')
-                .map(data => data.start.team)
-            
-            console.log("Red teams from data:", redTeamsFromData)
-            console.log("Blue teams from data:", blueTeamsFromData)
-            
-            // If we have teams from data, use them
-            if (redTeamsFromData.length > 0 || blueTeamsFromData.length > 0) {
-                setRedTeams(redTeamsFromData)
-                setBlueTeams(blueTeamsFromData)
-            } 
-            // Otherwise try to get from TBA
-            else if (useApi) {
-                try {
-                    console.log("Fetching from TBA API")
-                    const response = await fetch(
-                        `https://www.thebluealliance.com/api/v3/event/${key}/matches/simple`,
-                        {
-                            method: "GET",
-                            headers: {
-                                "X-TBA-Auth-Key": "ZsbRGTknrkbJAl3OBXVaRh8loiP9ecki3Ag2q1DpExs7yRg9g0RVsXTY3edbMBQO",
-                            },
-                        }
-                    )
-                    
-                    if (response.ok) {
-                        const matches = await response.json()
-                        console.log("TBA matches:", matches.length)
-                        
-                        const selectedMatch = matches.find((m: any) => 
-                            m.comp_level === "qm" && m.match_number === matchNumber
-                        )
-                        
-                        if (selectedMatch) {
-                            console.log("Found match in TBA data:", selectedMatch)
-                            const redTeamNumbers = selectedMatch.alliances.red.team_keys.map((team: string) => 
-                                parseInt(team.replace("frc", ""))
-                            )
-                            const blueTeamNumbers = selectedMatch.alliances.blue.team_keys.map((team: string) => 
-                                parseInt(team.replace("frc", ""))
-                            )
-                            
-                            console.log("TBA red teams:", redTeamNumbers)
-                            console.log("TBA blue teams:", blueTeamNumbers)
-                            
-                            setRedTeams(redTeamNumbers)
-                            setBlueTeams(blueTeamNumbers)
-                        } else {
-                            console.log("Match not found in TBA data")
-                            setError("Match not found in TBA data")
-                        }
-                    } else {
-                        console.error("TBA API error:", response.status)
-                        setError("Error fetching data from TBA")
-                    }
-                } catch (error) {
-                    console.error("Error fetching match data from TBA:", error)
-                    setError("Error connecting to TBA")
-                }
+            // If we don't have teams from the API but have match data, extract teams from there
+            if ((!teamsInMatch || !teamsInMatch.red || !teamsInMatch.blue) && allMatchData.length > 0) {
+                const redTeamsFromData = allMatchData
+                    .filter(data => data.start?.alliance === 'red')
+                    .map(data => data.start.team)
+                
+                const blueTeamsFromData = allMatchData
+                    .filter(data => data.start?.alliance === 'blue')
+                    .map(data => data.start.team)
+                
+                if (redTeamsFromData.length > 0) setRedTeams(redTeamsFromData)
+                if (blueTeamsFromData.length > 0) setBlueTeams(blueTeamsFromData)
             }
             
-            // If we still don't have teams, show an error
+            // If we still don't have any data, show an error
             if (redTeams.length === 0 && blueTeams.length === 0 && allMatchData.length === 0) {
                 setError("No data found for this match")
             }
