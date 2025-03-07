@@ -11,16 +11,18 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { submitPitData } from "./submitPitData";
+import { submitPitData, PitScoutData } from "./submitPitData";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
+import { db } from "@/app/firebase/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function PitScoutCategories({ teamNumber }: { teamNumber: string }) {
     const [robotWeight, setRobotWeight] = useState<number>(0);
@@ -34,6 +36,61 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
     const [pickupLocation, setPickupLocation] = useState<string>("");
     const [notes, setNotes] = useState<string>("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [existingData, setExistingData] = useState<boolean>(false);
+
+    // Load existing pit data when team changes
+    useEffect(() => {
+        const loadPitData = async () => {
+            if (!teamNumber) return;
+            
+            setIsLoading(true);
+            try {
+                const pitDocRef = doc(db, "pitscout", teamNumber);
+                const pitDocSnap = await getDoc(pitDocRef);
+                
+                if (pitDocSnap.exists()) {
+                    const data = pitDocSnap.data() as PitScoutData & { timestamp?: string };
+                    
+                    // Update all state values with existing data
+                    setRobotWeight(data.robotWeight || 0);
+                    setRobotSpeed(data.robotSpeed || 0);
+                    setCenterOfGravity(data.centerOfGravity || "");
+                    setDrivetrainType(data.drivetrainType || "");
+                    setDefenseComfort(data.defenseComfort || 1);
+                    setAlgaeCapability(data.algaeCapability || 1);
+                    setCoralCapability(data.coralCapability || 1);
+                    setClimbAbility(data.climbAbility || "");
+                    setPickupLocation(data.pickupLocation || "");
+                    setNotes(data.notes || "");
+                    
+                    setExistingData(true);
+                    toast.info(`Loaded existing pit data from ${new Date(data.timestamp || "").toLocaleString()}`);
+                } else {
+                    // Reset form for new team
+                    setRobotWeight(0);
+                    setRobotSpeed(0);
+                    setCenterOfGravity("");
+                    setDrivetrainType("");
+                    setDefenseComfort(1);
+                    setAlgaeCapability(1);
+                    setCoralCapability(1);
+                    setClimbAbility("");
+                    setPickupLocation("");
+                    setNotes("");
+                    
+                    setExistingData(false);
+                }
+            } catch (error) {
+                console.error("Error loading pit data:", error);
+                toast.error("Failed to load existing pit data");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        
+        loadPitData();
+    }, [teamNumber]);
 
     const handleSubmit = async () => {
         if (!teamNumber) {
@@ -57,7 +114,8 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
             });
 
             if (result.success) {
-                toast.success(result.message);
+                toast.success(existingData ? "Pit data updated successfully" : "Pit data submitted successfully");
+                setExistingData(true);
             } else {
                 toast.error(result.message);
             }
@@ -69,8 +127,24 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
         }
     };
 
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center p-8">
+                <p className="text-lg">Loading pit data...</p>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col gap-8 p-4 max-w-[1400px] mx-auto">
+            {existingData && (
+                <div className="bg-blue-500/20 border border-blue-500 rounded-md p-4 text-center">
+                    <p className="text-lg">
+                        Editing existing pit data for Team {teamNumber}
+                    </p>
+                </div>
+            )}
+            
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Left Column - with self-start alignment */}
                 <div className="flex flex-col gap-8 self-start">
@@ -291,9 +365,18 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
             <Button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="w-full py-6 text-xl bg-blue-600 hover:bg-blue-700"
+                className={`w-full py-6 text-xl ${
+                    existingData 
+                        ? "bg-yellow-600 hover:bg-yellow-700" 
+                        : "bg-blue-600 hover:bg-blue-700"
+                }`}
             >
-                {isSubmitting ? "Submitting..." : "Submit Pit Data"}
+                {isSubmitting 
+                    ? "Submitting..." 
+                    : existingData 
+                        ? "Update Pit Data" 
+                        : "Submit Pit Data"
+                }
             </Button>
         </div>
     );
