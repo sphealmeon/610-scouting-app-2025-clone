@@ -67,20 +67,20 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
     };
 
     const handleSubmit = async () => {
-        if (!match || !redTeam || !blueTeam) {
-            alert("Please select match and teams first");
+        if (!match) {
+            alert("Please select a match first");
             return;
         }
         
         const submitData = {
             red: {
                 ...scores.red,
-                team: parseInt(redTeam),
+                team: parseInt(redTeam || "0"),
                 match: parseInt(match)
             },
             blue: {
                 ...scores.blue,
-                team: parseInt(blueTeam),
+                team: parseInt(blueTeam || "0"),
                 match: parseInt(match)
             }
         };
@@ -88,13 +88,13 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
         try {
             await submitHPData({ 
                 red: {
-                    team: parseInt(redTeam),
+                    team: parseInt(redTeam || "0"),
                     match: parseInt(match),
                     redScored: scores.red.redScored,
                     redMissed: scores.red.redMissed
                 },
                 blue: {
-                    team: parseInt(blueTeam),
+                    team: parseInt(blueTeam || "0"),
                     match: parseInt(match),
                     blueScored: scores.blue.blueScored,
                     blueMissed: scores.blue.blueMissed
@@ -174,6 +174,7 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                             <SelectValue placeholder="Select Blue Team" />
                         </SelectTrigger>
                         <SelectContent>
+                            <SelectItem value="0">No Team</SelectItem>
                             {matchTeams?.blue.map((team) => (
                                 <SelectItem key={team} value={team.toString()}>
                                     {team}
@@ -187,6 +188,7 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                             <SelectValue placeholder="Select Red Team" />
                         </SelectTrigger>
                         <SelectContent>
+                            <SelectItem value="0">No Team</SelectItem>
                             {matchTeams?.red.map((team) => (
                                 <SelectItem key={team} value={team.toString()}>
                                     {team}
