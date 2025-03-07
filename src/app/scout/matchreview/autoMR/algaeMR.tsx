@@ -1,6 +1,7 @@
 import { ScoutingData } from "../../data";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { scoringTableSide } from "@/app/globalVars";
 
 interface AlgaeScores {
   barge: number;
@@ -20,7 +21,7 @@ const AlgaeMR = ({ setLeaveState }: {
     processor: ScoutingData.auto.processor,
   });
 
-  const slots = ScoutingData.start.alliance === "red" 
+  const slots = (ScoutingData.start.alliance === "blue") !== scoringTableSide
     ? ["F", "E", "D", "C", "B", "A"]
     : ["C", "B", "A", "F", "E", "D"];
 
