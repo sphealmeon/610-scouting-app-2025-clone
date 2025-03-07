@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { MainHeader } from "@/components/MainHeader"
 import MatchSelect from "./select"
 import { MatchTable } from "./matchtable"
@@ -9,6 +9,9 @@ import { db } from "@/app/firebase/firebase"
 import { doc, getDoc } from "firebase/firestore"
 import { useApi, key, teams } from "@/app/globalVars"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import RadarChart from "@/app/compare/radarchart"
+import { AggregateData } from "../interfaces"
+import { TeamAggregate } from "@/app/firebase/TeamAggregate"
 
 export default function MatchSummaryPage() {
     const [selectedMatch, setSelectedMatch] = useState<string>("")
@@ -18,6 +21,8 @@ export default function MatchSummaryPage() {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>("")
     const [activeTab, setActiveTab] = useState<string>("match-data")
+    const [redTeamsData, setRedTeamsData] = useState<{ [key: string]: AggregateData }>({})
+    const [blueTeamsData, setBlueTeamsData] = useState<{ [key: string]: AggregateData }>({})
 
     const handleMatchSelect = async (match: string) => {
         setSelectedMatch(match)
@@ -146,6 +151,37 @@ export default function MatchSummaryPage() {
         }
     }
 
+    // Add this useEffect to populate teamsData when teams change
+    useEffect(() => {
+        const fetchTeamData = async () => {
+            const newRedTeamsData: { [key: string]: AggregateData } = {};
+            const newBlueTeamsData: { [key: string]: AggregateData } = {};
+            
+            // Fetch data for red teams
+            for (const team of redTeams) {
+                const data = await TeamAggregate({ team });
+                if (data) {
+                    newRedTeamsData[team.toString()] = data;
+                }
+            }
+            
+            // Fetch data for blue teams
+            for (const team of blueTeams) {
+                const data = await TeamAggregate({ team });
+                if (data) {
+                    newBlueTeamsData[team.toString()] = data;
+                }
+            }
+            
+            setRedTeamsData(newRedTeamsData);
+            setBlueTeamsData(newBlueTeamsData);
+        };
+        
+        if (redTeams.length > 0 || blueTeams.length > 0) {
+            fetchTeamData();
+        }
+    }, [redTeams, blueTeams]);
+
     return (
         <>
             <MainHeader />
@@ -199,12 +235,21 @@ export default function MatchSummaryPage() {
                                         <div>
                                             <h3 className="text-xl font-bold mb-2 text-red-500">Red Alliance</h3>
                                             <TeamStatsTable teams={redTeams} />
+                                            <div className="mt-4">
+                                                <h4 className="text-lg font-semibold mb-2">Red Alliance Comparison</h4>
+                                                <RadarChart teamsData={redTeamsData} />
+                                            </div>
                                         </div>
                                         <div>
                                             <h3 className="text-xl font-bold mb-2 text-blue-500">Blue Alliance</h3>
                                             <TeamStatsTable teams={blueTeams} />
+                                            <div className="mt-4">
+                                                <h4 className="text-lg font-semibold mb-2">Blue Alliance Comparison</h4>
+                                                <RadarChart teamsData={blueTeamsData} />
+                                            </div>
                                         </div>
                                     </div>
+                                    <h1> P.S values in chart are multiplied</h1>
                                 </TabsContent>
                             </Tabs>
                         </div>

@@ -12,7 +12,6 @@ interface TeamSelectProps {
 
 export default function TeamSelect({ onTeamSelect }: TeamSelectProps) {
     const [teams, setTeams] = useState<string[]>([])
-
     const [selectedTeam, setSelectedTeam] = useState<string>("")
 
     useEffect(() => {   
