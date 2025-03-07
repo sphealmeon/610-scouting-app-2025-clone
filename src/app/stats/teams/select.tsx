@@ -4,6 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { db } from "@/app/firebase/firebase"
 import { collection, getDocs } from "firebase/firestore"
 import { useState, useEffect } from "react"
+import { FetchTeams } from "@/app/blueAlliance/fetchTeams"
 
 interface TeamSelectProps {
     onTeamSelect: (team: string) => void;
@@ -12,15 +13,25 @@ interface TeamSelectProps {
 export default function TeamSelect({ onTeamSelect }: TeamSelectProps) {
     const [teams, setTeams] = useState<string[]>([])
 
-    useEffect(() => {
-        const fetchTeams = async () => {
-            const matchesRef = collection(db, "matches")
-            const querySnapshot = await getDocs(matchesRef)
-            const uniqueTeams = [...new Set(querySnapshot.docs.map(doc => doc.data().start.team))]
-            setTeams(uniqueTeams.sort((a, b) => a - b).map(String))
-        }
-        fetchTeams()
+    const [selectedTeam, setSelectedTeam] = useState<string>("")
+
+    useEffect(() => {   
+        FetchTeams({ setTeams })
     }, [])
+
+    const handleTeamSelect = (team: string) => {
+        setSelectedTeam(team)
+        onTeamSelect(team)
+    }
+    // useEffect(() => {
+    //     const fetchTeams = async () => {
+    //         const matchesRef = collection(db, "matches")
+    //         const querySnapshot = await getDocs(matchesRef)
+    //         const uniqueTeams = [...new Set(querySnapshot.docs.map(doc => doc.data().start.team))]
+    //         setTeams(uniqueTeams.sort((a, b) => a - b).map(String))
+    //     }
+    //     fetchTeams()
+    // }, [])
 
     return (
         <div className="p-4">
