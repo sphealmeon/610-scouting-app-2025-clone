@@ -118,6 +118,15 @@ const ReefMR = ({ setLeaveState }: {
         showPopup(`Scored at Level ${level}, Slot ${slot}`);
       } else {
         slotData.made = 0;
+        // Decrement coral count
+        ScoutingData.auto.coral--;
+        // Decrement specific level counter
+        switch(level) {
+          case 'L1': ScoutingData.auto.l1--; break;
+          case 'L2': ScoutingData.auto.l2--; break;
+          case 'L3': ScoutingData.auto.l3--; break;
+          case 'L4': ScoutingData.auto.l4--; break;
+        }
         showPopup(`Removed score at Level ${level}, Slot ${slot}`);
       }
     }
