@@ -1,7 +1,8 @@
 "use client"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FetchTeams } from "@/app/blueAlliance/fetchTeams"
+import { db } from "@/app/firebase/firebase"
+import { collection, getDocs } from "firebase/firestore"
 import { useState, useEffect } from "react"
 
 interface TeamSelectProps {
@@ -10,21 +11,21 @@ interface TeamSelectProps {
 
 export default function TeamSelect({ onTeamSelect }: TeamSelectProps) {
     const [teams, setTeams] = useState<string[]>([])
-    const [selectedTeam, setSelectedTeam] = useState<string>("")
 
     useEffect(() => {
-        FetchTeams({ setTeams })
+        const fetchTeams = async () => {
+            const matchesRef = collection(db, "matches")
+            const querySnapshot = await getDocs(matchesRef)
+            const uniqueTeams = [...new Set(querySnapshot.docs.map(doc => doc.data().start.team))]
+            setTeams(uniqueTeams.sort((a, b) => a - b).map(String))
+        }
+        fetchTeams()
     }, [])
-
-    const handleTeamSelect = (team: string) => {
-        setSelectedTeam(team)
-        onTeamSelect(team)
-    }
 
     return (
         <div className="p-4">
             <label className="block mb-2 bold text-2xl">Select a team</label>
-            <Select onValueChange={handleTeamSelect} value={selectedTeam}>
+            <Select onValueChange={onTeamSelect}>
                 <SelectTrigger className="w-[200px]">
                     <SelectValue placeholder="Select team..." />
                 </SelectTrigger>
