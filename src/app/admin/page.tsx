@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { db } from "@/app/firebase/firebase"
 import { collection, getDocs } from "firebase/firestore"
-import { Data } from "@/app/interfaces"
 import { MainHeader } from "@/components/MainHeader"
 import { teams } from "@/app/globalVars"
 import { key, useApi } from "@/app/globalVars"
