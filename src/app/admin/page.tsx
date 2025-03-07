@@ -47,7 +47,7 @@ export default function MatchSummary() {
     useEffect(() => {
         const loadDefaultCSV = async () => {
             try {
-                const response = await fetch('/Scouting Schedule PH - Scouting Schedule.csv');
+                const response = await fetch('/Scouting Schedule Centenial 2025  - ScoutingAppCSV.csv');
                 const text = await response.text();
                 parseCSV(text);
                 setCsvLoaded(true);
