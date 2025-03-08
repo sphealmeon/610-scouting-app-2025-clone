@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import RadarChart from "@/app/compare/radarchart"
 import { AggregateData } from "../interfaces"
 import { TeamAggregate } from "@/app/firebase/TeamAggregate"
+import PlayoffMatch from "./playoffmatch"
 
 export default function MatchSummaryPage() {
     const [selectedMatch, setSelectedMatch] = useState<string>("")
@@ -23,9 +24,23 @@ export default function MatchSummaryPage() {
     const [activeTab, setActiveTab] = useState<string>("match-data")
     const [redTeamsData, setRedTeamsData] = useState<{ [key: string]: AggregateData }>({})
     const [blueTeamsData, setBlueTeamsData] = useState<{ [key: string]: AggregateData }>({})
+    const [isPlayoff, setIsPlayoff] = useState<boolean>(false)
+    const [playoffMatchDisplay, setPlayoffMatchDisplay] = useState<string>("")
 
     const handleMatchSelect = async (match: string) => {
         setSelectedMatch(match)
+        
+        // Check if this is a playoff match (ID 1001-1016)
+        const isPlayoffMatch = parseInt(match) >= 1000
+        setIsPlayoff(isPlayoffMatch)
+        
+        if (isPlayoffMatch) {
+            // Just use the numeric ID for display
+            setPlayoffMatchDisplay(`Playoff Match ${match}`)
+            return // Skip the rest of the function for playoff matches
+        }
+        
+        // Regular qualification match handling
         setError("")
         setLoading(true)
         setMatchData([])
@@ -201,59 +216,68 @@ export default function MatchSummaryPage() {
                 )}
                 
                 {selectedMatch && !loading && !error && (
-                    <div className="space-y-8">
-                        <div className="mt-4">
-                            <h2 className="text-2xl font-bold mb-4">Match {selectedMatch} Details</h2>
-                            
-                            <Tabs defaultValue="match-data" onValueChange={setActiveTab}>
-                                <TabsList className="mb-4">
-                                    <TabsTrigger value="match-data">Match Data</TabsTrigger>
-                                    <TabsTrigger value="team-stats">Team Stats</TabsTrigger>
-                                </TabsList>
-                                
-                                <TabsContent value="match-data">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <h3 className="text-xl font-bold mb-2 text-red-500">Red Alliance</h3>
-                                            <MatchTable 
-                                                matchData={matchData.filter(data => data.start?.alliance === 'red')} 
-                                                teams={redTeams}
-                                            />
-                                        </div>
-                                        <div>
-                                            <h3 className="text-xl font-bold mb-2 text-blue-500">Blue Alliance</h3>
-                                            <MatchTable 
-                                                matchData={matchData.filter(data => data.start?.alliance === 'blue')} 
-                                                teams={blueTeams}
-                                            />
-                                        </div>
-                                    </div>
-                                </TabsContent>
-                                
-                                <TabsContent value="team-stats">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <h3 className="text-xl font-bold mb-2 text-red-500">Red Alliance</h3>
-                                            <TeamStatsTable teams={redTeams} />
-                                            <div className="mt-4">
-                                                <h4 className="text-lg font-semibold mb-2">Red Alliance Comparison</h4>
-                                                <RadarChart teamsData={redTeamsData} />
+                    <>
+                        {isPlayoff ? (
+                            <PlayoffMatch 
+                                matchId={selectedMatch} 
+                                matchDisplay={playoffMatchDisplay} 
+                            />
+                        ) : (
+                            <div className="space-y-8">
+                                <div className="mt-4">
+                                    <h2 className="text-2xl font-bold mb-4">Match {selectedMatch} Details</h2>
+                                    
+                                    <Tabs defaultValue="match-data" onValueChange={setActiveTab}>
+                                        <TabsList className="mb-4">
+                                            <TabsTrigger value="match-data">Match Data</TabsTrigger>
+                                            <TabsTrigger value="team-stats">Team Stats</TabsTrigger>
+                                        </TabsList>
+                                        
+                                        <TabsContent value="match-data">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <h3 className="text-xl font-bold mb-2 text-red-500">Red Alliance</h3>
+                                                    <MatchTable 
+                                                        matchData={matchData.filter(data => data.start?.alliance === 'red')} 
+                                                        teams={redTeams}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-xl font-bold mb-2 text-blue-500">Blue Alliance</h3>
+                                                    <MatchTable 
+                                                        matchData={matchData.filter(data => data.start?.alliance === 'blue')} 
+                                                        teams={blueTeams}
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div>
-                                            <h3 className="text-xl font-bold mb-2 text-blue-500">Blue Alliance</h3>
-                                            <TeamStatsTable teams={blueTeams} />
-                                            <div className="mt-4">
-                                                <h4 className="text-lg font-semibold mb-2">Blue Alliance Comparison</h4>
-                                                <RadarChart teamsData={blueTeamsData} />
+                                        </TabsContent>
+                                        
+                                        <TabsContent value="team-stats">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <h3 className="text-xl font-bold mb-2 text-red-500">Red Alliance</h3>
+                                                    <TeamStatsTable teams={redTeams} />
+                                                    <div className="mt-4">
+                                                        <h4 className="text-lg font-semibold mb-2">Red Alliance Comparison</h4>
+                                                        <RadarChart teamsData={redTeamsData} />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-xl font-bold mb-2 text-blue-500">Blue Alliance</h3>
+                                                    <TeamStatsTable teams={blueTeams} />
+                                                    <div className="mt-4">
+                                                        <h4 className="text-lg font-semibold mb-2">Blue Alliance Comparison</h4>
+                                                        <RadarChart teamsData={blueTeamsData} />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <h1> P.S values in chart are multiplied</h1>
-                                </TabsContent>
-                            </Tabs>
-                        </div>
-                    </div>
+                                            <h1> P.S values in chart are multiplied</h1>
+                                        </TabsContent>
+                                    </Tabs>
+                                </div>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </>
