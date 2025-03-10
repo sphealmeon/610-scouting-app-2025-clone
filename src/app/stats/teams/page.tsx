@@ -47,15 +47,16 @@ export default function Home() {
                                 <h2 className="text-2xl font-bold mb-4">Match History</h2>
                                 <MatchTable team={parseInt(selectedTeam)} />
                             </div>
-                            <div>
-                                <h2 className="text-2xl font-bold mb-4">Starting Positions</h2>
-                                <StartPos matches={matchData} />
-                            </div>
+                            
                         </div>
                         <div>
                             <Last5Matches matches={matchData} />
                             <h2 className="text-2xl font-bold mb-4">Auto Scoring</h2>
                             <ScoringDist matches={matchData} />
+                            <div>
+                                <h2 className="text-2xl font-bold mb-4">Starting Positions</h2>
+                                <StartPos matches={matchData} />
+                            </div>
                         </div>
                     </div>
                     

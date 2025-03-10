@@ -75,14 +75,6 @@ export const columns: ColumnDef<Data>[] = [
     {
         accessorKey: "teleop.missedShallow",
         header: "Missed Shallow",
-    },
-    {
-        accessorKey: "teleop.general",
-        header: "General Notes",
-    },
-    {
-        accessorKey: "teleop.reason",
-        header: "Break Notes",
     }
 ]
 
@@ -131,7 +123,7 @@ export function MatchTable({ team }: MatchTableProps) {
     }
 
     return (
-        <div>
+        <div className="space-y-6">
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
@@ -173,6 +165,31 @@ export function MatchTable({ team }: MatchTableProps) {
                         )}
                     </TableBody>
                 </Table>
+            </div>
+
+            <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Match Notes</h3>
+                <div className="rounded-md border divide-y">
+                    {data.map((match) => (
+                        <div key={match.start.match} className="p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">Match {match.start.match}</span>
+                            </div>
+                            {match.teleop.general && (
+                                <div className="mb-2">
+                                    <span className="text-gray-400">General: </span>
+                                    {match.teleop.general}
+                                </div>
+                            )}
+                            {match.teleop.reason && (
+                                <div>
+                                    <span className="text-gray-400">Break: </span>
+                                    {match.teleop.reason}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     )

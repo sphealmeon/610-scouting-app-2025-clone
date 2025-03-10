@@ -32,7 +32,7 @@ export default function ScoutSelect({ setMatchState }: { setMatchState: Function
             return;
         }
         
-        setMatchState("auto");
+        setMatchState(1);
     };
 
     return (
