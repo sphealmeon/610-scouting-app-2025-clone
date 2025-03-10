@@ -100,6 +100,16 @@ export const ScoutingData: Data = {
         general: "",
         reason: "",
         explanation: "",
+
+        coralAverageScoringTime: 0,
+        processorAverageScoringTime: 0,
+        bargeAverageScoringTime: 0,
+        shallowAverageHangTime: 0,
+        deepAverageHangTime: 0,
+
+        coralCyclesForTimer: 0,
+        processorCyclesForTimer: 0,
+        bargeCyclesForTimer: 0,
     },
 };
 
@@ -212,6 +222,16 @@ export const resetData = () => {
     ScoutingData.teleop.general = "";
     ScoutingData.teleop.reason = "";
     ScoutingData.teleop.explanation = "";
+
+    ScoutingData.teleop.coralAverageScoringTime = 0;
+    ScoutingData.teleop.processorAverageScoringTime = 0;
+    ScoutingData.teleop.bargeAverageScoringTime = 0;
+    ScoutingData.teleop.shallowAverageHangTime = 0;
+    ScoutingData.teleop.deepAverageHangTime = 0;
+
+    ScoutingData.teleop.coralCyclesForTimer = 0;
+    ScoutingData.teleop.processorCyclesForTimer = 0;
+    ScoutingData.teleop.bargeCyclesForTimer = 0;
 
     // HPData.red.team = 0;
     // HPData.red.match = 0;

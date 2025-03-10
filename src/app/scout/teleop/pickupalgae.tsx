@@ -9,24 +9,29 @@ export default function PickupAlgae() {
     visible: false,
     message: "",
   });
+  const [pickupTime, setPickupTime] = useState<number | null>(null);
 
   const showPopup = (message: string) => {
     setPopup({ visible: true, message });
     setTimeout(() => setPopup({ visible: false, message: "" }), 2000);
   };
 
-
   const handleKnock = () => {
-    ScoutingData.teleop.algaeRemoved++
-    showPopup("Algae Knocked Off Reef")
-  }
+    ScoutingData.teleop.algaeRemoved++;
+    showPopup("Algae Knocked Off Reef");
+  };
 
   const handlePickupClick = (type: string) => {
     // Toggle off if clicking the same button
     if (activePickup === type) {
       setActivePickup(null);
+      setPickupTime(null);
       return;
     }
+    
+    // Record the time when pickup is selected
+    const currentTime = Date.now();
+    setPickupTime(currentTime);
     setActivePickup(type);
     
     if (type === 'floor') {
@@ -36,10 +41,78 @@ export default function PickupAlgae() {
     }
   };
 
-  const handleScoring = (action: () => void) => {
+  // Helper function to update processor cycle time
+  const updateProcessorCycleTime = () => {
+    if (pickupTime) {
+      const scoringTime = Date.now();
+      const cycleTime = scoringTime - pickupTime;
+      
+      // Update the cycle count
+      ScoutingData.teleop.processorCyclesForTimer++;
+      
+      // Calculate new average time
+      if (ScoutingData.teleop.processorAverageScoringTime === 0) {
+        // First cycle, just set the time
+        ScoutingData.teleop.processorAverageScoringTime = cycleTime;
+      } else {
+        // Calculate running average
+        const currentAvg = ScoutingData.teleop.processorAverageScoringTime;
+        const cycleCount = ScoutingData.teleop.processorCyclesForTimer;
+        const timeDiff = cycleTime - currentAvg;
+        
+        // Update average: currentAvg + (newTime - currentAvg) / cycleCount
+        const newAverage = currentAvg + (timeDiff / cycleCount);
+        ScoutingData.teleop.processorAverageScoringTime = newAverage;
+        
+        console.log(`Processor cycle #${cycleCount}: Current time: ${cycleTime}ms, Previous avg: ${currentAvg.toFixed(2)}ms, New avg: ${newAverage.toFixed(2)}ms`);
+      }
+    }
+  };
+
+  // Helper function to update barge cycle time
+  const updateBargeCycleTime = () => {
+    if (pickupTime) {
+      const scoringTime = Date.now();
+      const cycleTime = scoringTime - pickupTime;
+      
+      // Update the cycle count
+      ScoutingData.teleop.bargeCyclesForTimer++;
+      
+      // Calculate new average time
+      if (ScoutingData.teleop.bargeAverageScoringTime === 0) {
+        // First cycle, just set the time
+        ScoutingData.teleop.bargeAverageScoringTime = cycleTime;
+      } else {
+        // Calculate running average
+        const currentAvg = ScoutingData.teleop.bargeAverageScoringTime;
+        const cycleCount = ScoutingData.teleop.bargeCyclesForTimer;
+        const timeDiff = cycleTime - currentAvg;
+        
+        // Update average: currentAvg + (newTime - currentAvg) / cycleCount
+        const newAverage = currentAvg + (timeDiff / cycleCount);
+        ScoutingData.teleop.bargeAverageScoringTime = newAverage;
+        
+        console.log(`Barge cycle #${cycleCount}: Current time: ${cycleTime}ms, Previous avg: ${currentAvg.toFixed(2)}ms, New avg: ${newAverage.toFixed(2)}ms`);
+      }
+    }
+  };
+
+  const handleScoring = (action: () => void, scoringType: 'processor' | 'barge' | 'none' = 'none') => {
     if (!activePickup) return; // Don't allow scoring if no pickup selected
+    
+    // Execute the scoring action
     action();
-    setActivePickup(null); // Clear pickup selection after scoring
+    
+    // Update cycle time based on scoring type
+    if (scoringType === 'processor') {
+      updateProcessorCycleTime();
+    } else if (scoringType === 'barge') {
+      updateBargeCycleTime();
+    }
+    
+    // Reset pickup state
+    setActivePickup(null);
+    setPickupTime(null);
   };
 
   return (
@@ -78,7 +151,7 @@ export default function PickupAlgae() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
               } bg-green-700 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.processorScored++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.processorScored++, 'processor')}
             >
               Processor Made
             </div>
@@ -86,7 +159,7 @@ export default function PickupAlgae() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
               } bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.processorDropped++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.processorDropped++, 'processor')}
             >
               Processor Missed
             </div>
@@ -97,7 +170,7 @@ export default function PickupAlgae() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
               } bg-green-700 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.bargeScored++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.bargeScored++, 'barge')}
             >
               Net Made
             </div>
@@ -105,7 +178,7 @@ export default function PickupAlgae() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
               } bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.bargeDropped++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.bargeDropped++, 'barge')}
             >
               Net Missed
             </div>
@@ -117,7 +190,7 @@ export default function PickupAlgae() {
           className={`${
             !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-600'
           } bg-gray-700 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-          onClick={() => handleScoring(() => ScoutingData.teleop.algaeRemoved++)}
+          onClick={() => handleScoring(() => ScoutingData.teleop.algaeRemoved++, 'none')}
         >
           Dropped on field
         </div>

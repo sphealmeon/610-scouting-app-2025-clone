@@ -7,8 +7,32 @@ export default function EndGame() {
     const [endgameState, setEndgameState] = useState("none"); // none, park, shallow, deep
     const [missedShallowChecked, setMissedShallowChecked] = useState(ScoutingData.teleop.missedShallow === 1);
     const [missedDeepChecked, setMissedDeepChecked] = useState(ScoutingData.teleop.missedDeep === 1);
+    const [hangStartTime, setHangStartTime] = useState<number | null>(null);
+    const [hangType, setHangType] = useState<'shallow' | 'deep' | null>(null);
+    const [hangInProgress, setHangInProgress] = useState(false);
 
     const handleEndgameStateChange = (state: string) => {
+        // If there's a hang in progress, calculate the time
+        if (hangInProgress && hangStartTime && (state === 'shallow' || state === 'deep')) {
+            const endTime = Date.now();
+            const hangTime = endTime - hangStartTime;
+            
+            if (hangType === 'shallow' && state === 'shallow') {
+                // Update shallow hang time
+                ScoutingData.teleop.shallowAverageHangTime = hangTime;
+                console.log(`Shallow hang time: ${hangTime}ms`);
+            } else if (hangType === 'deep' && state === 'deep') {
+                // Update deep hang time
+                ScoutingData.teleop.deepAverageHangTime = hangTime;
+                console.log(`Deep hang time: ${hangTime}ms`);
+            }
+            
+            // Reset hang state
+            setHangInProgress(false);
+            setHangStartTime(null);
+            setHangType(null);
+        }
+        
         setEndgameState(state);
         
         // Reset all states
@@ -38,6 +62,12 @@ export default function EndGame() {
     const handleMissedDeepChange = (checked: boolean) => {
         setMissedDeepChecked(checked);
         ScoutingData.teleop.missedDeep = checked ? 1 : 0;
+    };
+
+    const startHangTimer = (type: 'shallow' | 'deep') => {
+        setHangStartTime(Date.now());
+        setHangType(type);
+        setHangInProgress(true);
     };
 
     return (
@@ -93,6 +123,24 @@ export default function EndGame() {
                     )}
                 </div>
 
+                {/* Hang Timer Buttons */}
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                    <Button 
+                        onClick={() => startHangTimer('shallow')}
+                        className={`p-4 ${hangInProgress && hangType === 'shallow' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-green-700 hover:bg-green-600'}`}
+                        disabled={hangInProgress && hangType !== 'shallow'}
+                    >
+                        {hangInProgress && hangType === 'shallow' ? 'Timing Shallow Hang...' : 'Start Shallow Hang'}
+                    </Button>
+                    <Button 
+                        onClick={() => startHangTimer('deep')}
+                        className={`p-4 ${hangInProgress && hangType === 'deep' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-green-700 hover:bg-green-600'}`}
+                        disabled={hangInProgress && hangType !== 'deep'}
+                    >
+                        {hangInProgress && hangType === 'deep' ? 'Timing Deep Hang...' : 'Start Deep Hang'}
+                    </Button>
+                </div>
+
                 {/* Ended on section */}
                 <div className="flex flex-col gap-2">
                     <p className="text-lg">Ended on:</p>
@@ -114,14 +162,14 @@ export default function EndGame() {
                         <Button 
                             variant={endgameState === "shallow" ? "secondary" : "default"}
                             onClick={() => handleEndgameStateChange("shallow")}
-                            className="p-4"
+                            className={`p-4 ${hangInProgress && hangType === 'shallow' ? 'bg-blue-500 hover:bg-blue-600' : ''}`}
                         >
                             Shallow
                         </Button>
                         <Button 
                             variant={endgameState === "deep" ? "secondary" : "default"}
                             onClick={() => handleEndgameStateChange("deep")}
-                            className="p-4"
+                            className={`p-4 ${hangInProgress && hangType === 'deep' ? 'bg-blue-500 hover:bg-blue-600' : ''}`}
                         >
                             Deep
                         </Button>

@@ -6,6 +6,7 @@ import { ScoutingData } from "../data";
 export default function CoralScoringSection() {
   const [activePickup, setActivePickup] = useState<string | null>(null);
   const [hasPreloadedCoral, setHasPreloadedCoral] = useState(false);
+  const [pickupTime, setPickupTime] = useState<number | null>(null);
 
   // Check if there's a preloaded coral that wasn't used in auto
   useEffect(() => {
@@ -22,6 +23,7 @@ export default function CoralScoringSection() {
     if (preloadExists && !coralUsedInAuto) {
       setHasPreloadedCoral(true);
       setActivePickup('preload'); // Set a special 'preload' state
+      setPickupTime(Date.now()); // Set pickup time for preloaded coral
     }
   }, []);
 
@@ -29,8 +31,13 @@ export default function CoralScoringSection() {
     // Toggle off if clicking the same button
     if (activePickup === type) {
       setActivePickup(null);
+      setPickupTime(null);
       return;
     }
+    
+    // Record the time when pickup is selected
+    const currentTime = Date.now();
+    setPickupTime(currentTime);
     setActivePickup(type);
     
     if (type === 'floor') {
@@ -40,16 +47,53 @@ export default function CoralScoringSection() {
     }
   };
 
-  const handleScoring = (action: () => void) => {
+  // Helper function to update cycle time for scoring actions
+  const updateCycleTime = () => {
+    if (pickupTime) {
+      const scoringTime = Date.now();
+      const cycleTime = scoringTime - pickupTime;
+      
+      // Update the cycle count
+      ScoutingData.teleop.coralCyclesForTimer++;
+      
+      // Calculate new average time
+      if (ScoutingData.teleop.coralAverageScoringTime === 0) {
+        // First cycle, just set the time
+        ScoutingData.teleop.coralAverageScoringTime = cycleTime;
+      } else {
+        // Calculate running average
+        const currentAvg = ScoutingData.teleop.coralAverageScoringTime;
+        const cycleCount = ScoutingData.teleop.coralCyclesForTimer;
+        const timeDiff = cycleTime - currentAvg;
+        
+        // Update average: currentAvg + (newTime - currentAvg) / cycleCount
+        const newAverage = currentAvg + (timeDiff / cycleCount);
+        ScoutingData.teleop.coralAverageScoringTime = newAverage;
+        
+        console.log(`Coral cycle #${cycleCount}: Current time: ${cycleTime}ms, Previous avg: ${currentAvg.toFixed(2)}ms, New avg: ${newAverage.toFixed(2)}ms`);
+      }
+    }
+  };
+
+  const handleScoring = (action: () => void, updateAverage: boolean = true) => {
     if (!activePickup) return; // Don't allow scoring if no pickup selected
+    
+    // Execute the scoring action
     action();
+    
+    // Only update cycle time if this is a scoring action (not dropped on field)
+    if (updateAverage) {
+      updateCycleTime();
+    }
     
     // If this was a preloaded coral, reset the preload state after scoring
     if (activePickup === 'preload') {
       setHasPreloadedCoral(false);
     }
     
-    setActivePickup(null); // Clear pickup selection after scoring
+    // Reset pickup state
+    setActivePickup(null);
+    setPickupTime(null);
   };
 
   return (
@@ -98,7 +142,7 @@ export default function CoralScoringSection() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
               } bg-green-700 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.l4Scored++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.l4Scored++, true)}
             >
               L4 Made
             </div>
@@ -106,7 +150,7 @@ export default function CoralScoringSection() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
               } bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.l4Dropped++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.l4Dropped++, true)}
             >
               L4 Missed
             </div>
@@ -118,7 +162,7 @@ export default function CoralScoringSection() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
               } bg-green-700 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.l3Scored++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.l3Scored++, true)}
             >
               L3 Made
             </div>
@@ -126,7 +170,7 @@ export default function CoralScoringSection() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
               } bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.l3Dropped++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.l3Dropped++, true)}
             >
               L3 Missed
             </div>
@@ -138,7 +182,7 @@ export default function CoralScoringSection() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
               } bg-green-700 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.l2Scored++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.l2Scored++, true)}
             >
               L2 Made
             </div>
@@ -146,7 +190,7 @@ export default function CoralScoringSection() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
               } bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.l2Dropped++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.l2Dropped++, true)}
             >
               L2 Missed
             </div>
@@ -158,7 +202,7 @@ export default function CoralScoringSection() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
               } bg-green-700 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.l1Scored++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.l1Scored++, true)}
             >
               L1 Made
             </div>
@@ -166,7 +210,7 @@ export default function CoralScoringSection() {
               className={`${
                 !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
               } bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.l1Dropped++)}
+              onClick={() => handleScoring(() => ScoutingData.teleop.l1Dropped++, true)}
             >
               L1 Missed
             </div>
@@ -178,7 +222,7 @@ export default function CoralScoringSection() {
           className={`${
             !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-600'
           } h-16 bg-gray-700 text-white font-bold py-3 rounded-sm cursor-pointer text-center flex items-center justify-center`}
-          onClick={() => handleScoring(() => ScoutingData.teleop.droppedOnField++)}
+          onClick={() => handleScoring(() => ScoutingData.teleop.droppedOnField++, false)}
         >
           Dropped on field
         </div>

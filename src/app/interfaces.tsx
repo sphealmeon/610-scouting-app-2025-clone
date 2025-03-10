@@ -224,6 +224,16 @@ export interface Data{
         general: string;
         reason: string;
         explanation: string;
+
+        coralAverageScoringTime: number;
+        processorAverageScoringTime: number;
+        bargeAverageScoringTime: number;
+        shallowAverageHangTime: number;
+        deepAverageHangTime: number;
+
+        coralCyclesForTimer: number;
+        processorCyclesForTimer: number;
+        bargeCyclesForTimer: number;
     };
 }
 
