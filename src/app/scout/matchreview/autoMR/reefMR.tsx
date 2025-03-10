@@ -143,6 +143,7 @@ const ReefMR = ({ setLeaveState }: {
       }
     }));
     ScoutingData.auto.droppedCoral++;
+    setLeaveState(1)
     switch(level) {
       case 'L4':
         switch(slot) {

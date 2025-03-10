@@ -86,6 +86,7 @@ const Reef = ({ setLeaveState }: {
 
   const handleDroppedCoral = (level: string, slot: string) => {
     ScoutingData.auto.droppedCoral++;
+    setLeaveState(1)
     switch(level) {
       case 'L4':
         switch(slot) {

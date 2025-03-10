@@ -14,11 +14,13 @@ const Algae = ({ setLeaveState }: {
 
   // Define which slots can have algae for each level
   const handleProcessor = () => {
+    setLeaveState(1)
     ScoutingData.auto.processor++
     showPopup("Processor Scored")
   }
 
   const handleBarge = () => {
+    setLeaveState(1)
     ScoutingData.auto.barge
     showPopup("Barge Scored")
   }
