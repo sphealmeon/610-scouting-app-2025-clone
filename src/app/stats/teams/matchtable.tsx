@@ -19,10 +19,56 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
+// Calculate coral cycles for a match
+const calculateCoralCycles = (match: Data): number => {
+    // Count all coral pieces scored
+    let total = 0;
+    
+    // Auto coral
+    if (match.auto?.coral) {
+        total += match.auto.coral;
+    }
+    
+    // Teleop coral (L1-L4)
+    if (match.teleop?.l1Scored) total += match.teleop.l1Scored;
+    if (match.teleop?.l2Scored) total += match.teleop.l2Scored;
+    if (match.teleop?.l3Scored) total += match.teleop.l3Scored;
+    if (match.teleop?.l4Scored) total += match.teleop.l4Scored;
+    
+    return total;
+};
+
+// Calculate algae cycles for a match
+const calculateAlgaeCycles = (match: Data): number => {
+    // Count all algae pieces scored
+    let total = 0;
+    
+    // Auto algae
+    if (match.auto?.algae) {
+        total += match.auto.algae;
+    }
+    
+    // Teleop algae (processor + barge)
+    if (match.teleop?.processorScored) total += match.teleop.processorScored;
+    if (match.teleop?.bargeScored) total += match.teleop.bargeScored;
+    
+    return total;
+};
+
 export const columns: ColumnDef<Data>[] = [
     {
         accessorKey: "start.match",
         header: "Match",
+    },
+    {
+        id: "coralCycles",
+        header: "Coral Cycles",
+        cell: ({ row }) => calculateCoralCycles(row.original)
+    },
+    {
+        id: "algaeCycles",
+        header: "Algae Cycles",
+        cell: ({ row }) => calculateAlgaeCycles(row.original)
     },
     {
         accessorKey: "auto.coral",
