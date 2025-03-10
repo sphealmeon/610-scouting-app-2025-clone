@@ -24,10 +24,18 @@ export const SubmitMatch = async ({
     await setDoc(doc(db, team + "", match + ""), {
       matchData,
     });
-    CalculateAggregate({ team })
+    CalculateAggregate({ team });
+    console.log("Match submitted");
   } catch (e) {
     console.error(e);
+    // Store failed submission in localStorage
+    const failedSubmissions = JSON.parse(localStorage.getItem('failedSubmissions') || '[]');
+    failedSubmissions.push({
+      team,
+      match,
+      matchData,
+      timestamp: new Date().toISOString(),
+    });
+    localStorage.setItem('failedSubmissions', JSON.stringify(failedSubmissions));
   }
-
-  console.log("Match submitted");
 };
