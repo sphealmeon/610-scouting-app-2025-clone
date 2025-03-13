@@ -26,23 +26,23 @@ const AlgaeMR = ({ setLeaveState }: {
     : ["C", "B", "A", "F", "E", "D"];
 
   const algaePositions = {
-    'L2-L3': new Set(['A', 'E', 'C']),
-    'L3-L4': new Set(['F', 'D', 'B']),
+    'L2-L3': new Set(['F', 'D', 'B']),
+    'L3-L4': new Set(['A', 'E', 'C']),
   };
 
   const getSlotKnocked = (level: string, slot: string) => {
     if (level === 'L2-L3') {
       switch(slot) {
-        case 'A': return ScoutingData.auto.algaeA > 0;
-        case 'E': return ScoutingData.auto.algaeE > 0;
-        case 'C': return ScoutingData.auto.algaeC > 0;
+        case 'F': return ScoutingData.auto.algaeF > 0;
+        case 'D': return ScoutingData.auto.algaeD > 0;
+        case 'B': return ScoutingData.auto.algaeB > 0;
         default: return false;
       }
     } else {
       switch(slot) {
-        case 'B': return ScoutingData.auto.algaeB > 0;
-        case 'F': return ScoutingData.auto.algaeF > 0;
-        case 'D': return ScoutingData.auto.algaeD > 0;
+        case 'A': return ScoutingData.auto.algaeA > 0;
+        case 'E': return ScoutingData.auto.algaeE > 0;
+        case 'C': return ScoutingData.auto.algaeC > 0;
         default: return false;
       }
     }
@@ -62,15 +62,15 @@ const AlgaeMR = ({ setLeaveState }: {
       
       if (level === 'L2-L3') {
         switch(slot) {
-          case 'A': ScoutingData.auto.algaeA++; break;
-          case 'E': ScoutingData.auto.algaeE++; break;
-          case 'C': ScoutingData.auto.algaeC++; break;
+          case 'F': ScoutingData.auto.algaeF++; break;
+          case 'D': ScoutingData.auto.algaeD++; break;
+          case 'B': ScoutingData.auto.algaeB++; break;
         }
       } else {
         switch(slot) {
-          case 'B': ScoutingData.auto.algaeB++; break;
-          case 'F': ScoutingData.auto.algaeF++; break;
-          case 'D': ScoutingData.auto.algaeD++; break;
+          case 'A': ScoutingData.auto.algaeA++; break;
+          case 'E': ScoutingData.auto.algaeE++; break;
+          case 'C': ScoutingData.auto.algaeC++; break;
         }
       }
       showPopup(`Knocked off algae at ${level}, Slot ${slot}`);
@@ -81,15 +81,15 @@ const AlgaeMR = ({ setLeaveState }: {
       ScoutingData.auto.algae--;
       if (level === 'L2-L3') {
         switch(slot) {
-          case 'A': ScoutingData.auto.algaeA = 0; break;
-          case 'E': ScoutingData.auto.algaeE = 0; break;
-          case 'C': ScoutingData.auto.algaeC = 0; break;
+          case 'F': ScoutingData.auto.algaeF = 0; break;
+          case 'D': ScoutingData.auto.algaeD = 0; break;
+          case 'B': ScoutingData.auto.algaeB = 0; break;
         }
       } else {
         switch(slot) {
-          case 'B': ScoutingData.auto.algaeB = 0; break;
-          case 'F': ScoutingData.auto.algaeF = 0; break;
-          case 'D': ScoutingData.auto.algaeD = 0; break;
+          case 'A': ScoutingData.auto.algaeA = 0; break;
+          case 'E': ScoutingData.auto.algaeE = 0; break;
+          case 'C': ScoutingData.auto.algaeC = 0; break;
         }
       }
       showPopup(`Removed algae at ${level}, Slot ${slot}`);
