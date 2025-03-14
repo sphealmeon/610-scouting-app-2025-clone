@@ -6,9 +6,11 @@ import Popup from "./popup";
 export default function ReviewHeader({
     setMatchState,
     handlePageChange,
+    pageState,
 }: {
     setMatchState: Function;
-    handlePageChange: (page: string) => void
+    handlePageChange: (page: string) => void;
+    pageState: string;
 }) {
     const [confirm, setConfirm] = useState(false);
 
@@ -20,12 +22,18 @@ export default function ReviewHeader({
         <div className="bg-black flex flex-col sm:flex-row p-4 w-full items-center gap-4 border-2 border-green-900 justify-center">
             <Button
                 className="w-40 text-xl sm:text-3xl bg-red-400 hover:bg-red-300 p-2"
-                onClick={() => setMatchState(2)}
+                onClick={() => {
+                    if(pageState==="auto"){
+                        setMatchState(2);
+                    }else{
+                        handlePageChange("back");
+                    }
+                }}
             >
-                Return
+                {pageState === "auto" ? "Return" : "Back"}
             </Button>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                     className="w-40 text-xl sm:text-3xl bg-gray-500 hover:bg-gray-400 p-2"
                     onClick={() => handlePageChange("auto")}
@@ -34,7 +42,8 @@ export default function ReviewHeader({
                 </Button>
                 <Button
                     className="w-40 text-xl sm:text-3xl bg-gray-500 hover:bg-gray-400 p-2"
-                    onClick={() => handlePageChange("teleop")}
+                    onClick={() => 
+                        handlePageChange("teleop")}
                 >
                     Teleop
                 </Button>
@@ -44,13 +53,19 @@ export default function ReviewHeader({
                 >
                     Notes
                 </Button>
-            </div>
+            </div> */}
 
             <Button
                 className="w-40 text-xl sm:text-3xl bg-green-500 hover:bg-green-400 p-2"
-                onClick={() => handleConfirm(true)}
+                onClick={() => {
+                    if(pageState==="notes"){
+                        handleConfirm(true);
+                    }else{
+                        handlePageChange("continue");
+                    }
+                }}
             >
-                Confirm
+                {pageState === "notes" ? "Confirm" : "Continue"}
             </Button>
 
             {confirm && <Popup setConfirm={setConfirm} setMatchState={setMatchState}/>}

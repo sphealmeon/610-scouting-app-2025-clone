@@ -10,7 +10,13 @@ export default function MatchReviewPage({setMatchState}: {setMatchState: Functio
     const [pageState, setPageState] = useState("auto");
 
     const handlePageChange = (state: string) => {
-        setPageState(state);
+        if(state === "continue"){
+            setPageState(pageState === "auto" ? "teleop" : "notes");
+        } else if (state === "back") {
+            setPageState(pageState === "notes" ? "teleop" : "auto");
+        } else {
+            setPageState(state);
+        }
     };
     
     return (
@@ -19,6 +25,7 @@ export default function MatchReviewPage({setMatchState}: {setMatchState: Functio
                 <ReviewHeader 
                     setMatchState={setMatchState} 
                     handlePageChange={handlePageChange}
+                    pageState={pageState}
                 />
                 {pageState === "auto" && (
                     <AutoReview/>
