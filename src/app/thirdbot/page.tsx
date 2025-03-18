@@ -21,7 +21,7 @@ export default function ThirdBotPage() {
     const fetchBrokenTeams = async () => {
         await FetchTeams({setTeams});
         console.log("Teams fetched:", teams);
-        for (const team of teams) {
+        for (const team of teams) { 
             const data = await TeamAggregate({team: parseInt(team)});
             if(data.brokePercentage > 0) {
                 setBrokenTeams(prev => [...prev, team]);
@@ -48,10 +48,10 @@ export default function ThirdBotPage() {
                         {brokenTeams.length === 0 ? (
                             <p className="text-center text-gray-400 text-lg">No teams have broken in matches yet.</p>
                         ) : (
-                            brokenTeams.map((team) => (
-                                <Card key={team}>
+                            brokenTeams.map((teams) => (
+                                <Card key={teams}>
                                     <CardContent className="p-4">
-                                        <p className="text-lg">Team {team}</p>
+                                        <p className="text-lg">Team {teams}</p>
                                     </CardContent>
                                 </Card>
                             ))

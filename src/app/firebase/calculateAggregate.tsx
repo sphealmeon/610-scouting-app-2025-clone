@@ -156,7 +156,8 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       shallow: 0,
       deep: 0,
       missedShallow: 0,
-      missedDeep: 0,
+      missedDeep: 0, 
+      playedDefense: 0,
       general: "",
       reason: "",
       explanation: "",
@@ -298,6 +299,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.teleop.deep * 12 +
       totalData.teleop.shallow * 6 +
       totalData.teleop.park * 2,
+    playedDefenseMatches: totalData.teleop.playedDefense,
     brokePercentage: numMatches === 0 ? 0 : timesBroke / numMatches,
   };
 

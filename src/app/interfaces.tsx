@@ -221,6 +221,7 @@ export interface Data{
         deep: number;
         missedShallow: number;
         missedDeep: number;
+        playedDefense: number;
         general: string;
         reason: string;
         explanation: string;
@@ -284,6 +285,7 @@ export interface AggregateData {
     deepAccuracy: number;
     endgamePPG: number;
     brokePercentage: number;
+    playedDefenseMatches: number;
 }
 
 

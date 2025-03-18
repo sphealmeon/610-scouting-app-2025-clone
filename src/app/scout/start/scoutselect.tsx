@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function ScoutSelect({ setMatchState }: { setMatchState: Function }) {
-    const [isReady, setIsReady] = useState(false);
+    const [isReady, setIsReady] = useState(true);
     const router = useRouter();
 
     useEffect(() => {

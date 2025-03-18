@@ -36,6 +36,7 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
     processorAccuracy: (data: AggregateData) => data.teleopProcessorAccuracy,
     shallowAccuracy: (data: AggregateData) => data.shallowAccuracy,
     deepAccuracy: (data: AggregateData) => data.deepAccuracy,
+    playedDefenseMatches: (data: AggregateData) => data.playedDefenseMatches,
     brokePercentage: (data: AggregateData) => data.brokePercentage,
   };
 
@@ -100,6 +101,7 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
               <TableCell>{(data.teleopProcessorAccuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.shallowAccuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.deepAccuracy * 100).toFixed(1)}%</TableCell>
+              <TableCell>{data.playedDefenseMatches}</TableCell>
               <TableCell>{(data.brokePercentage * 100).toFixed(1)}%</TableCell>
             </TableRow>
           ))}

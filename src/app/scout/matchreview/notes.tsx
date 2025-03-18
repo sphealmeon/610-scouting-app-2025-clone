@@ -12,6 +12,7 @@ export default function NotesReview() {
     const [missedDeepChecked, setMissedDeepChecked] = useState(ScoutingData.teleop.missedDeep === 1);
     const [generalNotes, setGeneralNotes] = useState(ScoutingData.teleop.general);
     const [robotIssues, setRobotIssues] = useState(ScoutingData.teleop.reason);
+    const [playedDefenseChecked, setPlayedDefenseChecked] = useState(ScoutingData.teleop.playedDefense === 1);
 
     return (
         <div className="flex flex-col gap-8 p-6">
@@ -80,6 +81,17 @@ export default function NotesReview() {
                             }}
                         />
                         <span className="text-2xl">Missed Deep Cage</span>
+                    </label>
+                    <label className="flex items-center gap-4">
+                        <Checkbox
+                            className="h-6 w-6 hover:bg-gray-500"
+                            checked={playedDefenseChecked}
+                            onCheckedChange={(checked: boolean) => {
+                                setPlayedDefenseChecked(checked);
+                                ScoutingData.teleop.playedDefense = checked ? 1 : 0;
+                            }}
+                        />
+                        <span className="text-2xl">Played Defense</span>
                     </label>
                 </div>
             </div>
