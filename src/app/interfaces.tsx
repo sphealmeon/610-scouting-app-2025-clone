@@ -294,3 +294,9 @@ export interface Picklist {
     teams: string[];
     createdAt: number;
 } 
+
+export interface BrokenTeam {
+    team: number;
+    match: number;
+    reason: string;
+}

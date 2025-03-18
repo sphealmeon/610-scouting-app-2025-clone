@@ -133,7 +133,10 @@ const ReefMR = ({ setLeaveState }: {
   };
 
   const handleDroppedCoral = (level: string, slot: string) => {
-    const slotKey = `${level.toLowerCase()}${slot}`;
+    const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
+    const slotData = ScoutingData.auto[slotKey];
+    
+
     setScores(prev => ({
       ...prev,
       droppedCoral: prev.droppedCoral + 1,
@@ -144,67 +147,20 @@ const ReefMR = ({ setLeaveState }: {
     }));
     ScoutingData.auto.droppedCoral++;
     setLeaveState(1)
-    switch(level) {
-      case 'L4':
-        switch(slot) {
-          case 'A': ScoutingData.auto.l4A.dropped++; break;
-          case 'B': ScoutingData.auto.l4B.dropped++; break;
-          case 'C': ScoutingData.auto.l4C.dropped++; break;
-          case 'D': ScoutingData.auto.l4D.dropped++; break;
-          case 'E': ScoutingData.auto.l4E.dropped++; break;
-          case 'F': ScoutingData.auto.l4F.dropped++; break;
-          case 'G': ScoutingData.auto.l4G.dropped++; break;
-          case 'H': ScoutingData.auto.l4H.dropped++; break;
-          case 'I': ScoutingData.auto.l4I.dropped++; break;
-          case 'J': ScoutingData.auto.l4J.dropped++; break;
-          case 'K': ScoutingData.auto.l4K.dropped++; break;
-          case 'L': ScoutingData.auto.l4L.dropped++; break;
-        }
-        break;
-      case 'L3':
-        switch(slot) {
-          case 'A': ScoutingData.auto.l3A.dropped++; break;
-          case 'B': ScoutingData.auto.l3B.dropped++; break;
-          case 'C': ScoutingData.auto.l3C.dropped++; break;
-          case 'D': ScoutingData.auto.l3D.dropped++; break;
-          case 'E': ScoutingData.auto.l3E.dropped++; break;
-          case 'F': ScoutingData.auto.l3F.dropped++; break;
-          case 'G': ScoutingData.auto.l3G.dropped++; break;
-          case 'H': ScoutingData.auto.l3H.dropped++; break;
-          case 'I': ScoutingData.auto.l3I.dropped++; break;
-          case 'J': ScoutingData.auto.l3J.dropped++; break;
-          case 'K': ScoutingData.auto.l3K.dropped++; break;
-          case 'L': ScoutingData.auto.l3L.dropped++; break;
-        }
-        break;
-      case 'L2':
-        switch(slot) {
-          case 'A': ScoutingData.auto.l2A.dropped++; break;
-          case 'B': ScoutingData.auto.l2B.dropped++; break;
-          case 'C': ScoutingData.auto.l2C.dropped++; break;
-          case 'D': ScoutingData.auto.l2D.dropped++; break;
-          case 'E': ScoutingData.auto.l2E.dropped++; break;
-          case 'F': ScoutingData.auto.l2F.dropped++; break;
-          case 'G': ScoutingData.auto.l2G.dropped++; break;
-          case 'H': ScoutingData.auto.l2H.dropped++; break;
-          case 'I': ScoutingData.auto.l2I.dropped++; break;
-          case 'J': ScoutingData.auto.l2J.dropped++; break;
-          case 'K': ScoutingData.auto.l2K.dropped++; break;
-          case 'L': ScoutingData.auto.l2L.dropped++; break;
-        }
-        break;
-      case 'L1':
-        switch(slot) {
-          case 'A': ScoutingData.auto.l1A.dropped++; break;
-          case 'B': ScoutingData.auto.l1B.dropped++; break;
-          case 'C': ScoutingData.auto.l1C.dropped++; break;
-          case 'D': ScoutingData.auto.l1D.dropped++; break;
-          case 'E': ScoutingData.auto.l1E.dropped++; break;
-          case 'F': ScoutingData.auto.l1F.dropped++; break;
-        }
-        break;
+
+    if (typeof slotData === 'object' && 'dropped' in slotData) {
+      if (slotData.dropped === 0) {
+        ScoutingData.auto.droppedCoral++;
+        setLeaveState(1);
+        slotData.dropped++;
+        showPopup(`Dropped coral at Level ${level}, Slot ${slot}`);
+      } else {
+        ScoutingData.auto.droppedCoral--;
+        slotData.dropped--;
+        showPopup(`Removed dropped coral at Level ${level}, Slot ${slot}`);
+      }
     }
-    showPopup(`Dropped at Level ${level}, Slot ${slot}`);
+
   };
 
   const showPopup = (message: string) => {

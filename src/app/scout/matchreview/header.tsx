@@ -33,27 +33,9 @@ export default function ReviewHeader({
                 {pageState === "auto" ? "Return" : "Back"}
             </Button>
 
-            {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                    className="w-40 text-xl sm:text-3xl bg-gray-500 hover:bg-gray-400 p-2"
-                    onClick={() => handlePageChange("auto")}
-                >
-                    Auto
-                </Button>
-                <Button
-                    className="w-40 text-xl sm:text-3xl bg-gray-500 hover:bg-gray-400 p-2"
-                    onClick={() => 
-                        handlePageChange("teleop")}
-                >
-                    Teleop
-                </Button>
-                <Button
-                    className="w-40 text-xl sm:text-3xl bg-gray-500 hover:bg-gray-400 p-2"
-                    onClick={() => handlePageChange("notes")}
-                >
-                    Notes
-                </Button>
-            </div> */}
+            <h2 className="text-2xl font-bold">
+                {pageState === "auto" ? "Auto Review" : pageState === "teleop" ? "Teleop Review" : "Additional Review"}
+            </h2>
 
             <Button
                 className="w-40 text-xl sm:text-3xl bg-green-500 hover:bg-green-400 p-2"

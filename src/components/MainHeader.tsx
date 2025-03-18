@@ -11,7 +11,8 @@ import {
   faClipboardList, 
   faListOl,
   faHammer,
-  faChessKing
+  faChessKing,
+  faTriangleExclamation
 } from '@fortawesome/free-solid-svg-icons'
 
 // Prevent fontawesome from dynamically adding its css
@@ -25,7 +26,8 @@ const links = [
   { link: "/matchsummary", label: "Match Summary" },
   { link: "/stats/teams", label: "Team Stats" },
   { link: "/picklist", label: "Picklist" },
-  { link: "/history", label: "History"}
+  { link: "/history", label: "History"},
+  { link: "/thirdpick", label: "Third Bot"}
 ];
 
 export function MainHeader() {
@@ -59,6 +61,9 @@ export function MainHeader() {
       )}
       {link.label === "Picklist" && (
         <FontAwesomeIcon icon={faChessKing} className="w-3 h-3 sm:w-4 sm:h-4" />
+      )}
+      {link.label === "Third Bot" && (
+        <FontAwesomeIcon icon={faTriangleExclamation} className="w-3 h-3 sm:w-4 sm:h-4" />
       )}
       {link.label}
     </a>

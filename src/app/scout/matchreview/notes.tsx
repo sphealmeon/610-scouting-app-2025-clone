@@ -16,7 +16,6 @@ export default function NotesReview() {
     return (
         <div className="flex flex-col gap-8 p-6">
             <div className="space-y-6">
-                <h2 className="text-2xl font-bold">Endgame Review</h2>
                 <div className="grid gap-4">
                     <label className="flex items-center gap-4">
                         <Checkbox
@@ -86,7 +85,7 @@ export default function NotesReview() {
             </div>
             
             <div className="space-y-4">
-                <h2 className="text-2xl font-bold">Additional Notes</h2>
+                <h2 className="text-2xl font-bold text-center">Additional Notes</h2>
                 <div className="space-y-4">
                     <div>
                         <Label className="text-xl mb-2">Match Notes</Label>
