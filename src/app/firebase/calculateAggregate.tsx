@@ -61,6 +61,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
   } 
   let numMatches: number = 0;
   let timesBroke: number = 0;
+  let defenseMatches: number = 0;
 
   const totalData: Data = {
     start: {
@@ -161,6 +162,16 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       general: "",
       reason: "",
       explanation: "",
+
+      coralAverageScoringTime: 0,
+        processorAverageScoringTime: 0,
+        bargeAverageScoringTime: 0,
+        shallowAverageHangTime: 0,
+        deepAverageHangTime: 0,
+
+        coralCyclesForTimer: 0,
+        processorCyclesForTimer: 0,
+        bargeCyclesForTimer: 0,
     },
   };
 
@@ -172,6 +183,9 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
     if (!(document.id == "aggregate")) {
       if (document.data().matchData["teleop"]["reason"] != "") {
         timesBroke++;
+      }
+      if (document.data().matchData["teleop"]["playedDefense"] == 1) {
+        defenseMatches++;
       }
       numMatches++;
       
@@ -299,7 +313,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.teleop.deep * 12 +
       totalData.teleop.shallow * 6 +
       totalData.teleop.park * 2,
-    playedDefenseMatches: totalData.teleop.playedDefense,
+    playedDefenseMatches: defenseMatches,
     brokePercentage: numMatches === 0 ? 0 : timesBroke / numMatches,
   };
 
