@@ -27,7 +27,7 @@ const links = [
   { link: "/stats/teams", label: "Team Stats" },
   { link: "/picklist", label: "Picklist" },
   { link: "/history", label: "History"},
-  { link: "/thirdpick", label: "Third Bot"}
+  { link: "/thirdbot", label: "Third Bot"}
 ];
 
 export function MainHeader() {

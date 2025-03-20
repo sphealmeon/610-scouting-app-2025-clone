@@ -17,7 +17,8 @@ export default function TeleopReview() {
     processorMissed: ScoutingData.teleop.processorDropped,
     bargeMade: ScoutingData.teleop.bargeScored,
     bargeMissed: ScoutingData.teleop.bargeDropped,
-    algaeRemoved: ScoutingData.teleop.algaeRemoved
+    algaeRemoved: ScoutingData.teleop.algaeRemoved,
+    playedDefense: ScoutingData.teleop.playedDefense
   });
 
   const handleScoreChange = (key: keyof typeof scores, increment: number) => {

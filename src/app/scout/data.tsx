@@ -97,6 +97,7 @@ export const ScoutingData: Data = {
         deep: 0,
         missedShallow: 0,
         missedDeep: 0,
+        playedDefense: 0,
         general: "",
         reason: "",
         explanation: "",
@@ -219,6 +220,7 @@ export const resetData = () => {
     ScoutingData.teleop.deep = 0;
     ScoutingData.teleop.missedShallow = 0;
     ScoutingData.teleop.missedDeep = 0;
+    ScoutingData.teleop.playedDefense = 0;
     ScoutingData.teleop.general = "";
     ScoutingData.teleop.reason = "";
     ScoutingData.teleop.explanation = "";
