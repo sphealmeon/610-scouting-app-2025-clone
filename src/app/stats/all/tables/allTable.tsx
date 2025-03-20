@@ -31,7 +31,10 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
     endgamePPG: (data: AggregateData) => data.endgamePPG,
     coralCycles: (data: AggregateData) => data.coralCyclesScored,
     algaeCycles: (data: AggregateData) => data.algaeCyclesScored,
-    l1l4Accuracy: (data: AggregateData) => (data.teleopL1Accuracy + data.teleopL2Accuracy + data.teleopL3Accuracy + data.teleopL4Accuracy) / 4,
+    l1Accuracy: (data: AggregateData) => data.teleopL1Accuracy,
+    l2Accuracy: (data: AggregateData) => data.teleopL2Accuracy,
+    l3Accuracy: (data: AggregateData) => data.teleopL3Accuracy,
+    l4Accuracy: (data: AggregateData) => data.teleopL4Accuracy,
     bargeAccuracy: (data: AggregateData) => data.teleopBargeAccuracy,
     processorAccuracy: (data: AggregateData) => data.teleopProcessorAccuracy,
     shallowAccuracy: (data: AggregateData) => data.shallowAccuracy,
@@ -96,7 +99,10 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
               <TableCell>{data.endgamePPG.toFixed(2)}</TableCell>
               <TableCell>{data.coralCyclesScored.toFixed(2)}</TableCell>
               <TableCell>{data.algaeCyclesScored.toFixed(2)}</TableCell>
-              <TableCell>{((data.teleopL1Accuracy + data.teleopL2Accuracy + data.teleopL3Accuracy + data.teleopL4Accuracy) / 4 * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.teleopL1Accuracy * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.teleopL2Accuracy * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.teleopL3Accuracy * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.teleopL4Accuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopBargeAccuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.teleopProcessorAccuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.shallowAccuracy * 100).toFixed(1)}%</TableCell>
