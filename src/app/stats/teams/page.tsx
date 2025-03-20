@@ -10,6 +10,7 @@ import { MainHeader } from "@/components/MainHeader"
 import { PitData } from "./pitdata"
 import { ScoringDist } from "./scoringdist"
 import { Last5Matches } from "./last5matches"
+import { MatchAutoDisplay } from "./matchautodisplay"
 
 export default function Home() {
     const [selectedTeam, setSelectedTeam] = useState<string>("")
@@ -51,8 +52,13 @@ export default function Home() {
                         </div>
                         <div>
                             <Last5Matches matches={matchData} />
-                            <h2 className="text-2xl font-bold mb-4">Auto Scoring</h2>
-                            <ScoringDist matches={matchData} />
+                            <div className="mt-8">
+                                <MatchAutoDisplay matches={matchData} />
+                            </div>
+                            <div className="mt-8">
+                                <h2 className="text-2xl font-bold mb-4">Auto Scoring Distribution</h2>
+                                <ScoringDist matches={matchData} />
+                            </div>
                             <div>
                                 <h2 className="text-2xl font-bold mb-4">Starting Positions</h2>
                                 <StartPos matches={matchData} />

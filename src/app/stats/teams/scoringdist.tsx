@@ -42,8 +42,6 @@ export function ScoringDist({ matches }: ScoringDistProps) {
 
     return (
         <div className="rounded-md border p-4">
-            <h2 className="text-2xl font-bold mb-4">Auto Scoring Distribution</h2>
-            
             <div className="flex space-x-4 mb-4 justify-center">
                 {(['L1', 'L2', 'L3', 'L4'] as const).map((l) => (
                     <button
