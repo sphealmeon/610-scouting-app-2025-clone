@@ -7,12 +7,12 @@ import { doc, getDoc, collection, getDocs } from "firebase/firestore"
 import { useApi, key } from "@/app/globalVars"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import RadarChart from "@/app/compare/radarchart"
-import { AggregateData, BrokenTeam, Data } from "../interfaces"
+import { AggregateData, BrokenTeam, Data, PitData } from "../interfaces"
 import { TeamAggregate } from "@/app/firebase/TeamAggregate"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FetchTeams } from "../blueAlliance/fetchTeams"
 import { Badge } from "@/components/ui/badge"
-    
+import { PitData as PitDataInterface } from "@/app/firebase/pitData"
 // Interface for match data
 interface MatchData {
     teamNumber: string;
@@ -22,6 +22,8 @@ interface MatchData {
     }[];
 }
 
+
+
 export default function ThirdBotPage() {
     const [teams, setTeams] = useState<string[]>([]);
     const [brokenTeams, setBrokenTeams] = useState<string[]>([]);
@@ -30,6 +32,7 @@ export default function ThirdBotPage() {
     const [defenseMatchesData, setDefenseMatchesData] = useState<MatchData[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [teamBreakCounts, setTeamBreakCounts] = useState<Map<number, number>>(new Map())
+    const [pitData, setPitData] = useState<PitData[] | null>(null);
 
     useEffect(() => {
         const fetchTeamsData = async () => {
@@ -53,6 +56,7 @@ export default function ThirdBotPage() {
                 const defenseTeamsArray: string[] = [];
                 const brokenMatchesArray: MatchData[] = [];
                 const defenseMatchesArray: MatchData[] = [];
+                const pitDataArray: PitData[] = [];
                 
                 for (const team of teamsFetched) { 
                     const data = await TeamAggregate({team: parseInt(team)});
@@ -76,7 +80,14 @@ export default function ThirdBotPage() {
                         if (defenseMatches.matches.length > 0) {
                             defenseMatchesArray.push(defenseMatches);
                         }
-                    }
+                    }                    
+                }
+
+                for (const team of teamsFetched) { 
+                    const data = await PitDataInterface({team: parseInt(team)});
+                    console.log(`Team ${team} - pit data: ${pitData}`);
+                    
+                    pitDataArray.push(data as PitData);
                 }
                 
                 // Update state once with all teams
@@ -84,10 +95,12 @@ export default function ThirdBotPage() {
                 console.log("Defense teams collected:", defenseTeamsArray);
                 console.log("Broken matches data:", brokenMatchesArray);
                 console.log("Defense matches data:", defenseMatchesArray);
+                console.log("Pit data:", pitDataArray);
                 setBrokenTeams(brokenTeamsArray);
                 setDefenseTeams(defenseTeamsArray);
                 setBrokenMatchesData(brokenMatchesArray);
                 setDefenseMatchesData(defenseMatchesArray);
+                setPitData(pitDataArray);
             } catch (error) {
                 console.error("Error fetching teams data:", error);
             } finally {
@@ -95,8 +108,51 @@ export default function ThirdBotPage() {
             }
         };
 
+        
+
         fetchTeamsData();
     }, []);
+
+    const fetchPitData = async (team: number): Promise<PitData> => {
+        const pitData: PitData = {
+            team,
+            drivetrainType: "",
+            robotSpeed: 0,
+            robotWeight: 0,
+            bumperClearance: 0,
+            centerOfGravity: "",
+            defenseComfort: 0,
+            algaeCapability: 0,
+            coralCapability: 0,
+            climbAbility: "",
+            pickupLocation: "",
+            notes: ""
+        };
+
+        try {
+            const querySnapshot = await getDocs(collection(db, team.toString()));
+            querySnapshot.forEach((document) => {
+                if (document.id === "pitscout") {
+                    const pitData = document.data();
+                    pitData.drivetrainType = pitData.drivetrainType;
+                    pitData.robotSpeed = pitData.robotSpeed;
+                    pitData.robotWeight = pitData.robotWeight;
+                    pitData.bumperClearance = pitData.bumperClearance;
+                    pitData.centerOfGravity = pitData.centerOfGravity;
+                    pitData.defenseComfort = pitData.defenseComfort;
+                    pitData.algaeCapability = pitData.algaeCapability;
+                    pitData.coralCapability = pitData.coralCapability;
+                    pitData.climbAbility = pitData.climbAbility;
+                    pitData.pickupLocation = pitData.pickupLocation;
+                    pitData.notes = pitData.notes;
+                }
+            });
+        } catch (error) {
+            console.error(`Error fetching pit data for team ${team}:`, error);
+        }
+
+        return pitData;
+    };
     
     // Function to fetch broken matches for a team
     const fetchBrokenMatches = async (teamNumber: string): Promise<MatchData> => {
@@ -184,6 +240,13 @@ export default function ThirdBotPage() {
     const getTeamDefenseMatches = (teamNumber: string) => {
         return defenseMatchesData.find(data => data.teamNumber === teamNumber);
     };
+
+    const getPitData = (team: string) => {
+        if(pitData!== null) {
+        return pitData.find(data => data.team === parseInt(team));
+        }
+        return null;
+    };
     
     return (
         <div>
@@ -192,11 +255,53 @@ export default function ThirdBotPage() {
                 <h1 className="text-3xl font-bold mb-6">Third Bot Analysis</h1>
 
                 <Tabs defaultValue="broken" className="mb-6">
-                    <TabsList className="grid w-full grid-cols-2">
+                    <TabsList className="grid w-full grid-cols-3">
+                        <TabsTrigger value="all">All Third Picks</TabsTrigger>
                         <TabsTrigger value="broken">Broken Teams</TabsTrigger>
                         <TabsTrigger value="defense">Defense Teams</TabsTrigger>
                     </TabsList>
-                    
+                    <TabsContent value="all">
+                        <h2 className="text-2xl font-semibold mb-4">All Third Picks</h2>
+                            <div className="grid gap-4">
+                                {teams.map((team) => (
+                                    <Card key={team}>
+                                        <CardHeader>
+                                            <CardTitle className="flex justify-between items-center text-xl font-bold">
+                                            <span>Team {team}</span>
+                                                    <Badge className="ml-2" variant="default">
+                                                        {getPitData(team)===null?"Not Pit Scouted":"Pit Scouted"}
+                                                    </Badge>
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <div className="space-y-2"> 
+                                                <div className="grid grid-cols-2 gap-5">
+                                                    <div>
+                                                        <p className="text-lg font-bold">Drivetrain</p> 
+                                                        <p className="font-medium">{getPitData(team)?.drivetrainType}</p>
+                                                        <p className="font-medium">{getPitData(team)?.robotSpeed} ft/s</p>
+                                                        
+                                                        {/* <p>Type: Tank Drive</p>
+                                                        <p>Speed: 12 ft/s</p> */}
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-lg font-bold">Robot Specs:</p>
+                                                        <p className="font-medium">{getPitData(team)?.robotWeight} lbs</p>
+                                                        <p className="font-medium">{getPitData(team)?.bumperClearance} in</p>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <p className="text-lg font-bold">Defense Stats:</p>
+                                                    {/*// TODO Add Foul Count, add bumper clearance to expert scouting */ }
+                                                    <p>Average Fouls per Match: 2.5</p>
+                                                </div>
+                                            </div> 
+                                        </CardContent>
+                                    </Card>
+                                    ))}
+                                </div>
+                    </TabsContent>
+
                     <TabsContent value="broken">
                         <h2 className="text-2xl font-semibold mb-4">Broken Teams</h2>
                         <div className="grid gap-4">

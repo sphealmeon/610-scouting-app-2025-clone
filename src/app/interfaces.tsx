@@ -307,3 +307,20 @@ export interface BrokenTeam {
     match: number;
     reason: string;
 }
+
+export interface PitData {
+    team: number;
+    drivetrainType: string;
+    robotSpeed: number;
+    robotWeight: number;
+    bumperClearance: number;
+    centerOfGravity: string;
+    defenseComfort: number;
+    algaeCapability: number;
+    coralCapability: number;
+    climbAbility: string;
+    pickupLocation: string;
+    notes: string;
+
+    
+}
