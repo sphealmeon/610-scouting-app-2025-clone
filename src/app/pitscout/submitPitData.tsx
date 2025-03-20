@@ -4,11 +4,13 @@ import { doc, setDoc } from "firebase/firestore";
 export interface PitScoutData {
     robotWeight: number;
     robotSpeed: number;
+    bumperTolerance: number;
     centerOfGravity: string;
     drivetrainType: string;
     defenseComfort: number;
     algaeCapability: number;
     coralCapability: number;
+    driverExperience: number;
     climbAbility: string;
     pickupLocation: string;
     notes: string;
