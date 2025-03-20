@@ -20,12 +20,24 @@ const ItemTypes = {
     TEAM: 'team'
 };
 
-const DraggableTeam = ({ team, index, moveTeam, onRemove, onSelect }: { 
+const DraggableTeam = ({ 
+    team, 
+    index, 
+    moveTeam, 
+    onRemove, 
+    onSelect,
+    onMoveToUnavailable,
+    isWatchlisted,
+    onToggleWatchlist
+}: { 
     team: string, 
     index: number, 
     moveTeam: (dragIndex: number, hoverIndex: number) => void,
     onRemove: () => void,
-    onSelect: () => void 
+    onSelect: () => void,
+    onMoveToUnavailable: () => void,
+    isWatchlisted: boolean,
+    onToggleWatchlist: () => void
 }) => {
     const [{ isDragging }, drag] = useDrag({
         type: ItemTypes.TEAM,
@@ -53,7 +65,7 @@ const DraggableTeam = ({ team, index, moveTeam, onRemove, onSelect }: {
     return (
         <li
             ref={dragDropRef}
-            className={`flex items-center justify-between w-64 p-2 bg-gray-700 rounded cursor-move ${
+            className={`flex items-center justify-between w-full p-3 bg-gray-700 rounded cursor-move ${
                 isDragging ? 'opacity-50' : ''
             }`}
             onClick={onSelect}
@@ -62,15 +74,168 @@ const DraggableTeam = ({ team, index, moveTeam, onRemove, onSelect }: {
                 <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
                 <span>Team {team}</span>
             </div>
-            <button 
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onRemove();
-                }}
-                className="text-red-500 hover:text-red-400 px-2"
-            >
-                ×
-            </button>
+            <div className="flex gap-2">
+                <Button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleWatchlist();
+                    }}
+                    className="bg-clear hover:bg-gray-600 p-1"
+                >
+                    {isWatchlisted ? 
+                        <Star className="h-4 w-4 text-yellow-400" /> : 
+                        <StarOff className="h-4 w-4 text-gray-400" />
+                    }
+                </Button>
+                <Button 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onRemove();
+                    }}
+                    className="bg-clear text-red-500 hover:text-red-400 px-2"
+                >
+                    x
+                </Button>
+                <Button 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onMoveToUnavailable();
+                    }}
+                    className="bg-clear text-yellow-500 hover:text-yellow-400 px-2"
+                >
+                    S-U
+                </Button>
+            </div>
+        </li>
+    );
+};
+
+// Generic DraggableList component with fixed type for rightButton
+const DraggableList = ({ 
+    items, 
+    itemType, 
+    moveItem, 
+    onItemRemove, 
+    onItemSelect, 
+    isItemWatchlisted,
+    onToggleWatchlist,
+    bgClass = "bg-gray-700", 
+    rightButton
+}: { 
+    items: string[], 
+    itemType: string,
+    moveItem: (fromIndex: number, toIndex: number) => void,
+    onItemRemove: (item: string) => void,
+    onItemSelect: (item: string) => void,
+    isItemWatchlisted: (item: string) => boolean,
+    onToggleWatchlist: (item: string) => void,
+    bgClass?: string,
+    rightButton?: ((item: string, index: number) => React.ReactNode) | undefined
+}) => {
+    return (
+        <ul className="space-y-2">
+            {items.map((item, index) => (
+                <DraggableItem
+                    key={item}
+                    item={item}
+                    index={index}
+                    itemType={itemType}
+                    moveItem={moveItem}
+                    onRemove={() => onItemRemove(item)}
+                    onSelect={() => onItemSelect(item)}
+                    isWatchlisted={isItemWatchlisted(item)}
+                    onToggleWatchlist={() => onToggleWatchlist(item)}
+                    bgClass={bgClass}
+                    rightButton={rightButton ? rightButton(item, index) : null}
+                />
+            ))}
+        </ul>
+    );
+};
+
+// Generic DraggableItem component
+const DraggableItem = ({ 
+    item, 
+    index, 
+    itemType,
+    moveItem, 
+    onRemove, 
+    onSelect,
+    isWatchlisted,
+    onToggleWatchlist,
+    bgClass,
+    rightButton
+}: { 
+    item: string, 
+    index: number,
+    itemType: string,
+    moveItem: (fromIndex: number, toIndex: number) => void,
+    onRemove: () => void,
+    onSelect: () => void,
+    isWatchlisted: boolean,
+    onToggleWatchlist: () => void,
+    bgClass: string,
+    rightButton: React.ReactNode | null
+}) => {
+    const [{ isDragging }, drag] = useDrag({
+        type: itemType,
+        item: { index },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    });
+
+    const [, drop] = useDrop({
+        accept: itemType,
+        hover: (draggedItem: { index: number }) => {
+            if (draggedItem.index !== index) {
+                moveItem(draggedItem.index, index);
+                draggedItem.index = index;
+            }
+        },
+    });
+
+    const dragDropRef = (element: HTMLLIElement | null) => {
+        drag(element);
+        drop(element);
+    };
+
+    return (
+        <li
+            ref={dragDropRef}
+            className={`flex items-center justify-between w-full p-3 ${bgClass} rounded cursor-move ${
+                isDragging ? 'opacity-50' : ''
+            }`}
+            onClick={onSelect}
+        >
+            <div className="flex items-center gap-2">
+                <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
+                <span>Team {item}</span>
+            </div>
+            <div className="flex gap-2">
+                <Button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleWatchlist();
+                    }}
+                    className="bg-clear hover:bg-gray-600 p-1"
+                >
+                    {isWatchlisted ? 
+                        <Star className="h-4 w-4 text-yellow-400" /> : 
+                        <StarOff className="h-4 w-4 text-gray-400" />
+                    }
+                </Button>
+                <Button 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onRemove();
+                    }}
+                    className="bg-clear text-red-500 hover:text-red-400 px-2"
+                >
+                    x
+                </Button>
+                {rightButton}
+            </div>
         </li>
     );
 };
@@ -85,6 +250,10 @@ const PicklistPage = () => {
     const [doNotPickTeams, setDoNotPickTeams] = useState<string[]>([]);
     const [unavailableTeams, setUnavailableTeams] = useState<string[]>([]);
     const [watchlistTeams, setWatchlistTeams] = useState<string[]>([]);
+    const [watchlistNotes, setWatchlistNotes] = useState<Record<string, string>>({});
+    const [isNoteDialogOpen, setIsNoteDialogOpen] = useState(false);
+    const [currentTeamForNote, setCurrentTeamForNote] = useState<string | null>(null);
+    const [noteText, setNoteText] = useState("");
 
     useEffect(() => {
         fetchSavedLists();
@@ -108,6 +277,7 @@ const PicklistPage = () => {
             teams: selectedTeams,
             dnpTeams: doNotPickTeams,
             watchlist: watchlistTeams,
+            watchlistNotes: watchlistNotes,
             createdAt: Date.now()
         };
 
@@ -128,6 +298,7 @@ const PicklistPage = () => {
         setSelectedTeams(list.teams);
         setDoNotPickTeams(list.dnpTeams || []);
         setWatchlistTeams(list.watchlist || []);
+        setWatchlistNotes(list.watchlistNotes || {});
         setShowSavedLists(false);
     };
 
@@ -206,9 +377,73 @@ const PicklistPage = () => {
     const toggleWatchlist = (team: string) => {
         if (watchlistTeams.includes(team)) {
             setWatchlistTeams(watchlistTeams.filter(t => t !== team));
+            
+            const updatedNotes = { ...watchlistNotes };
+            delete updatedNotes[team];
+            setWatchlistNotes(updatedNotes);
         } else {
-            setWatchlistTeams([...watchlistTeams, team]);
+            setCurrentTeamForNote(team);
+            setNoteText(watchlistNotes[team] || "");
+            setIsNoteDialogOpen(true);
         }
+    };
+
+    const handleNoteSubmit = () => {
+        if (currentTeamForNote) {
+            setWatchlistTeams([...watchlistTeams, currentTeamForNote]);
+            
+            setWatchlistNotes({
+                ...watchlistNotes,
+                [currentTeamForNote]: noteText
+            });
+            
+            setIsNoteDialogOpen(false);
+            setCurrentTeamForNote(null);
+            setNoteText("");
+        }
+    };
+
+    const handleNoteCancel = () => {
+        setIsNoteDialogOpen(false);
+        setCurrentTeamForNote(null);
+        setNoteText("");
+    };
+
+    const updateWatchlistNote = (team: string, note: string) => {
+        setWatchlistNotes({
+            ...watchlistNotes,
+            [team]: note
+        });
+    };
+
+    // Add new moveItem functions for each list
+    const moveUnavailableTeam = (dragIndex: number, hoverIndex: number) => {
+        const newTeams = [...unavailableTeams];
+        const draggedTeam = newTeams[dragIndex];
+        newTeams.splice(dragIndex, 1);
+        newTeams.splice(hoverIndex, 0, draggedTeam);
+        setUnavailableTeams(newTeams);
+    };
+    
+    const moveDoNotPickTeam = (dragIndex: number, hoverIndex: number) => {
+        const newTeams = [...doNotPickTeams];
+        const draggedTeam = newTeams[dragIndex];
+        newTeams.splice(dragIndex, 1);
+        newTeams.splice(hoverIndex, 0, draggedTeam);
+        setDoNotPickTeams(newTeams);
+    };
+    
+    // Function to select a team and load its data
+    const selectTeam = (team: string) => {
+        setSelectedTeam(team);
+        TeamMatchesData({ team: parseInt(team) }).then(matches => {
+            const validMatches = matches.filter(match => 
+                match !== undefined && 
+                match.start?.match !== undefined && 
+                match.start.match !== 0
+            );
+            setMatchData(validMatches);
+        });
     };
 
     return (
@@ -320,114 +555,58 @@ const PicklistPage = () => {
                     <div className="w-1/5 min-w-[200px]">
                         <h2 className="text-2xl mb-4">Ordered Teams</h2>
                         <div className="overflow-y-auto max-h-[70vh]">
-                            <ul className="space-y-2">
-                                {selectedTeams.map((team, index) => (
-                                    <li
-                                        key={team}
-                                        className="flex items-center justify-between w-full p-3 bg-gray-700 rounded"
+                            <DraggableList
+                                items={selectedTeams}
+                                itemType="ordered-team"
+                                moveItem={moveTeam}
+                                onItemRemove={handleTeamRemove}
+                                onItemSelect={selectTeam}
+                                isItemWatchlisted={(team) => watchlistTeams.includes(team)}
+                                onToggleWatchlist={toggleWatchlist}
+                                rightButton={(team) => (
+                                    <Button 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            moveTeamToUnavailable(team);
+                                        }}
+                                        className="bg-clear text-yellow-500 hover:text-yellow-400 px-2"
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
-                                            <span>Team {team}</span>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <Button
-                                                onClick={() => toggleWatchlist(team)}
-                                                className="bg-clear hover:bg-gray-600 p-1"
-                                            >
-                                                {watchlistTeams.includes(team) ? 
-                                                    <Star className="h-4 w-4 text-yellow-400" /> : 
-                                                    <StarOff className="h-4 w-4 text-gray-400" />
-                                                }
-                                            </Button>
-                                            <Button 
-                                                onClick={() => handleTeamRemove(team)}
-                                                className="bg-clear text-red-500 hover:text-red-400 px-2"
-                                            >
-                                                x
-                                            </Button>
-                                            <Button 
-                                                onClick={() => moveTeamToUnavailable(team)}
-                                                className="bg-clear text-yellow-500 hover:text-yellow-400 px-2"
-                                            >
-                                                S-U
-                                            </Button>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
+                                        S-U
+                                    </Button>
+                                )}
+                            />
                         </div>
                     </div>
 
                     <div className="w-1/5 min-w-[200px]">
                         <h2 className="text-2xl mb-4">Selected - Unavailable</h2>
                         <div className="overflow-y-auto max-h-[70vh]">
-                            <ul className="space-y-2">
-                                {unavailableTeams.map((team, index) => (
-                                    <li
-                                        key={team}
-                                        className="flex items-center justify-between w-full p-3 bg-red-900/50 rounded"
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
-                                            <span>Team {team}</span>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <Button
-                                                onClick={() => toggleWatchlist(team)}
-                                                className="bg-clear hover:bg-gray-600 p-1"
-                                            >
-                                                {watchlistTeams.includes(team) ? 
-                                                    <Star className="h-4 w-4 text-yellow-400" /> : 
-                                                    <StarOff className="h-4 w-4 text-gray-400" />
-                                                }
-                                            </Button>
-                                            <Button 
-                                                onClick={() => moveTeamToOrdered(team)}
-                                                className="bg-clear text-red-500 hover:text-red-400 px-2"
-                                            >
-                                                x
-                                            </Button>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
+                            <DraggableList
+                                items={unavailableTeams}
+                                itemType="unavailable-team"
+                                moveItem={moveUnavailableTeam}
+                                onItemRemove={moveTeamToOrdered}
+                                onItemSelect={selectTeam}
+                                isItemWatchlisted={(team) => watchlistTeams.includes(team)}
+                                onToggleWatchlist={toggleWatchlist}
+                                bgClass="bg-red-900/50"
+                            />
                         </div>
                     </div>
 
                     <div className="w-1/5 min-w-[200px]">
                         <h2 className="text-2xl mb-4">Personality</h2>
                         <div className="overflow-y-auto max-h-[70vh]">
-                            <ul className="space-y-2">
-                                {doNotPickTeams.map((team, index) => (
-                                    <li
-                                        key={team}
-                                        className="flex items-center justify-between w-full p-3 bg-red-900/50 rounded"
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
-                                            <span>Team {team}</span>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <Button
-                                                onClick={() => toggleWatchlist(team)}
-                                                className="bg-clear hover:bg-gray-600 p-1"
-                                            >
-                                                {watchlistTeams.includes(team) ? 
-                                                    <Star className="h-4 w-4 text-yellow-400" /> : 
-                                                    <StarOff className="h-4 w-4 text-gray-400" />
-                                                }
-                                            </Button>
-                                            <Button 
-                                                onClick={() => removeFromPersonality(team)}
-                                                className="bg-clear text-red-500 hover:text-red-400 px-2"
-                                            >
-                                                x
-                                            </Button>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
+                            <DraggableList
+                                items={doNotPickTeams}
+                                itemType="dnp-team"
+                                moveItem={moveDoNotPickTeam}
+                                onItemRemove={removeFromPersonality}
+                                onItemSelect={selectTeam}
+                                isItemWatchlisted={(team) => watchlistTeams.includes(team)}
+                                onToggleWatchlist={toggleWatchlist}
+                                bgClass="bg-red-900/50"
+                            />
                         </div>
                     </div>
 
@@ -436,6 +615,21 @@ const PicklistPage = () => {
                         <div className="overflow-y-auto max-h-[70vh]">
                             {selectedTeam ? (
                                 <div className="space-y-4">
+                                    {watchlistTeams.includes(selectedTeam) && (
+                                        <div className="border border-yellow-500/50 rounded p-4 bg-gray-800/50">
+                                            <h3 className="text-lg font-semibold flex items-center mb-2">
+                                                <Star className="h-5 w-5 text-yellow-400 mr-2" />
+                                                Watchlist Notes
+                                            </h3>
+                                            <textarea
+                                                className="w-full p-2 bg-gray-800 text-white rounded border border-gray-700 h-24"
+                                                value={watchlistNotes[selectedTeam] || ""}
+                                                onChange={(e) => updateWatchlistNote(selectedTeam, e.target.value)}
+                                                placeholder="Enter notes about this team..."
+                                            />
+                                        </div>
+                                    )}
+                                    
                                     <DataTable teams={[parseInt(selectedTeam)]} />
                                     <MatchTable team={parseInt(selectedTeam)} />
                                     <StartPos matches={matchData} />
@@ -446,6 +640,30 @@ const PicklistPage = () => {
                         </div>
                     </div>
                 </div>
+
+                <Dialog open={isNoteDialogOpen} onOpenChange={setIsNoteDialogOpen}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Add Watchlist Note for Team {currentTeamForNote}</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                            <textarea
+                                className="w-full p-2 bg-gray-800 text-white rounded border border-gray-700 h-32"
+                                placeholder="Enter notes about this team..."
+                                value={noteText}
+                                onChange={(e) => setNoteText(e.target.value)}
+                            />
+                            <div className="flex justify-end gap-2">
+                                <Button variant="outline" onClick={handleNoteCancel}>
+                                    Cancel
+                                </Button>
+                                <Button onClick={handleNoteSubmit}>
+                                    Save Note
+                                </Button>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </div>
         </DndProvider>
     );
