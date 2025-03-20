@@ -11,7 +11,7 @@ export const useApi = true;
 export const scoringTableSide = false;
 
 //blue alliance key for comp
-export const key = "2025onsca"; 
+export const key = "2025onnob"; 
 
 
 //list of all teams at comp, in case BA is broken
