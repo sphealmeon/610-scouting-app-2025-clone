@@ -82,6 +82,7 @@ const PicklistPage = () => {
     const [listName, setListName] = useState("");
     const [showSavedLists, setShowSavedLists] = useState(false);
     const [doNotPickTeams, setDoNotPickTeams] = useState<string[]>([]);
+    const [unavailableTeams, setUnavailableTeams] = useState<string[]>([]);
 
     useEffect(() => {
         fetchSavedLists();
@@ -163,19 +164,39 @@ const PicklistPage = () => {
         setSelectedTeams(newTeams);
     };
 
-    const toggleDoNotPick = (team: string) => {
+    const addToPersonality = (team: string) => {
         if (selectedTeams.includes(team)) {
             setSelectedTeams(selectedTeams.filter(t => t !== team));
             if (selectedTeam === team) {
                 setSelectedTeam(null);
                 setMatchData([]);
             }
+        } else if (unavailableTeams.includes(team)) {
+            setUnavailableTeams(unavailableTeams.filter(t => t !== team));
         }
+        
+        if (!doNotPickTeams.includes(team)) {
+            setDoNotPickTeams([...doNotPickTeams, team]);
+        }
+    };
 
-        const newList = doNotPickTeams.includes(team)
-            ? doNotPickTeams.filter(t => t !== team)
-            : [...doNotPickTeams, team];
-        setDoNotPickTeams(newList);
+    const moveTeamToUnavailable = (team: string) => {
+        setSelectedTeams(selectedTeams.filter(t => t !== team));
+        setUnavailableTeams([...unavailableTeams, team]);
+    };
+
+    const moveTeamToOrdered = (team: string) => {
+        if (unavailableTeams.includes(team)) {
+            setUnavailableTeams(unavailableTeams.filter(t => t !== team));
+            setSelectedTeams([...selectedTeams, team]);
+        } else if (doNotPickTeams.includes(team)) {
+            setDoNotPickTeams(doNotPickTeams.filter(t => t !== team));
+            setSelectedTeams([...selectedTeams, team]);
+        }
+    };
+
+    const removeFromPersonality = (team: string) => {
+        setDoNotPickTeams(doNotPickTeams.filter(t => t !== team));
     };
 
     return (
@@ -244,13 +265,13 @@ const PicklistPage = () => {
                         </Dialog>
                     </div>
                 </div>
-                <div className="flex gap-8">
-                    <div className="w-1/4">
+                <div className="flex gap-4">
+                    <div className="w-1/5 min-w-[200px]">
                         <h2 className="text-2xl mb-4">Available Teams</h2>
                         <div className="overflow-y-auto max-h-[70vh]">
                             <ul className="space-y-2">
                                 {teams
-                                    .filter(team => !selectedTeams.includes(team) && !doNotPickTeams.includes(team))
+                                    .filter(team => !selectedTeams.includes(team) && !doNotPickTeams.includes(team) && !unavailableTeams.includes(team))
                                     .map((team) => (
                                         <li key={team} 
                                             className="flex items-center justify-between w-full p-3 bg-gray-700 rounded hover:bg-gray-600 cursor-pointer"
@@ -261,7 +282,7 @@ const PicklistPage = () => {
                                             <Button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    toggleDoNotPick(team);
+                                                    addToPersonality(team);
                                                 }}
                                                 className="bg-clear text-gray-400 hover:text-gray-300 px-2"
                                             >
@@ -273,39 +294,54 @@ const PicklistPage = () => {
                         </div>
                     </div>
 
-                    <div className="w-1/4">
-                        <h2 className="text-2xl mb-4">Selected Teams</h2>
+                    <div className="w-1/5 min-w-[200px]">
+                        <h2 className="text-2xl mb-4">Ordered Teams</h2>
                         <div className="overflow-y-auto max-h-[70vh]">
                             <ul className="space-y-2">
                                 {selectedTeams.map((team, index) => (
-                                    <DraggableTeam 
-                                        key={team} 
-                                        team={team} 
-                                        index={index} 
-                                        moveTeam={moveTeam}
-                                        onRemove={() => handleTeamRemove(team)}
-                                        onSelect={() => handleTeamSelect(team)}
-                                    />
+                                    <li
+                                        key={team}
+                                        className="flex items-center justify-between w-full p-3 bg-gray-700 rounded"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
+                                            <span>Team {team}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <Button 
+                                                onClick={() => handleTeamRemove(team)}
+                                                className="bg-clear text-red-500 hover:text-red-400 px-2"
+                                            >
+                                                x
+                                            </Button>
+                                            <Button 
+                                                onClick={() => moveTeamToUnavailable(team)}
+                                                className="bg-clear text-yellow-500 hover:text-yellow-400 px-2"
+                                            >
+                                                S-U
+                                            </Button>
+                                        </div>
+                                    </li>
                                 ))}
                             </ul>
                         </div>
                     </div>
 
-                    <div className="w-1/4">
-                        <h2 className="text-2xl mb-4">Personality</h2>
+                    <div className="w-1/5 min-w-[200px]">
+                        <h2 className="text-2xl mb-4">Selected - Unavailable</h2>
                         <div className="overflow-y-auto max-h-[70vh]">
                             <ul className="space-y-2">
-                                {doNotPickTeams.map((team, index) => (
+                                {unavailableTeams.map((team, index) => (
                                     <li
                                         key={team}
-                                        className="flex items-center justify-between w-64 p-2 bg-red-900/50 rounded"
+                                        className="flex items-center justify-between w-full p-3 bg-red-900/50 rounded"
                                     >
                                         <div className="flex items-center gap-2">
                                             <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
                                             <span>Team {team}</span>
                                         </div>
                                         <Button 
-                                            onClick={() => toggleDoNotPick(team)}
+                                            onClick={() => moveTeamToOrdered(team)}
                                             className="bg-clear text-red-500 hover:text-red-400 px-2"
                                         >
                                             x
@@ -316,7 +352,32 @@ const PicklistPage = () => {
                         </div>
                     </div>
 
-                    <div className="w-1/3">
+                    <div className="w-1/5 min-w-[200px]">
+                        <h2 className="text-2xl mb-4">Personality</h2>
+                        <div className="overflow-y-auto max-h-[70vh]">
+                            <ul className="space-y-2">
+                                {doNotPickTeams.map((team, index) => (
+                                    <li
+                                        key={team}
+                                        className="flex items-center justify-between w-full p-3 bg-red-900/50 rounded"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
+                                            <span>Team {team}</span>
+                                        </div>
+                                        <Button 
+                                            onClick={() => removeFromPersonality(team)}
+                                            className="bg-clear text-red-500 hover:text-red-400 px-2"
+                                        >
+                                            x
+                                        </Button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="w-1/3 min-w-[300px]">
                         <h2 className="text-2xl mb-4">Team Stats - {selectedTeam}</h2>
                         <div className="overflow-y-auto max-h-[70vh]">
                             {selectedTeam ? (
