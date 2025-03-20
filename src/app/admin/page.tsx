@@ -34,7 +34,10 @@ interface ScoutStats {
 // New interfaces for scout accuracy comparison
 interface ScoutAccuracy {
     name: string;
-    accuracy: number;
+    autoAccuracy: number;
+    teleopAccuracy: number;
+    endgameAccuracy: number;
+    overallAccuracy: number;
     matchesScored: number;
     totalDifference: number;
 }
@@ -54,6 +57,13 @@ interface MatchComparison {
             l4Scored: number;
             processorScored: number;
             bargeScored: number;
+            coral: number;
+            algae: number;
+        };
+        endgame: {
+            parked: number;
+            shallow: number;
+            deep: number;
         };
     };
     scoutingData: {
@@ -69,6 +79,13 @@ interface MatchComparison {
             l4Scored: number;
             processorScored: number;
             bargeScored: number;
+            coral: number;
+            algae: number;
+        };
+        endgame: {
+            parked: number;
+            shallow: number;
+            deep: number;
         };
     };
 }
@@ -91,6 +108,7 @@ export default function MatchSummary() {
     const [scoutAccuracy, setScoutAccuracy] = useState<ScoutAccuracy[]>([]);
     const [matchComparisons, setMatchComparisons] = useState<MatchComparison[]>([]);
     const [loadingTBAComparison, setLoadingTBAComparison] = useState<boolean>(false);
+    const [totalQualMatches, setTotalQualMatches] = useState<number>(0);
 
     // Load the CSV file from public directory on component mount
     useEffect(() => {
@@ -356,14 +374,13 @@ export default function MatchSummary() {
             const data = await response.json();
             
             // Process qualification matches for comparison
-            // This is a placeholder - actual implementation will be more complex
             console.log("TBA match data fetched:", data);
             
             // After fetching data, compare with scouting data
             await compareScoutingData(data);
             
         } catch (error) {
-            console.error("Error fetching TBA match data for comparison:", error);
+            console.error("Error fetching TBA qualification match data:", error);
         } finally {
             setLoadingTBAComparison(false);
         }
@@ -372,15 +389,27 @@ export default function MatchSummary() {
     // Function to compare scouting data with TBA data
     const compareScoutingData = async (tbaMatches: any[]) => {
         try {
-            console.log("Comparing scouting data with TBA data");
+            console.log("Comparing qualification scouting data with TBA data");
             
-            // Filter to qualification matches only
+            // Filter for qualification matches only
             const qualMatches = tbaMatches.filter(match => match.comp_level === "qm");
+            
+            // Store the total number of qualification matches for display
+            const totalQualificationMatches = qualMatches.length;
+            setTotalQualMatches(totalQualificationMatches);
+            
+            console.log(`Found ${qualMatches.length} qualification matches to compare`);
             
             // Scout accuracy tracking
             const scoutAccuracyMap: Record<string, {
-                totalDifference: number,
+                autoTotalDifference: number,
+                autoTotalPossible: number,
+                teleopTotalDifference: number,
+                teleopTotalPossible: number,
+                endgameTotalDifference: number,
+                endgameTotalPossible: number,
                 matchesScored: number,
+                totalDifference: number,
                 matches: { matchNum: string, teamNum: string, diffPercentage: number }[]
             }> = {};
             
@@ -389,7 +418,9 @@ export default function MatchSummary() {
             // Process each qualification match
             for (const match of qualMatches) {
                 const matchNumber = match.match_number.toString();
-                console.log(`Processing match ${matchNumber}`);
+                const matchLabel = `Qualification ${matchNumber}`;
+                
+                console.log(`Processing ${matchLabel}`);
                 
                 // Extract TBA match data, excluding foul points
                 const redScore = match.alliances.red.score - (match.score_breakdown?.red?.foul || 0);
@@ -414,8 +445,14 @@ export default function MatchSummary() {
                         // Initialize scout record if not exists
                         if (!scoutAccuracyMap[scoutName]) {
                             scoutAccuracyMap[scoutName] = {
-                                totalDifference: 0,
+                                autoTotalDifference: 0,
+                                autoTotalPossible: 0,
+                                teleopTotalDifference: 0,
+                                teleopTotalPossible: 0,
+                                endgameTotalDifference: 0,
+                                endgameTotalPossible: 0,
                                 matchesScored: 0,
+                                totalDifference: 0,
                                 matches: []
                             };
                         }
@@ -428,7 +465,7 @@ export default function MatchSummary() {
                         }
                         
                         // Extract TBA data for auto and teleop
-                        const tbaData = extractTBAData(scoreBreakdown, i);
+                        const tbaData = extractTBAData(scoreBreakdown, alliance, i);
                         
                         // Get our scouting data for this team and match
                         try {
@@ -440,26 +477,38 @@ export default function MatchSummary() {
                                 continue;
                             }
                             
-                            // Calculate difference between TBA and our data
-                            const difference = calculateDifference(tbaData, teamScoutingData);
-                            const totalPossiblePoints = calculateTotalPossiblePoints(tbaData);
-                            const diffPercentage = totalPossiblePoints > 0 
-                                ? (totalPossiblePoints - difference) / totalPossiblePoints 
-                                : 1;
+                            // Calculate differences and accuracy for each phase
+                            const differences = calculateDifference(tbaData, teamScoutingData);
+                            const possiblePoints = calculateTotalPossiblePoints(tbaData);
                             
-                            // Add to scout's record
-                            scoutAccuracyMap[scoutName].totalDifference += difference;
-                            scoutAccuracyMap[scoutName].matchesScored += 1;
-                            scoutAccuracyMap[scoutName].matches.push({
+                            // Calculate accuracy percentages (higher is better)
+                            const autoAccuracy = (possiblePoints.autoTotal - differences.autoDiff) / possiblePoints.autoTotal;
+                            const teleopAccuracy = (possiblePoints.teleopTotal - differences.teleopDiff) / possiblePoints.teleopTotal;
+                            const endgameAccuracy = (possiblePoints.endgameTotal - differences.endgameDiff) / possiblePoints.endgameTotal;
+                            const overallAccuracy = (possiblePoints.overallTotal - differences.totalDiff) / possiblePoints.overallTotal;
+                            
+                            // Update scout's record
+                            const scout = scoutAccuracyMap[scoutName];
+                            scout.autoTotalDifference += differences.autoDiff;
+                            scout.autoTotalPossible += possiblePoints.autoTotal;
+                            scout.teleopTotalDifference += differences.teleopDiff;
+                            scout.teleopTotalPossible += possiblePoints.teleopTotal;
+                            scout.endgameTotalDifference += differences.endgameDiff;
+                            scout.endgameTotalPossible += possiblePoints.endgameTotal;
+                            scout.totalDifference += differences.totalDiff;
+                            scout.matchesScored += 1;
+                            
+                            // Store the match result
+                            scout.matches.push({
                                 matchNum: matchNumber,
                                 teamNum: teamNumber,
-                                diffPercentage
+                                diffPercentage: overallAccuracy
                             });
                             
                             // Add comparison record
                             comparisons.push({
                                 matchNumber,
-                                tbaData: tbaData,
+                                tbaData,
                                 scoutingData: teamScoutingData
                             });
                             
@@ -473,14 +522,33 @@ export default function MatchSummary() {
             
             // Calculate overall accuracy for each scout
             const scoutAccuracyResults: ScoutAccuracy[] = Object.entries(scoutAccuracyMap).map(([name, data]) => {
-                const matchAccuracies = data.matches.map(m => m.diffPercentage);
-                const averageAccuracy = matchAccuracies.length > 0 
-                    ? matchAccuracies.reduce((sum, val) => sum + val, 0) / matchAccuracies.length
+                // Calculate accuracy percentages
+                const autoAccuracy = data.autoTotalPossible > 0 
+                    ? (data.autoTotalPossible - data.autoTotalDifference) / data.autoTotalPossible
+                    : 0;
+                    
+                const teleopAccuracy = data.teleopTotalPossible > 0 
+                    ? (data.teleopTotalPossible - data.teleopTotalDifference) / data.teleopTotalPossible
+                    : 0;
+                    
+                const endgameAccuracy = data.endgameTotalPossible > 0 
+                    ? (data.endgameTotalPossible - data.endgameTotalDifference) / data.endgameTotalPossible
+                    : 0;
+                
+                // Calculate overall accuracy as weighted average of all phases
+                const totalPossible = data.autoTotalPossible + data.teleopTotalPossible + data.endgameTotalPossible;
+                const totalDifference = data.autoTotalDifference + data.teleopTotalDifference + data.endgameTotalDifference;
+                
+                const overallAccuracy = totalPossible > 0 
+                    ? (totalPossible - totalDifference) / totalPossible
                     : 0;
                 
                 return {
                     name,
-                    accuracy: averageAccuracy,
+                    autoAccuracy,
+                    teleopAccuracy,
+                    endgameAccuracy,
+                    overallAccuracy,
                     matchesScored: data.matchesScored,
                     totalDifference: data.totalDifference
                 };
@@ -489,29 +557,47 @@ export default function MatchSummary() {
             // Update state with results
             setScoutAccuracy(scoutAccuracyResults);
             setMatchComparisons(comparisons);
-            console.log("Comparison completed:", scoutAccuracyResults);
+            // Store the total number of qualification matches
+            sessionStorage.setItem('totalQualificationMatches', totalQualificationMatches.toString());
+            console.log("Comparison completed with detailed accuracy metrics:", scoutAccuracyResults);
         } catch (error) {
             console.error("Error in compareScoutingData:", error);
         }
     };
     
     // Helper function to extract relevant data from TBA score breakdown
-    const extractTBAData = (scoreBreakdown: any, robotIndex: number): MatchComparison['tbaData'] => {
-        // This is a simplified version - you'll need to map the actual TBA data structure
-        // to your expected format based on the TBA API documentation
+    const extractTBAData = (scoreBreakdown: any, alliance: string, robotIndex: number): MatchComparison['tbaData'] => {
+        // Get robot-specific auto data (robotIndex is 0-based, but TBA indexes are 1-based)
+        const robotNum = robotIndex + 1;
         
-        // Auto scoring
-        const autoLeave = scoreBreakdown.autoRobotsLeft || 0;
-        const autoCoral = 0; // You'll need to extract this from TBA data
-        const autoAlgae = 0; // You'll need to extract this from TBA data
+        // Extract auto data for this specific robot
+        const autoLeave = scoreBreakdown[`autoLineRobot${robotNum}`] === "Yes" ? 1 : 0;
         
-        // Teleop scoring
-        const l1Scored = 0; // Extract from TBA
-        const l2Scored = 0; // Extract from TBA
-        const l3Scored = 0; // Extract from TBA
-        const l4Scored = 0; // Extract from TBA
-        const processorScored = 0; // Extract from TBA
-        const bargeScored = 0; // Extract from TBA
+        // For game pieces, we need to estimate per-robot performance since TBA only provides alliance totals
+        // Divide alliance totals evenly among robots as an estimate
+        const autoCoral = Math.round((scoreBreakdown.autoCoralCount || 0) / 3);
+        const teleopCoral = Math.round((scoreBreakdown.teleopCoralCount || 0) / 3);
+        
+        // Algae is split between wall and net in this game - estimate per robot
+        const teleopAlgae = Math.round(((scoreBreakdown.netAlgaeCount || 0) + (scoreBreakdown.wallAlgaeCount || 0)) / 3);
+        const autoAlgae = 0; // Auto algae information might not be directly available, use 0 as default
+        
+        // Extract endgame data for this specific robot
+        const parked = scoreBreakdown[`endGameRobot${robotNum}`] === "Parked" ? 1 : 0;
+        const shallow = scoreBreakdown[`endGameRobot${robotNum}`] === "ShallowCage" ? 1 : 0;
+        const deep = scoreBreakdown[`endGameRobot${robotNum}`] === "DeepCage" ? 1 : 0;
+        
+        // Scoring locations - divide these evenly as an estimate since they are alliance totals
+        const l1Scored = Math.round((countNodesInRow(scoreBreakdown.teleopReef?.botRow) || 0) / 3);
+        const l2Scored = Math.round((countNodesInRow(scoreBreakdown.teleopReef?.midRow) || 0) / 3);
+        const l3Scored = 0; // Not clearly defined in the example data
+        const l4Scored = Math.round((countNodesInRow(scoreBreakdown.teleopReef?.topRow) || 0) / 3);
+        
+        // Processor and barge - divide these evenly among robots
+        const processorScored = Math.round(Math.floor((scoreBreakdown.teleopPoints - 
+            (l1Scored * 2 + l2Scored * 3 + l3Scored * 4 + l4Scored * 5 + scoreBreakdown.endGameBargePoints)) / 6) / 3) || 0;
+        
+        const bargeScored = Math.round(Math.floor(scoreBreakdown.endGameBargePoints / 4) / 3) || 0;
         
         return {
             auto: {
@@ -525,9 +611,27 @@ export default function MatchSummary() {
                 l3Scored,
                 l4Scored,
                 processorScored,
-                bargeScored
+                bargeScored,
+                coral: teleopCoral,
+                algae: teleopAlgae
+            },
+            endgame: {
+                parked,
+                shallow,
+                deep
             }
         };
+    };
+    
+    // Helper function to count nodes in a row of the reef
+    const countNodesInRow = (row: any): number => {
+        if (!row) return 0;
+        
+        let count = 0;
+        for (const key in row) {
+            if (row[key] === true) count++;
+        }
+        return count;
     };
     
     // Helper function to fetch team match data from our database
@@ -548,17 +652,24 @@ export default function MatchSummary() {
             // Map our data structure to the comparison format
             return {
                 auto: {
-                    leave: matchData.auto.leave || 0,
-                    coral: matchData.auto.coral || 0,
-                    algae: matchData.auto.algae || 0
+                    leave: matchData.auto?.leave || 0,
+                    coral: matchData.auto?.coral || 0,
+                    algae: matchData.auto?.algae || 0
                 },
                 teleop: {
-                    l1Scored: matchData.teleop.l1Scored || 0,
-                    l2Scored: matchData.teleop.l2Scored || 0,
-                    l3Scored: matchData.teleop.l3Scored || 0,
-                    l4Scored: matchData.teleop.l4Scored || 0,
-                    processorScored: matchData.teleop.processorScored || 0,
-                    bargeScored: matchData.teleop.bargeScored || 0
+                    l1Scored: matchData.teleop?.l1Scored || 0,
+                    l2Scored: matchData.teleop?.l2Scored || 0,
+                    l3Scored: matchData.teleop?.l3Scored || 0,
+                    l4Scored: matchData.teleop?.l4Scored || 0,
+                    processorScored: matchData.teleop?.processorScored || 0,
+                    bargeScored: matchData.teleop?.bargeScored || 0,
+                    coral: matchData.teleop?.coralPickup + matchData.teleop?.coralPickupFromStation || 0,
+                    algae: matchData.teleop?.pickupAlgae + matchData.teleop?.pickupAlgaeFromReef || 0
+                },
+                endgame: {
+                    parked: matchData.teleop?.park ? 1 : 0,
+                    shallow: matchData.teleop?.shallow ? 1 : 0,
+                    deep: matchData.teleop?.deep ? 1 : 0
                 }
             };
         } catch (error) {
@@ -569,42 +680,73 @@ export default function MatchSummary() {
     
     // Helper function to calculate difference between TBA and our data
     const calculateDifference = (tbaData: MatchComparison['tbaData'], scoutData: MatchComparison['scoutingData']) => {
-        let totalDiff = 0;
+        // Calculate differences for each category
+        const autoDiff = calculateAutoDifference(tbaData.auto, scoutData.auto);
+        const teleopDiff = calculateTeleopDifference(tbaData.teleop, scoutData.teleop);
+        const endgameDiff = calculateEndgameDifference(tbaData.endgame, scoutData.endgame);
         
-        // Auto differences
-        totalDiff += Math.abs(tbaData.auto.leave - scoutData.auto.leave);
-        totalDiff += Math.abs(tbaData.auto.coral - scoutData.auto.coral);
-        totalDiff += Math.abs(tbaData.auto.algae - scoutData.auto.algae);
-        
-        // Teleop differences
-        totalDiff += Math.abs(tbaData.teleop.l1Scored - scoutData.teleop.l1Scored);
-        totalDiff += Math.abs(tbaData.teleop.l2Scored - scoutData.teleop.l2Scored);
-        totalDiff += Math.abs(tbaData.teleop.l3Scored - scoutData.teleop.l3Scored);
-        totalDiff += Math.abs(tbaData.teleop.l4Scored - scoutData.teleop.l4Scored);
-        totalDiff += Math.abs(tbaData.teleop.processorScored - scoutData.teleop.processorScored);
-        totalDiff += Math.abs(tbaData.teleop.bargeScored - scoutData.teleop.bargeScored);
-        
-        return totalDiff;
+        return {
+            autoDiff,
+            teleopDiff,
+            endgameDiff,
+            totalDiff: autoDiff + teleopDiff + endgameDiff
+        };
     };
     
-    // Helper function to calculate total possible points for normalization
+    // Helper function to calculate auto differences
+    const calculateAutoDifference = (tbaAuto: MatchComparison['tbaData']['auto'], scoutAuto: MatchComparison['scoutingData']['auto']) => {
+        let autoDiff = 0;
+        
+        autoDiff += Math.abs(tbaAuto.leave - scoutAuto.leave);
+        autoDiff += Math.abs(tbaAuto.coral - scoutAuto.coral);
+        autoDiff += Math.abs(tbaAuto.algae - scoutAuto.algae);
+        
+        return autoDiff;
+    };
+    
+    // Helper function to calculate teleop differences
+    const calculateTeleopDifference = (tbaTeleop: MatchComparison['tbaData']['teleop'], scoutTeleop: MatchComparison['scoutingData']['teleop']) => {
+        let teleopDiff = 0;
+        
+        teleopDiff += Math.abs(tbaTeleop.l1Scored - scoutTeleop.l1Scored);
+        teleopDiff += Math.abs(tbaTeleop.l2Scored - scoutTeleop.l2Scored);
+        teleopDiff += Math.abs(tbaTeleop.l3Scored - scoutTeleop.l3Scored);
+        teleopDiff += Math.abs(tbaTeleop.l4Scored - scoutTeleop.l4Scored);
+        teleopDiff += Math.abs(tbaTeleop.processorScored - scoutTeleop.processorScored);
+        teleopDiff += Math.abs(tbaTeleop.bargeScored - scoutTeleop.bargeScored);
+        teleopDiff += Math.abs(tbaTeleop.coral - scoutTeleop.coral);
+        teleopDiff += Math.abs(tbaTeleop.algae - scoutTeleop.algae);
+        
+        return teleopDiff;
+    };
+    
+    // Helper function to calculate endgame differences
+    const calculateEndgameDifference = (tbaEndgame: MatchComparison['tbaData']['endgame'], scoutEndgame: MatchComparison['scoutingData']['endgame']) => {
+        let endgameDiff = 0;
+        
+        endgameDiff += Math.abs(tbaEndgame.parked - scoutEndgame.parked);
+        endgameDiff += Math.abs(tbaEndgame.shallow - scoutEndgame.shallow);
+        endgameDiff += Math.abs(tbaEndgame.deep - scoutEndgame.deep);
+        
+        return endgameDiff;
+    };
+    
+    // Helper function to calculate total possible points for normalization by phase
     const calculateTotalPossiblePoints = (tbaData: MatchComparison['tbaData']) => {
-        let total = 0;
+        // Calculate total points for each phase of the match
+        const autoTotal = tbaData.auto.leave + tbaData.auto.coral + tbaData.auto.algae;
+        const teleopTotal = tbaData.teleop.l1Scored + tbaData.teleop.l2Scored + 
+                          tbaData.teleop.l3Scored + tbaData.teleop.l4Scored + 
+                          tbaData.teleop.processorScored + tbaData.teleop.bargeScored +
+                          tbaData.teleop.coral + tbaData.teleop.algae;
+        const endgameTotal = tbaData.endgame.parked + tbaData.endgame.shallow + tbaData.endgame.deep;
         
-        // Auto
-        total += tbaData.auto.leave;
-        total += tbaData.auto.coral;
-        total += tbaData.auto.algae;
-        
-        // Teleop
-        total += tbaData.teleop.l1Scored;
-        total += tbaData.teleop.l2Scored;
-        total += tbaData.teleop.l3Scored;
-        total += tbaData.teleop.l4Scored;
-        total += tbaData.teleop.processorScored;
-        total += tbaData.teleop.bargeScored;
-        
-        return total > 0 ? total : 1; // Avoid division by zero
+        return {
+            autoTotal: autoTotal > 0 ? autoTotal : 1,
+            teleopTotal: teleopTotal > 0 ? teleopTotal : 1,
+            endgameTotal: endgameTotal > 0 ? endgameTotal : 1,
+            overallTotal: autoTotal + teleopTotal + endgameTotal > 0 ? autoTotal + teleopTotal + endgameTotal : 1
+        };
     };
 
     if (loading || !csvLoaded || !tbaLoaded) return (
@@ -788,7 +930,7 @@ export default function MatchSummary() {
                             {/* Scout Accuracy Tab Content */}
                             <TabsContent value="accuracy" className="mt-6">
                                 <div className="mb-6 p-4 border rounded-lg bg-gray-800">
-                                    <h2 className="text-xl font-semibold mb-4">TBA Data Comparison (THIS DOES NOT WORK RN)</h2>
+                                    <h2 className="text-xl font-semibold mb-4">TBA Data Comparison</h2>
                                     <p className="text-gray-300 mb-4">
                                         Compare your scouting data with official match data from The Blue Alliance to 
                                         calculate scout accuracy scores.
@@ -798,7 +940,7 @@ export default function MatchSummary() {
                                         disabled={loadingTBAComparison}
                                         className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                                     >
-                                        {loadingTBAComparison ? "Loading..." : "Fetch TBA Data & Calculate Accuracy"}
+                                        {loadingTBAComparison ? "Loading..." : "Fetch TBA Data & Calculate Qualification Accuracy"}
                                     </button>
                                 </div>
                                 
@@ -810,7 +952,7 @@ export default function MatchSummary() {
                                                 <h2 className="text-xl font-semibold mb-4">Scout Accuracy Scores</h2>
                                                 <div className="space-y-3">
                                                     {scoutAccuracy
-                                                        .sort((a, b) => b.accuracy - a.accuracy)
+                                                        .sort((a, b) => b.overallAccuracy - a.overallAccuracy)
                                                         .map((scout, index) => (
                                                             <div key={scout.name} className="flex justify-between items-center p-2 border-b border-gray-700">
                                                                 <div className="flex items-center gap-2">
@@ -820,13 +962,45 @@ export default function MatchSummary() {
                                                                         ({scout.matchesScored} matches)
                                                                     </span>
                                                                 </div>
-                                                                <span className={`font-bold ${
-                                                                    scout.accuracy > 0.9 ? 'text-green-500' : 
-                                                                    scout.accuracy > 0.7 ? 'text-yellow-500' : 
-                                                                    'text-red-500'
-                                                                }`}>
-                                                                    {Math.round(scout.accuracy * 100)}%
-                                                                </span>
+                                                                <div className="flex gap-3 items-center">
+                                                                    <div className="flex flex-col items-end text-xs">
+                                                                        <span className="text-gray-400">Auto</span>
+                                                                        <span className={`${
+                                                                            scout.autoAccuracy > 0.9 ? 'text-green-500' : 
+                                                                            scout.autoAccuracy > 0.7 ? 'text-yellow-500' : 
+                                                                            'text-red-500'
+                                                                        }`}>
+                                                                            {Math.round(scout.autoAccuracy * 100)}%
+                                                                        </span>
+                                                                    </div>
+                                                                    <div className="flex flex-col items-end text-xs">
+                                                                        <span className="text-gray-400">Teleop</span>
+                                                                        <span className={`${
+                                                                            scout.teleopAccuracy > 0.9 ? 'text-green-500' : 
+                                                                            scout.teleopAccuracy > 0.7 ? 'text-yellow-500' : 
+                                                                            'text-red-500'
+                                                                        }`}>
+                                                                            {Math.round(scout.teleopAccuracy * 100)}%
+                                                                        </span>
+                                                                    </div>
+                                                                    <div className="flex flex-col items-end text-xs">
+                                                                        <span className="text-gray-400">Endgame</span>
+                                                                        <span className={`${
+                                                                            scout.endgameAccuracy > 0.9 ? 'text-green-500' : 
+                                                                            scout.endgameAccuracy > 0.7 ? 'text-yellow-500' : 
+                                                                            'text-red-500'
+                                                                        }`}>
+                                                                            {Math.round(scout.endgameAccuracy * 100)}%
+                                                                        </span>
+                                                                    </div>
+                                                                    <span className={`font-bold ${
+                                                                        scout.overallAccuracy > 0.9 ? 'text-green-500' : 
+                                                                        scout.overallAccuracy > 0.7 ? 'text-yellow-500' : 
+                                                                        'text-red-500'
+                                                                    }`}>
+                                                                        {Math.round(scout.overallAccuracy * 100)}%
+                                                                    </span>
+                                                                </div>
                                                             </div>
                                                         ))}
                                                 </div>
@@ -835,17 +1009,39 @@ export default function MatchSummary() {
                                             {/* Summary Stats */}
                                             <div className="p-4 border rounded-lg">
                                                 <h2 className="text-xl font-semibold mb-4">Data Comparison Summary</h2>
-                                                <div className="space-y-4">
+                                                <div className="grid grid-cols-4 gap-4">
                                                     <div>
                                                         <h3 className="font-medium mb-2">Overall Accuracy</h3>
                                                         <p className="text-xl">
-                                                            {Math.round(scoutAccuracy.reduce((sum, scout) => sum + scout.accuracy, 0) / scoutAccuracy.length * 100)}%
+                                                            {Math.round(scoutAccuracy.reduce((sum, scout) => sum + scout.overallAccuracy, 0) / scoutAccuracy.length * 100)}%
                                                         </p>
                                                     </div>
                                                     <div>
+                                                        <h3 className="font-medium mb-2">Auto Accuracy</h3>
+                                                        <p className="text-xl">
+                                                            {Math.round(scoutAccuracy.reduce((sum, scout) => sum + scout.autoAccuracy, 0) / scoutAccuracy.length * 100)}%
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="font-medium mb-2">Teleop Accuracy</h3>
+                                                        <p className="text-xl">
+                                                            {Math.round(scoutAccuracy.reduce((sum, scout) => sum + scout.teleopAccuracy, 0) / scoutAccuracy.length * 100)}%
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="font-medium mb-2">Endgame Accuracy</h3>
+                                                        <p className="text-xl">
+                                                            {Math.round(scoutAccuracy.reduce((sum, scout) => sum + scout.endgameAccuracy, 0) / scoutAccuracy.length * 100)}%
+                                                        </p>
+                                                    </div>
+                                                    <div className="col-span-4">
                                                         <h3 className="font-medium mb-2">Total Matches Compared</h3>
                                                         <p className="text-xl">
-                                                            {scoutAccuracy.reduce((sum, scout) => sum + scout.matchesScored, 0)}
+                                                            {scoutAccuracy.reduce((sum, scout) => sum + scout.matchesScored, 0)} 
+                                                            <span className="text-sm text-gray-400 ml-2">
+                                                                of {totalQualMatches * 6} possible robot-matches 
+                                                                ({totalQualMatches} qualification matches × 6 robots)
+                                                            </span>
                                                         </p>
                                                     </div>
                                                 </div>
@@ -854,177 +1050,236 @@ export default function MatchSummary() {
                                         
                                         {/* Detailed Match Comparison View */}
                                         <div className="border rounded-lg p-4 mb-6">
-                                            <h2 className="text-xl font-semibold mb-4">Match Details</h2>
+                                            <h2 className="text-xl font-semibold mb-4">
+                                                Qualification Match Details
+                                                <span className="ml-2 text-sm text-gray-400">
+                                                    ({matchComparisons.length} of {totalQualMatches} total qual matches compared)
+                                                </span>
+                                            </h2>
                                             <div className="overflow-x-auto">
-                                                <table className="min-w-full text-sm">
-                                                    <thead>
-                                                        <tr className="border-b border-gray-700">
-                                                            <th className="py-3 px-4 text-left">Match</th>
-                                                            <th className="py-3 px-4 text-left">Category</th>
-                                                            <th className="py-3 px-4 text-right">TBA Data</th>
-                                                            <th className="py-3 px-4 text-right">Our Data</th>
-                                                            <th className="py-3 px-4 text-right">Difference</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {matchComparisons.map((comparison, index) => {
-                                                            // Helper to create rows for each data point in the comparison
-                                                            const createDataRows = () => {
-                                                                const rows = [];
+                                                {matchComparisons.length > 0 ? (
+                                                    <table className="min-w-full text-sm">
+                                                        <thead>
+                                                            <tr className="border-b border-gray-700">
+                                                                <th className="py-3 px-4 text-left">Match</th>
+                                                                <th className="py-3 px-4 text-left">Phase</th>
+                                                                <th className="py-3 px-4 text-left">Metric</th>
+                                                                <th className="py-3 px-4 text-right">TBA Data</th>
+                                                                <th className="py-3 px-4 text-right">Our Data</th>
+                                                                <th className="py-3 px-4 text-right">Difference</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {matchComparisons.map((comparison, index) => {
+                                                                // Helper to create rows for each data point in the comparison
+                                                                const createDataRows = () => {
+                                                                    const rows = [];
+                                                                    
+                                                                    // Auto Section
+                                                                    rows.push(
+                                                                        <tr key={`${index}-auto-header`} className="bg-gray-800/70">
+                                                                            {index === 0 && <td rowSpan={12} className="py-2 px-4 align-top border-r border-gray-700">{comparison.matchNumber}</td>}
+                                                                            <td rowSpan={3} className="py-2 px-4 font-semibold border-r border-gray-700 align-middle">Auto</td>
+                                                                            <td className="py-2 px-4">Robot Mobility</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.auto.leave}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.auto.leave}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.auto.leave === comparison.scoutingData.auto.leave
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.auto.leave - comparison.scoutingData.auto.leave)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                    
+                                                                    rows.push(
+                                                                        <tr key={`${index}-auto-coral`} className="bg-gray-800/70">
+                                                                            <td className="py-2 px-4">Coral Pickup</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.auto.coral}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.auto.coral}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.auto.coral === comparison.scoutingData.auto.coral
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.auto.coral - comparison.scoutingData.auto.coral)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                    
+                                                                    rows.push(
+                                                                        <tr key={`${index}-auto-algae`} className="bg-gray-800/70">
+                                                                            <td className="py-2 px-4">Algae</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.auto.algae}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.auto.algae}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.auto.algae === comparison.scoutingData.auto.algae
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.auto.algae - comparison.scoutingData.auto.algae)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                    
+                                                                    // Teleop Section
+                                                                    rows.push(
+                                                                        <tr key={`${index}-teleop-header`}>
+                                                                            <td rowSpan={6} className="py-2 px-4 font-semibold border-r border-gray-700 align-middle">Teleop</td>
+                                                                            <td className="py-2 px-4">Coral</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.teleop.coral}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.teleop.coral}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.teleop.coral === comparison.scoutingData.teleop.coral
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.teleop.coral - comparison.scoutingData.teleop.coral)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                    
+                                                                    rows.push(
+                                                                        <tr key={`${index}-teleop-algae`}>
+                                                                            <td className="py-2 px-4">Algae</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.teleop.algae}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.teleop.algae}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.teleop.algae === comparison.scoutingData.teleop.algae
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.teleop.algae - comparison.scoutingData.teleop.algae)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+
+                                                                    // Scoring locations
+                                                                    rows.push(
+                                                                        <tr key={`${index}-teleop-l1Scored`}>
+                                                                            <td className="py-2 px-4">L1 Scored</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.teleop.l1Scored}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.teleop.l1Scored}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.teleop.l1Scored === comparison.scoutingData.teleop.l1Scored
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.teleop.l1Scored - comparison.scoutingData.teleop.l1Scored)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                    
+                                                                    rows.push(
+                                                                        <tr key={`${index}-teleop-l2Scored`}>
+                                                                            <td className="py-2 px-4">L2 Scored</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.teleop.l2Scored}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.teleop.l2Scored}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.teleop.l2Scored === comparison.scoutingData.teleop.l2Scored
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.teleop.l2Scored - comparison.scoutingData.teleop.l2Scored)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                    
+                                                                    rows.push(
+                                                                        <tr key={`${index}-teleop-otherScored`}>
+                                                                            <td className="py-2 px-4">Processor</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.teleop.processorScored}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.teleop.processorScored}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.teleop.processorScored === comparison.scoutingData.teleop.processorScored
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.teleop.processorScored - comparison.scoutingData.teleop.processorScored)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                    
+                                                                    rows.push(
+                                                                        <tr key={`${index}-teleop-barge`}>
+                                                                            <td className="py-2 px-4">Barge</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.teleop.bargeScored}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.teleop.bargeScored}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.teleop.bargeScored === comparison.scoutingData.teleop.bargeScored
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.teleop.bargeScored - comparison.scoutingData.teleop.bargeScored)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                    
+                                                                    // Endgame Section
+                                                                    rows.push(
+                                                                        <tr key={`${index}-endgame-header`} className="bg-gray-800/70">
+                                                                            <td rowSpan={3} className="py-2 px-4 font-semibold border-r border-gray-700 align-middle">Endgame</td>
+                                                                            <td className="py-2 px-4">Parked</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.endgame.parked}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.endgame.parked}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.endgame.parked === comparison.scoutingData.endgame.parked
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.endgame.parked - comparison.scoutingData.endgame.parked)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                    
+                                                                    rows.push(
+                                                                        <tr key={`${index}-endgame-shallow`} className="bg-gray-800/70">
+                                                                            <td className="py-2 px-4">Shallow Cage</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.endgame.shallow}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.endgame.shallow}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.endgame.shallow === comparison.scoutingData.endgame.shallow
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.endgame.shallow - comparison.scoutingData.endgame.shallow)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                    
+                                                                    rows.push(
+                                                                        <tr key={`${index}-endgame-deep`} className="bg-gray-800/70">
+                                                                            <td className="py-2 px-4">Deep Cage</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.tbaData.endgame.deep}</td>
+                                                                            <td className="py-2 px-4 text-right">{comparison.scoutingData.endgame.deep}</td>
+                                                                            <td className={`py-2 px-4 text-right ${
+                                                                                comparison.tbaData.endgame.deep === comparison.scoutingData.endgame.deep
+                                                                                    ? 'text-green-500'
+                                                                                    : 'text-red-500'
+                                                                            }`}>
+                                                                                {Math.abs(comparison.tbaData.endgame.deep - comparison.scoutingData.endgame.deep)}
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                    
+                                                                    return rows;
+                                                                };
                                                                 
-                                                                // Auto data
-                                                                rows.push(
-                                                                    <tr key={`${index}-auto-leave`} className="border-b border-gray-700">
-                                                                        {index === 0 && <td rowSpan={9} className="py-2 px-4 align-top">{comparison.matchNumber}</td>}
-                                                                        <td className="py-2 px-4">Auto Leave</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.tbaData.auto.leave}</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.scoutingData.auto.leave}</td>
-                                                                        <td className={`py-2 px-4 text-right ${
-                                                                            comparison.tbaData.auto.leave === comparison.scoutingData.auto.leave
-                                                                                ? 'text-green-500'
-                                                                                : 'text-red-500'
-                                                                        }`}>
-                                                                            {Math.abs(comparison.tbaData.auto.leave - comparison.scoutingData.auto.leave)}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                                
-                                                                rows.push(
-                                                                    <tr key={`${index}-auto-coral`} className="border-b border-gray-700">
-                                                                        <td className="py-2 px-4">Auto Coral</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.tbaData.auto.coral}</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.scoutingData.auto.coral}</td>
-                                                                        <td className={`py-2 px-4 text-right ${
-                                                                            comparison.tbaData.auto.coral === comparison.scoutingData.auto.coral
-                                                                                ? 'text-green-500'
-                                                                                : 'text-red-500'
-                                                                        }`}>
-                                                                            {Math.abs(comparison.tbaData.auto.coral - comparison.scoutingData.auto.coral)}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                                
-                                                                rows.push(
-                                                                    <tr key={`${index}-auto-algae`} className="border-b border-gray-700">
-                                                                        <td className="py-2 px-4">Auto Algae</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.tbaData.auto.algae}</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.scoutingData.auto.algae}</td>
-                                                                        <td className={`py-2 px-4 text-right ${
-                                                                            comparison.tbaData.auto.algae === comparison.scoutingData.auto.algae
-                                                                                ? 'text-green-500'
-                                                                                : 'text-red-500'
-                                                                        }`}>
-                                                                            {Math.abs(comparison.tbaData.auto.algae - comparison.scoutingData.auto.algae)}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                                
-                                                                // Teleop data
-                                                                // Instead of using dynamic keys, let's directly render each field
-                                                                
-                                                                // L1 Scored
-                                                                rows.push(
-                                                                    <tr key={`${index}-teleop-l1Scored`} className="border-b border-gray-700">
-                                                                        <td className="py-2 px-4">L1 Scored</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.tbaData?.teleop?.l1Scored || 0}</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.scoutingData?.teleop?.l1Scored || 0}</td>
-                                                                        <td className={`py-2 px-4 text-right ${
-                                                                            (comparison.tbaData?.teleop?.l1Scored || 0) === (comparison.scoutingData?.teleop?.l1Scored || 0)
-                                                                                ? 'text-green-500'
-                                                                                : 'text-red-500'
-                                                                        }`}>
-                                                                            {Math.abs((comparison.tbaData?.teleop?.l1Scored || 0) - (comparison.scoutingData?.teleop?.l1Scored || 0))}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                                
-                                                                // L2 Scored
-                                                                rows.push(
-                                                                    <tr key={`${index}-teleop-l2Scored`} className="border-b border-gray-700">
-                                                                        <td className="py-2 px-4">L2 Scored</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.tbaData?.teleop?.l2Scored || 0}</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.scoutingData?.teleop?.l2Scored || 0}</td>
-                                                                        <td className={`py-2 px-4 text-right ${
-                                                                            (comparison.tbaData?.teleop?.l2Scored || 0) === (comparison.scoutingData?.teleop?.l2Scored || 0)
-                                                                                ? 'text-green-500'
-                                                                                : 'text-red-500'
-                                                                        }`}>
-                                                                            {Math.abs((comparison.tbaData?.teleop?.l2Scored || 0) - (comparison.scoutingData?.teleop?.l2Scored || 0))}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                                
-                                                                // L3 Scored
-                                                                rows.push(
-                                                                    <tr key={`${index}-teleop-l3Scored`} className="border-b border-gray-700">
-                                                                        <td className="py-2 px-4">L3 Scored</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.tbaData?.teleop?.l3Scored || 0}</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.scoutingData?.teleop?.l3Scored || 0}</td>
-                                                                        <td className={`py-2 px-4 text-right ${
-                                                                            (comparison.tbaData?.teleop?.l3Scored || 0) === (comparison.scoutingData?.teleop?.l3Scored || 0)
-                                                                                ? 'text-green-500'
-                                                                                : 'text-red-500'
-                                                                        }`}>
-                                                                            {Math.abs((comparison.tbaData?.teleop?.l3Scored || 0) - (comparison.scoutingData?.teleop?.l3Scored || 0))}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                                
-                                                                // L4 Scored
-                                                                rows.push(
-                                                                    <tr key={`${index}-teleop-l4Scored`} className="border-b border-gray-700">
-                                                                        <td className="py-2 px-4">L4 Scored</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.tbaData?.teleop?.l4Scored || 0}</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.scoutingData?.teleop?.l4Scored || 0}</td>
-                                                                        <td className={`py-2 px-4 text-right ${
-                                                                            (comparison.tbaData?.teleop?.l4Scored || 0) === (comparison.scoutingData?.teleop?.l4Scored || 0)
-                                                                                ? 'text-green-500'
-                                                                                : 'text-red-500'
-                                                                        }`}>
-                                                                            {Math.abs((comparison.tbaData?.teleop?.l4Scored || 0) - (comparison.scoutingData?.teleop?.l4Scored || 0))}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                                
-                                                                // Processor Scored
-                                                                rows.push(
-                                                                    <tr key={`${index}-teleop-processorScored`} className="border-b border-gray-700">
-                                                                        <td className="py-2 px-4">Processor Scored</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.tbaData?.teleop?.processorScored || 0}</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.scoutingData?.teleop?.processorScored || 0}</td>
-                                                                        <td className={`py-2 px-4 text-right ${
-                                                                            (comparison.tbaData?.teleop?.processorScored || 0) === (comparison.scoutingData?.teleop?.processorScored || 0)
-                                                                                ? 'text-green-500'
-                                                                                : 'text-red-500'
-                                                                        }`}>
-                                                                            {Math.abs((comparison.tbaData?.teleop?.processorScored || 0) - (comparison.scoutingData?.teleop?.processorScored || 0))}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                                
-                                                                // Barge Scored
-                                                                rows.push(
-                                                                    <tr key={`${index}-teleop-bargeScored`} className="border-b border-gray-700">
-                                                                        <td className="py-2 px-4">Barge Scored</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.tbaData?.teleop?.bargeScored || 0}</td>
-                                                                        <td className="py-2 px-4 text-right">{comparison.scoutingData?.teleop?.bargeScored || 0}</td>
-                                                                        <td className={`py-2 px-4 text-right ${
-                                                                            (comparison.tbaData?.teleop?.bargeScored || 0) === (comparison.scoutingData?.teleop?.bargeScored || 0)
-                                                                                ? 'text-green-500'
-                                                                                : 'text-red-500'
-                                                                        }`}>
-                                                                            {Math.abs((comparison.tbaData?.teleop?.bargeScored || 0) - (comparison.scoutingData?.teleop?.bargeScored || 0))}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                                
-                                                                return rows;
-                                                            };
-                                                            
-                                                            return createDataRows();
-                                                        })}
-                                                    </tbody>
-                                                </table>
+                                                                return createDataRows();
+                                                            })}
+                                                        </tbody>
+                                                    </table>
+                                                ) : (
+                                                    <div className="text-center p-8 border rounded-lg bg-gray-800/50">
+                                                        <p className="text-gray-400 mb-2">
+                                                            No comparison data available yet.
+                                                        </p>
+                                                        <p className="text-gray-500 text-sm">
+                                                            Click the button above to fetch TBA data and calculate scout accuracy.
+                                                        </p>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </>
