@@ -62,6 +62,15 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
   let numMatches: number = 0;
   let timesBroke: number = 0;
   let defenseMatches: number = 0;
+  let timesShallowHang: number = 0;
+  let timesDeepHang: number = 0;
+  
+  // Initialize accumulators for timing data
+  let totalCoralScoringTime: number = 0;
+  let totalProcessorScoringTime: number = 0;
+  let totalBargeScoringTime: number = 0;
+  let totalShallowHangTime: number = 0;
+  let totalDeepHangTime: number = 0;
 
   const totalData: Data = {
     start: {
@@ -187,6 +196,24 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       if (document.data().matchData["teleop"]["playedDefense"] == 1) {
         defenseMatches++;
       }
+      
+      const matchData = document.data().matchData;
+
+      // Count shallow and deep hang times separately
+      if (matchData.teleop.shallowAverageHangTime > 0) {
+        timesShallowHang++;
+        totalShallowHangTime += matchData.teleop.shallowAverageHangTime;
+      }
+      if (matchData.teleop.deepAverageHangTime > 0) {
+        timesDeepHang++;
+        totalDeepHangTime += matchData.teleop.deepAverageHangTime;
+      }
+      
+      // Accumulate cycle times
+      totalCoralScoringTime += matchData.teleop.coralAverageScoringTime;
+      totalProcessorScoringTime += matchData.teleop.processorAverageScoringTime;
+      totalBargeScoringTime += matchData.teleop.bargeAverageScoringTime;
+      
       numMatches++;
       
       console.log("team = " + team + "match = " + document.id);
@@ -201,7 +228,13 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
               value == "position" ||
               value == "general" ||
               value == "reason" ||
-              value == "explination"
+              value == "explination" ||
+              // Exclude timing fields from the general accumulation
+              value == "coralAverageScoringTime" ||
+              value == "processorAverageScoringTime" ||
+              value == "bargeAverageScoringTime" ||
+              value == "shallowAverageHangTime" ||
+              value == "deepAverageHangTime"
             )
           ) {
             totalData[key][value] *= numMatchesForRawAverage - 1;
@@ -210,30 +243,15 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
           }
         }
       });
-
-      const matchData = document.data().matchData;
-      totalData.teleop.coralAverageScoringTime += matchData.teleop.coralAverageScoringTime;
-      totalData.teleop.processorAverageScoringTime += matchData.teleop.processorAverageScoringTime;
-      totalData.teleop.bargeAverageScoringTime += matchData.teleop.bargeAverageScoringTime;
-      totalData.teleop.shallowAverageHangTime += matchData.teleop.shallowAverageHangTime;
-      totalData.teleop.deepAverageHangTime += matchData.teleop.deepAverageHangTime;
     }
   });
 
-  // Calculate averages
-  if (numMatches > 0) {
-    totalData.teleop.coralAverageScoringTime /= numMatches;
-    totalData.teleop.processorAverageScoringTime /= numMatches;
-    totalData.teleop.bargeAverageScoringTime /= numMatches;
-    totalData.teleop.shallowAverageHangTime /= numMatches;
-    totalData.teleop.deepAverageHangTime /= numMatches;
-  } else {
-    totalData.teleop.coralAverageScoringTime = 0;
-    totalData.teleop.processorAverageScoringTime = 0;
-    totalData.teleop.bargeAverageScoringTime = 0;
-    totalData.teleop.shallowAverageHangTime = 0;
-    totalData.teleop.deepAverageHangTime = 0;
-  }
+  // Calculate averages for timing data
+  totalData.teleop.coralAverageScoringTime = numMatches > 0 ? totalCoralScoringTime / numMatches : 0;
+  totalData.teleop.processorAverageScoringTime = numMatches > 0 ? totalProcessorScoringTime / numMatches : 0;
+  totalData.teleop.bargeAverageScoringTime = numMatches > 0 ? totalBargeScoringTime / numMatches : 0;
+  totalData.teleop.shallowAverageHangTime = timesShallowHang > 0 ? totalShallowHangTime / timesShallowHang : 0;
+  totalData.teleop.deepAverageHangTime = timesDeepHang > 0 ? totalDeepHangTime / timesDeepHang : 0;
 
   // Create aggregate data
   const aggregateData: AggregateData = {

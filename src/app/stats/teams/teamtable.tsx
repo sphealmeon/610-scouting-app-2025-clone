@@ -69,6 +69,16 @@ export const columns: ColumnDef<AggregateData>[] = [
         header: "Teleop L4 Accuracy",
         cell: ({ row }) => ((row.getValue("teleopL4Accuracy") as number) * 100).toFixed(1) + "%"
     },
+    {
+        accessorKey: "shallowAverageHangTime",
+        header: "Shallow Average Hang Time",
+        cell: ({ row }) => ((row.getValue("shallowAverageHangTime") as number) / 1000) + "s"
+    },
+    {
+        accessorKey: "deepAverageHangTime",
+        header: "Deep Average Hang Time",
+        cell: ({ row }) => ((row.getValue("deepAverageHangTime") as number) / 1000) + "s"
+    },
 ]
 
 interface DataTableProps<TData, TValue> {

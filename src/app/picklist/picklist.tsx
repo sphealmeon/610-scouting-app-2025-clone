@@ -14,6 +14,7 @@ import { Picklist } from "@/app/interfaces";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Star, StarOff } from "lucide-react";
 
 const ItemTypes = {
     TEAM: 'team'
@@ -83,6 +84,7 @@ const PicklistPage = () => {
     const [showSavedLists, setShowSavedLists] = useState(false);
     const [doNotPickTeams, setDoNotPickTeams] = useState<string[]>([]);
     const [unavailableTeams, setUnavailableTeams] = useState<string[]>([]);
+    const [watchlistTeams, setWatchlistTeams] = useState<string[]>([]);
 
     useEffect(() => {
         fetchSavedLists();
@@ -105,6 +107,7 @@ const PicklistPage = () => {
             name: listName,
             teams: selectedTeams,
             dnpTeams: doNotPickTeams,
+            watchlist: watchlistTeams,
             createdAt: Date.now()
         };
 
@@ -124,6 +127,7 @@ const PicklistPage = () => {
     const loadList = (list: Picklist) => {
         setSelectedTeams(list.teams);
         setDoNotPickTeams(list.dnpTeams || []);
+        setWatchlistTeams(list.watchlist || []);
         setShowSavedLists(false);
     };
 
@@ -197,6 +201,14 @@ const PicklistPage = () => {
 
     const removeFromPersonality = (team: string) => {
         setDoNotPickTeams(doNotPickTeams.filter(t => t !== team));
+    };
+
+    const toggleWatchlist = (team: string) => {
+        if (watchlistTeams.includes(team)) {
+            setWatchlistTeams(watchlistTeams.filter(t => t !== team));
+        } else {
+            setWatchlistTeams([...watchlistTeams, team]);
+        }
     };
 
     return (
@@ -279,15 +291,26 @@ const PicklistPage = () => {
                                             <span onClick={() => handleTeamSelect(team)}>
                                                 Team {team}
                                             </span>
-                                            <Button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    addToPersonality(team);
-                                                }}
-                                                className="bg-clear text-gray-400 hover:text-gray-300 px-2"
-                                            >
-                                                DNP
-                                            </Button>
+                                            <div className="flex items-center gap-2">
+                                                <Button
+                                                    onClick={() => toggleWatchlist(team)}
+                                                    className="bg-clear hover:bg-gray-600 p-1"
+                                                >
+                                                    {watchlistTeams.includes(team) ? 
+                                                        <Star className="h-4 w-4 text-yellow-400" /> : 
+                                                        <StarOff className="h-4 w-4 text-gray-400" />
+                                                    }
+                                                </Button>
+                                                <Button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        addToPersonality(team);
+                                                    }}
+                                                    className="bg-clear text-gray-400 hover:text-gray-300 px-2"
+                                                >
+                                                    DNP
+                                                </Button>
+                                            </div>
                                         </li>
                                     ))}
                             </ul>
@@ -308,6 +331,15 @@ const PicklistPage = () => {
                                             <span>Team {team}</span>
                                         </div>
                                         <div className="flex gap-2">
+                                            <Button
+                                                onClick={() => toggleWatchlist(team)}
+                                                className="bg-clear hover:bg-gray-600 p-1"
+                                            >
+                                                {watchlistTeams.includes(team) ? 
+                                                    <Star className="h-4 w-4 text-yellow-400" /> : 
+                                                    <StarOff className="h-4 w-4 text-gray-400" />
+                                                }
+                                            </Button>
                                             <Button 
                                                 onClick={() => handleTeamRemove(team)}
                                                 className="bg-clear text-red-500 hover:text-red-400 px-2"
@@ -340,12 +372,23 @@ const PicklistPage = () => {
                                             <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
                                             <span>Team {team}</span>
                                         </div>
-                                        <Button 
-                                            onClick={() => moveTeamToOrdered(team)}
-                                            className="bg-clear text-red-500 hover:text-red-400 px-2"
-                                        >
-                                            x
-                                        </Button>
+                                        <div className="flex gap-2">
+                                            <Button
+                                                onClick={() => toggleWatchlist(team)}
+                                                className="bg-clear hover:bg-gray-600 p-1"
+                                            >
+                                                {watchlistTeams.includes(team) ? 
+                                                    <Star className="h-4 w-4 text-yellow-400" /> : 
+                                                    <StarOff className="h-4 w-4 text-gray-400" />
+                                                }
+                                            </Button>
+                                            <Button 
+                                                onClick={() => moveTeamToOrdered(team)}
+                                                className="bg-clear text-red-500 hover:text-red-400 px-2"
+                                            >
+                                                x
+                                            </Button>
+                                        </div>
                                     </li>
                                 ))}
                             </ul>
@@ -365,12 +408,23 @@ const PicklistPage = () => {
                                             <span className="text-gray-400 min-w-[24px]">{index + 1}.</span>
                                             <span>Team {team}</span>
                                         </div>
-                                        <Button 
-                                            onClick={() => removeFromPersonality(team)}
-                                            className="bg-clear text-red-500 hover:text-red-400 px-2"
-                                        >
-                                            x
-                                        </Button>
+                                        <div className="flex gap-2">
+                                            <Button
+                                                onClick={() => toggleWatchlist(team)}
+                                                className="bg-clear hover:bg-gray-600 p-1"
+                                            >
+                                                {watchlistTeams.includes(team) ? 
+                                                    <Star className="h-4 w-4 text-yellow-400" /> : 
+                                                    <StarOff className="h-4 w-4 text-gray-400" />
+                                                }
+                                            </Button>
+                                            <Button 
+                                                onClick={() => removeFromPersonality(team)}
+                                                className="bg-clear text-red-500 hover:text-red-400 px-2"
+                                            >
+                                                x
+                                            </Button>
+                                        </div>
                                     </li>
                                 ))}
                             </ul>
