@@ -56,8 +56,8 @@ export function PitData({ team }: PitDataProps) {
                     <p>{pitData.robotSpeed} ft/s</p>
                 </div>
                 <div>
-                    <h3 className="font-semibold text-gray-400">Bumper Tolerance</h3>
-                    <p>{pitData.bumperTolerance} in</p>
+                    <h3 className="font-semibold text-gray-400">Bumper Clearance</h3>
+                    <p>{pitData.bumperClearance} in</p>
                 </div>
                 <div>
                     <h3 className="font-semibold text-gray-400">Center of Gravity</h3>
