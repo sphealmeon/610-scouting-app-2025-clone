@@ -217,6 +217,7 @@ export function MatchTable({ team }: MatchTableProps) {
                 <h3 className="text-lg font-semibold">Match Notes</h3>
                 <div className="rounded-md border divide-y">
                     {data.map((match) => (
+                        
                         <div key={match.start.match} className="p-4">
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">Match {match.start.match}</span>
