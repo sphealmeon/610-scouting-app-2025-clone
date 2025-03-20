@@ -9,9 +9,10 @@ import Image from "next/image";
 import logo from "@/components/assets/logo.png";
 import { FetchAlliance } from "@/app/blueAlliance/fetchTeamsInMatch";
 import { Switch } from "@/components/ui/switch"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function MatchSelect() {
-    const [matches, setMatches] = useState<any[]>([]); // Store match data
+    const [qualMatches, setQualMatches] = useState<any[]>([]); // Store qualification match data
     const [matchNumber, setMatchNumber] = useState("");
     const [teams, setTeams] = useState<string[]>([]); // Teams for the selected match
     const [selectedTeam, setSelectedTeam] = useState("");
@@ -24,6 +25,28 @@ export default function MatchSelect() {
         }
     });
     const [isPlayoff, setIsPlayoff] = useState(false);
+    const [activeTab, setActiveTab] = useState<string>("qualification");
+    const [loading, setLoading] = useState<boolean>(true);
+    
+    // Define playoff matches with their Firebase IDs, similar to match summary
+    const playoffMatches = [
+        { display: "Playoff 1", id: "1001" },
+        { display: "Playoff 2", id: "1002" },
+        { display: "Playoff 3", id: "1003" },
+        { display: "Playoff 4", id: "1004" },
+        { display: "Playoff 5", id: "1005" },
+        { display: "Playoff 6", id: "1006" },
+        { display: "Playoff 7", id: "1007" },
+        { display: "Playoff 8", id: "1008" },
+        { display: "Playoff 9", id: "1009" },
+        { display: "Playoff 10", id: "1010" },
+        { display: "Playoff 11", id: "1011" },
+        { display: "Playoff 12", id: "1012" },
+        { display: "Playoff 13", id: "1013" },
+        { display: "Final 1", id: "1014" },
+        { display: "Final 2", id: "1015" },
+        { display: "Final 3", id: "1016" }
+    ];
     
     const matchverify = () : boolean => {
         return selectedTeam !== "" && matchNumber !== "";
@@ -31,6 +54,7 @@ export default function MatchSelect() {
 
     useEffect(() => {
         const fetchMatches = async () => {
+            setLoading(true);
             if (useApi) {
                 try {
                     const request = await fetch(
@@ -49,13 +73,15 @@ export default function MatchSelect() {
                     }
 
                     const data = await request.json();
-                    setMatches(
-                        data.filter((match: any) => match.comp_level === "qm")
-                        // Qual matches = qm 
-                    );
+                    // Filter for qualification matches
+                    const qualMatches = data
+                        .filter((match: any) => match.comp_level === "qm")
+                        .sort((a: any, b: any) => a.match_number - b.match_number);
+                    
+                    setQualMatches(qualMatches);
                 } catch (err) {
                     console.error("Error fetching matches:", err);
-                    setMatches([]);
+                    setQualMatches([]);
                 }
             }
             else {
@@ -66,39 +92,33 @@ export default function MatchSelect() {
                     match_number: parseInt(matchNum),
                     comp_level: "qm"
                 }));
-                setMatches(formattedMatches);
+                setQualMatches(formattedMatches);
             }
+            setLoading(false);
         };
 
-        fetchMatches(); // 1
+        fetchMatches();
     }, [useApi]);
 
     const handleMatchNumberChange = async (value: string) => {
-        // Set playoff flag
-        setIsPlayoff(value.startsWith('playoff-') || value.startsWith('final-'));
-
-        //Write to data: match number
-        if (value.startsWith('playoff-')) {
-            const matchNum = parseInt(value.split('-')[1]) + 1000;
-            ScoutingData.start.match = matchNum;
-        } else if (value.startsWith('final-')) {
-            const matchNum = parseInt(value.split('-')[1]) + 1013;
-            ScoutingData.start.match = matchNum;
-        } else {
-            ScoutingData.start.match = parseInt(value);
-        }
-
-        if (ScoutingData.start.team && !value.startsWith('playoff-') && !value.startsWith('final-')) {
+        // For playoff matches, set isPlayoff based on the ID format
+        setIsPlayoff(parseInt(value) >= 1000);
+        
+        // Set match number in ScoutingData
+        ScoutingData.start.match = parseInt(value);
+        
+        if (ScoutingData.start.team && !isPlayoff) {
             const alliance = await FetchAlliance(ScoutingData.start.match, ScoutingData.start.team);
             ScoutingData.start.alliance = alliance;
         }
+        
         setMatchNumber(value);
         setSelectedTeam("");
         setError("");
 
-        if (useApi) {
+        if (useApi && !isPlayoff) {
             // Finding teams for selected match
-            const selectedMatch = matches.find(
+            const selectedMatch = qualMatches.find(
                 (m: any) => m.match_number === parseInt(value, 10)
             );
 
@@ -114,7 +134,6 @@ export default function MatchSelect() {
                 setTeams([]);
             }
         }
-        // else case not needed as teams are already set in fetchMatches for non-API scenario
 
         // Update scouting data
         setScoutingData(prev => ({
@@ -129,7 +148,7 @@ export default function MatchSelect() {
     const handleTeamSelection = async (value: string) => {
         //Write to data: team number
         ScoutingData.start.team = parseInt(value);
-        if (ScoutingData.start.match) {
+        if (ScoutingData.start.match && !isPlayoff) {
             const alliance = await FetchAlliance(ScoutingData.start.match, parseInt(value));
             ScoutingData.start.alliance = alliance;
         }
@@ -150,11 +169,24 @@ export default function MatchSelect() {
         ScoutingData.start.alliance = checked ? 'blue' : 'red';
     };
 
+    // Handle tab change
+    const handleTabChange = (value: string) => {
+        setActiveTab(value);
+        setIsPlayoff(value === "playoff");
+        // Reset selections when changing tabs
+        setMatchNumber("");
+        setSelectedTeam("");
+    };
+
+    // Handle alliance change
+    const handleAllianceChange = (value: string) => {
+        ScoutingData.start.alliance = value;
+    };
+
     return (
         <div className="w-1/2 flex flex-col items-center justify-center text-white">
             <Image src={logo} alt="610 Logo" width={188} height={100} className="mx-auto" />
             <p className="text-2xl mb-6 font-bold">Scouting App</p>
-    
     
             {/* Scout Name Input */}
             <Input
@@ -166,105 +198,123 @@ export default function MatchSelect() {
                 }}
             />
     
-    
-            {useApi ? (
-                // API-based dropdowns
-                <>
-                    <Select onValueChange={handleMatchNumberChange}>
-                        <SelectTrigger className="mb-6 w-64 bg-gray-600 text-white py-6">
-                            <SelectValue placeholder="Select Match Number" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-600 text-white">
-                            {matches
-                                .sort((a, b) => a.match_number - b.match_number)
-                                .map((match) => (
+            {/* Match Type Tabs */}
+            <Tabs defaultValue="qualification" onValueChange={handleTabChange} className="w-64 mb-6">
+                <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
+                    <TabsTrigger value="qualification">Qualification</TabsTrigger>
+                    <TabsTrigger value="playoff">Playoff</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="qualification">
+                    {useApi ? (
+                        // API-based qualification match dropdown
+                        <Select onValueChange={handleMatchNumberChange} disabled={loading}>
+                            <SelectTrigger className="w-64 bg-gray-600 text-white py-6 mx-auto">
+                                <SelectValue placeholder={loading ? "Loading..." : "Select Qualification Match"} />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-600 text-white">
+                                {qualMatches.map((match) => (
                                     <SelectItem key={match.match_number} value={String(match.match_number)}
                                         className="text-white">
                                         Match {match.match_number}
                                     </SelectItem>
                                 ))}
-                            
-                            {/* Playoff Matches */}
-                            {Array.from({length: 13}, (_, i) => i + 1).map((num) => (
-                                <SelectItem 
-                                    key={`playoff-${num}`} 
-                                    value={`playoff-${num}`}
-                                    className="text-white"
-                                >
-                                    Playoff {num}
-                                </SelectItem>
-                            ))}
-
-                            {/* Finals Matches */}
-                            {Array.from({length: 3}, (_, i) => i + 1).map((num) => (
-                                <SelectItem 
-                                    key={`final-${num}`} 
-                                    value={`final-${num}`}
-                                    className="text-white"
-                                >
-                                    Final {num}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-    
-    
-                    {matchNumber && (
-                        <>
-                            {matchNumber.startsWith('playoff-') || matchNumber.startsWith('final-') ? (
-                                // Manual team input for playoffs/finals
-                                <Input
-                                    min="1"
-                                    type="number"
-                                    placeholder="Enter Team Number"
-                                    className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6"
-                                    onChange={(e) => handleTeamSelection(e.target.value)}
-                                />
-                            ) : (
-                                // Existing team selection for qualification matches
-                                <Select
-                                    onValueChange={handleTeamSelection}
-                                    disabled={!matchNumber}
-                                >
-                                    <SelectTrigger className="mb-6 w-64 bg-gray-600 text-white py-6">
-                                        <SelectValue placeholder={matchNumber ? "Select Team" : "Select a Match First"} />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-gray-600 text-white">
-                                        {teams.map((team) => (
-                                            <SelectItem key={team} value={team} className="text-white">
-                                                Team {team}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            )}
-                        </>
+                            </SelectContent>
+                        </Select>
+                    ) : (
+                        // Manual input for qualification match
+                        <Input
+                            min="1"
+                            type="number"
+                            placeholder="Enter Match Number"
+                            className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6 mx-auto"
+                            onChange={(e) => handleMatchNumberChange(e.target.value)}
+                        />
                     )}
-                </>
-            ) : (
-                // Manual input fields
+                </TabsContent>
+                
+                <TabsContent value="playoff">
+                    {useApi ? (
+                        // Dropdown for playoff matches
+                        <Select onValueChange={handleMatchNumberChange}>
+                            <SelectTrigger className="w-64 bg-gray-600 text-white py-6 mx-auto">
+                                <SelectValue placeholder="Select Playoff Match" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-600 text-white">
+                                {playoffMatches.map((match) => (
+                                    <SelectItem key={match.id} value={match.id} className="text-white">
+                                        {match.display}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    ) : (
+                        // Manual input for playoff match
+                        <Input
+                            min="1001"
+                            max="1016"
+                            type="number"
+                            placeholder="Enter Playoff Match ID (1001-1016)"
+                            className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6 mx-auto"
+                            onChange={(e) => handleMatchNumberChange(e.target.value)}
+                        />
+                    )}
+                </TabsContent>
+            </Tabs>
+    
+            {/* Alliance Selection - Only shown when API is off or in Playoff mode */}
+            {(isPlayoff || !useApi) && (
+                <Tabs defaultValue="red" onValueChange={handleAllianceChange} className="w-64 mb-6">
+                    <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
+                        <TabsTrigger value="red" className="data-[state=active]:bg-red-500 data-[state=active]:text-white">Red</TabsTrigger>
+                        <TabsTrigger value="blue" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white">Blue</TabsTrigger>
+                    </TabsList>
+                </Tabs>
+            )}
+    
+            {/* Team Selection Section */}
+            {matchNumber && (
                 <>
-                    <Input
-                        min="1"
-                        type="number"
-                        placeholder="Enter Match Number"
-                        className="mb-6 w-64  bg-gray-600 text-white placeholder-gray-400 py-6"
-                        onChange={(e) => handleMatchNumberChange(e.target.value)}
-                    />
-                    <Input
-                        min="1"
-                        type="number"
-                        placeholder="Enter Team Number"
-                        className="mb-6 w-64  bg-gray-600 text-white placeholder-gray-400 py-6"
-                        onChange={(e) => handleTeamSelection(e.target.value)}
-                    />
+                    {isPlayoff ? (
+                        // Manual team input for playoffs/finals
+                        <Input
+                            min="1"
+                            type="number"
+                            placeholder="Enter Team Number"
+                            className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6"
+                            onChange={(e) => handleTeamSelection(e.target.value)}
+                        />
+                    ) : useApi ? (
+                        // Team dropdown for qualification matches with API
+                        <Select
+                            onValueChange={handleTeamSelection}
+                            disabled={!matchNumber}
+                        >
+                            <SelectTrigger className="mb-6 w-64 bg-gray-600 text-white py-6">
+                                <SelectValue placeholder={matchNumber ? "Select Team" : "Select a Match First"} />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-600 text-white">
+                                {teams.map((team) => (
+                                    <SelectItem key={team} value={team} className="text-white">
+                                        Team {team}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    ) : (
+                        // Manual team input for non-API qualification matches
+                        <Input
+                            min="1"
+                            type="number"
+                            placeholder="Enter Team Number"
+                            className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6"
+                            onChange={(e) => handleTeamSelection(e.target.value)}
+                        />
+                    )}
                 </>
             )}
     
-    
-            
-
-            {/* Container for checkbox and label */}
+            {/* Container for preload checkbox */}
             <div className="flex items-center mb-4 gap-4">
                 <div className="flex items-center justify-center gap-2">
                     <label htmlFor="preload" className="text-white font-medium leading-none ml-2 text-white">
@@ -278,17 +328,7 @@ export default function MatchSelect() {
                         }} 
                     />
                 </div>
-                {(!useApi || isPlayoff) && (
-                    <div className="flex items-center gap-2">
-                        <label className="text-white font-medium">Alliance</label>
-                        <Switch 
-                            onCheckedChange={handleAllianceToggle}
-                            className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-red-500"
-                        />
-                    </div>
-                )}
             </div>
-    
     
             {/* Optional: Add visual feedback about selection state */}
             {!matchverify() && (
