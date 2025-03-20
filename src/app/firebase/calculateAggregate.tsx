@@ -164,14 +164,14 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       explanation: "",
 
       coralAverageScoringTime: 0,
-        processorAverageScoringTime: 0,
-        bargeAverageScoringTime: 0,
-        shallowAverageHangTime: 0,
-        deepAverageHangTime: 0,
+      processorAverageScoringTime: 0,
+      bargeAverageScoringTime: 0,
+      shallowAverageHangTime: 0,
+      deepAverageHangTime: 0,
 
-        coralCyclesForTimer: 0,
-        processorCyclesForTimer: 0,
-        bargeCyclesForTimer: 0,
+      coralCyclesForTimer: 0,
+      processorCyclesForTimer: 0,
+      bargeCyclesForTimer: 0,
     },
   };
 
@@ -210,8 +210,30 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
           }
         }
       });
+
+      const matchData = document.data().matchData;
+      totalData.teleop.coralAverageScoringTime += matchData.teleop.coralAverageScoringTime;
+      totalData.teleop.processorAverageScoringTime += matchData.teleop.processorAverageScoringTime;
+      totalData.teleop.bargeAverageScoringTime += matchData.teleop.bargeAverageScoringTime;
+      totalData.teleop.shallowAverageHangTime += matchData.teleop.shallowAverageHangTime;
+      totalData.teleop.deepAverageHangTime += matchData.teleop.deepAverageHangTime;
     }
   });
+
+  // Calculate averages
+  if (numMatches > 0) {
+    totalData.teleop.coralAverageScoringTime /= numMatches;
+    totalData.teleop.processorAverageScoringTime /= numMatches;
+    totalData.teleop.bargeAverageScoringTime /= numMatches;
+    totalData.teleop.shallowAverageHangTime /= numMatches;
+    totalData.teleop.deepAverageHangTime /= numMatches;
+  } else {
+    totalData.teleop.coralAverageScoringTime = 0;
+    totalData.teleop.processorAverageScoringTime = 0;
+    totalData.teleop.bargeAverageScoringTime = 0;
+    totalData.teleop.shallowAverageHangTime = 0;
+    totalData.teleop.deepAverageHangTime = 0;
+  }
 
   // Create aggregate data
   const aggregateData: AggregateData = {
@@ -315,6 +337,11 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.teleop.park * 2,
     playedDefenseMatches: defenseMatches,
     brokePercentage: numMatches === 0 ? 0 : timesBroke / numMatches,
+    coralAverageScoringTime: totalData.teleop.coralAverageScoringTime,
+    processorAverageScoringTime: totalData.teleop.processorAverageScoringTime,
+    bargeAverageScoringTime: totalData.teleop.bargeAverageScoringTime,
+    shallowAverageHangTime: totalData.teleop.shallowAverageHangTime,
+    deepAverageHangTime: totalData.teleop.deepAverageHangTime,
   };
 
   // Set the new Aggregate Data

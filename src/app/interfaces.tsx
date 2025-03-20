@@ -286,6 +286,11 @@ export interface AggregateData {
     endgamePPG: number;
     brokePercentage: number;
     playedDefenseMatches: number;
+    coralAverageScoringTime: number;
+    processorAverageScoringTime: number;
+    bargeAverageScoringTime: number;
+    shallowAverageHangTime: number;
+    deepAverageHangTime: number;
 }
 
 
