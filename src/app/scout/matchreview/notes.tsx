@@ -13,6 +13,16 @@ export default function NotesReview() {
     const [generalNotes, setGeneralNotes] = useState(ScoutingData.teleop.general);
     const [robotIssues, setRobotIssues] = useState(ScoutingData.teleop.reason);
     const [playedDefenseChecked, setPlayedDefenseChecked] = useState(ScoutingData.teleop.playedDefense === 1);
+    const [brokenChecked, setBrokenChecked] = useState(false);
+
+    const handleBrokenChange = (checked: boolean) => {
+        setBrokenChecked(checked);
+        if (checked) {
+            const defaultText = "Robot issue is:";
+            setRobotIssues(defaultText);
+            ScoutingData.teleop.reason = defaultText;
+        }
+    };
 
     return (
         <div className="flex flex-col gap-8 p-6">
@@ -113,6 +123,14 @@ export default function NotesReview() {
                     </div>
 
                     <div>
+                        <div className="flex items-center gap-2 mb-2">
+                            <Checkbox
+                                className="h-5 w-5 hover:bg-gray-500"
+                                checked={brokenChecked}
+                                onCheckedChange={(checked: boolean) => handleBrokenChange(checked)}
+                            />
+                            <Label className="text-xl">Broken</Label>
+                        </div>
                         <Label className="text-xl mb-2">Robot Issues</Label>
                         <Textarea 
                             value={robotIssues}

@@ -300,6 +300,7 @@ export interface Picklist {
     teams: string[];
     dnpTeams: string[];
     watchlist: string[];
+    watchlistNotes: Record<string, string>;
     createdAt: number;
 } 
 
