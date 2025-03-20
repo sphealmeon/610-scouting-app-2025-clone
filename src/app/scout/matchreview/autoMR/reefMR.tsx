@@ -136,18 +136,6 @@ const ReefMR = ({ setLeaveState }: {
     const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
     const slotData = ScoutingData.auto[slotKey];
     
-
-    setScores(prev => ({
-      ...prev,
-      droppedCoral: prev.droppedCoral + 1,
-      slots: {
-        ...prev.slots,
-        [slotKey]: { dropped: prev.slots[slotKey].dropped + 1 }
-      }
-    }));
-    ScoutingData.auto.droppedCoral++;
-    setLeaveState(1)
-
     if (typeof slotData === 'object' && 'dropped' in slotData) {
       if (slotData.dropped === 0) {
         ScoutingData.auto.droppedCoral++;
@@ -160,7 +148,6 @@ const ReefMR = ({ setLeaveState }: {
         showPopup(`Removed dropped coral at Level ${level}, Slot ${slot}`);
       }
     }
-
   };
 
   const showPopup = (message: string) => {
@@ -177,8 +164,9 @@ const ReefMR = ({ setLeaveState }: {
 
   // Add this helper function
   const getSlotDropped = (level: string, slot: string) => {
-    const slotKey = `${level.toLowerCase()}${slot}`;
-    return scores.slots[slotKey].dropped;
+    const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
+    const slotData = ScoutingData.auto[slotKey];
+    return typeof slotData === 'object' && 'dropped' in slotData && slotData.dropped > 0;
   };
 
   // Add decrement handler
@@ -252,65 +240,44 @@ const ReefMR = ({ setLeaveState }: {
               `;
 
               const isMade = getSlotMade(level, slot);
+              const isDropped = getSlotDropped(level, slot);
 
               return (
-                <g key={slot} onClick={() => handleHexagonClick(level, slot)} className="cursor-pointer">
-                  <path
-                    d={path}
-                    fill={isMade ? "#22c55e" : "#ef4444"}
-                    stroke="black"
-                    strokeWidth="0.5"
-                    className="hover:opacity-80"
-                  />
-                  <text
-                    x={centerX + (radius * 0.7) * Math.cos(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
-                    y={centerY + (radius * 0.7) * Math.sin(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill="white"
-                    fontSize="6"
-                  >
-                    {slot}
-                  </text>
-
-                  
-                  {/* Add dropped count and incrementor */}
-                  <g onClick={(e) => e.stopPropagation()}>
+                <g key={slot}>
+                  <g onClick={() => handleHexagonClick(level, slot)} className="cursor-pointer">
+                    <path
+                      d={path}
+                      fill={isMade ? "#22c55e" : "#ef4444"}
+                      stroke="black"
+                      strokeWidth="0.5"
+                      className="hover:opacity-80"
+                    />
                     <text
-                      x={buttonX - 5}
-                      y={buttonY}
+                      x={centerX + (radius * 0.7) * Math.cos(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
+                      y={centerY + (radius * 0.7) * Math.sin(startAngle + (360 / totalSlots / 2) * (Math.PI / 180))}
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fill="white"
-                      fontSize="4"
-                      className="cursor-pointer"
-                      onClick={() => handleDecrementDropped(level, slot)}
+                      fontSize="6"
                     >
-                      -
-                    </text>
-                    <text
-                      x={buttonX}
-                      y={buttonY}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill="white"
-                      fontSize="4"
-                    >
-                      {getSlotDropped(level, slot)}
-                    </text>
-                    <text
-                      x={buttonX + 5}
-                      y={buttonY}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill="white"
-                      fontSize="4"
-                      className="cursor-pointer"
-                      onClick={() => handleDroppedCoral(level, slot)}
-                    >
-                      +
+                      {slot}
                     </text>
                   </g>
+                  
+                  {/* Drop Button */}
+                  <circle
+                    cx={buttonX}
+                    cy={buttonY}
+                    r="2"
+                    fill={isDropped ? "#EF4444" : "#4B5563"}
+                    stroke="gray-700"
+                    strokeWidth="0.5" 
+                    className="cursor-pointer hover:fill-red-800"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDroppedCoral(level, slot);
+                    }}
+                  />
                 </g>
               );
             })}
