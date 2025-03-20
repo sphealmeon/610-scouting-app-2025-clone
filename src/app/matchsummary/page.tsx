@@ -30,17 +30,14 @@ export default function MatchSummaryPage() {
     const handleMatchSelect = async (match: string) => {
         setSelectedMatch(match)
         
-        // Check if this is a playoff match (ID 1001-1016)
         const isPlayoffMatch = parseInt(match) >= 1000
         setIsPlayoff(isPlayoffMatch)
         
         if (isPlayoffMatch) {
-            // Just use the numeric ID for display
             setPlayoffMatchDisplay(`Playoff Match ${match}`)
-            return // Skip the rest of the function for playoff matches
+            return
         }
         
-        // Regular qualification match handling
         setError("")
         setLoading(true)
         setMatchData([])
@@ -48,7 +45,6 @@ export default function MatchSummaryPage() {
         setBlueTeams([])
         
         try {
-            // First get teams from TBA API
             if (useApi) {
                 const response = await fetch(
                     `https://www.thebluealliance.com/api/v3/event/${key}/matches/simple`,
@@ -77,19 +73,16 @@ export default function MatchSummaryPage() {
                         setRedTeams(redTeamNumbers)
                         setBlueTeams(blueTeamNumbers)
 
-                        // Now fetch match data for each team
                         const allMatchData = []
                         const allTeams = [...redTeamNumbers, ...blueTeamNumbers]
 
                         for (const team of allTeams) {
-                            // Get match data using the same pattern as submitMatch.ts
                             const matchDoc = doc(db, team.toString(), match)
                             const matchSnapshot = await getDoc(matchDoc)
                             
                             if (matchSnapshot.exists()) {
                                 const data = matchSnapshot.data()
                                 if (data.matchData) {
-                                    // Add team and alliance info to the match data
                                     const alliance = redTeamNumbers.includes(team) ? 'red' : 'blue'
                                     allMatchData.push({
                                         ...data.matchData,
@@ -104,16 +97,13 @@ export default function MatchSummaryPage() {
                             }
                         }
 
-                        console.log("Match data found:", allMatchData)
                         setMatchData(allMatchData)
                     }
                 } else {
-                    // Try to find match data for all teams
                     const allMatchData: any[] = []
                     const redTeamsFound: number[] = []
                     const blueTeamsFound: number[] = []
 
-                    // Try all possible teams for this match
                     for (const team of teams) {
                         const teamNum = parseInt(team)
                         const matchDoc = doc(db, team, match)
@@ -122,17 +112,14 @@ export default function MatchSummaryPage() {
                         if (matchSnapshot.exists()) {
                             const data = matchSnapshot.data()
                             if (data.matchData) {
-                                // Get alliance from the match data
                                 const alliance = data.matchData.start?.alliance || ''
                                 
-                                // Add team to appropriate alliance array
                                 if (alliance === 'red') {
                                     redTeamsFound.push(teamNum)
                                 } else if (alliance === 'blue') {
                                     blueTeamsFound.push(teamNum)
                                 }
 
-                                // Add the match data
                                 allMatchData.push({
                                     ...data.matchData,
                                     start: {
@@ -146,9 +133,7 @@ export default function MatchSummaryPage() {
                         }
                     }
 
-                    // If we found any data, update the state
                     if (allMatchData.length > 0) {
-                        console.log("Match data found:", allMatchData)
                         setMatchData(allMatchData)
                         setRedTeams(redTeamsFound)
                         setBlueTeams(blueTeamsFound)
@@ -159,20 +144,17 @@ export default function MatchSummaryPage() {
             }
             
         } catch (error) {
-            console.error("Error in handleMatchSelect:", error)
             setError("An error occurred while fetching match data")
         } finally {
             setLoading(false)
         }
     }
 
-    // Add this useEffect to populate teamsData when teams change
     useEffect(() => {
         const fetchTeamData = async () => {
             const newRedTeamsData: { [key: string]: AggregateData } = {};
             const newBlueTeamsData: { [key: string]: AggregateData } = {};
             
-            // Fetch data for red teams
             for (const team of redTeams) {
                 const data = await TeamAggregate({ team });
                 if (data) {
@@ -180,7 +162,6 @@ export default function MatchSummaryPage() {
                 }
             }
             
-            // Fetch data for blue teams
             for (const team of blueTeams) {
                 const data = await TeamAggregate({ team });
                 if (data) {
@@ -196,6 +177,62 @@ export default function MatchSummaryPage() {
             fetchTeamData();
         }
     }, [redTeams, blueTeams]);
+
+    const aggregateAllianceData = (teamsData: { [key: string]: AggregateData }) => {
+        const aggregatedData: AggregateData = {
+            team: 0,
+            standing: 0,
+            matchAggregateData: {} as any,
+            matchesPlayed: 0,
+            autoPPG: 0,
+            teleopPPG: 0,
+            coralCyclesScored: 0,
+            algaeCyclesScored: 0,
+            autoL1Accuracy: 0,
+            autoL2Accuracy: 0,
+            autoL3Accuracy: 0,
+            autoL4Accuracy: 0,
+            teleopL1Accuracy: 0,
+            teleopL2Accuracy: 0,
+            teleopL3Accuracy: 0,
+            teleopL4Accuracy: 0,
+            teleopBargeAccuracy: 0,
+            teleopProcessorAccuracy: 0,
+            shallowAccuracy: 0,
+            deepAccuracy: 0,
+            endgamePPG: 0,
+            brokePercentage: 0,
+            playedDefenseMatches: 0,
+        }
+
+        for (const teamData of Object.values(teamsData)) {
+            aggregatedData.matchesPlayed += teamData.matchesPlayed
+            aggregatedData.autoPPG += teamData.autoPPG
+            aggregatedData.teleopPPG += teamData.teleopPPG
+            aggregatedData.coralCyclesScored += teamData.coralCyclesScored
+            aggregatedData.algaeCyclesScored += teamData.algaeCyclesScored
+            aggregatedData.autoL1Accuracy += teamData.autoL1Accuracy
+            aggregatedData.autoL2Accuracy += teamData.autoL2Accuracy
+            aggregatedData.autoL3Accuracy += teamData.autoL3Accuracy
+            aggregatedData.autoL4Accuracy += teamData.autoL4Accuracy
+            aggregatedData.teleopL1Accuracy += teamData.teleopL1Accuracy
+            aggregatedData.teleopL2Accuracy += teamData.teleopL2Accuracy
+            aggregatedData.teleopL3Accuracy += teamData.teleopL3Accuracy
+            aggregatedData.teleopL4Accuracy += teamData.teleopL4Accuracy
+            aggregatedData.teleopBargeAccuracy += teamData.teleopBargeAccuracy
+            aggregatedData.teleopProcessorAccuracy += teamData.teleopProcessorAccuracy
+            aggregatedData.shallowAccuracy += teamData.shallowAccuracy
+            aggregatedData.deepAccuracy += teamData.deepAccuracy
+            aggregatedData.endgamePPG += teamData.endgamePPG
+            aggregatedData.brokePercentage += teamData.brokePercentage
+            aggregatedData.playedDefenseMatches += teamData.playedDefenseMatches
+        }
+
+        return aggregatedData
+    }
+
+    const redAllianceData = aggregateAllianceData(redTeamsData)
+    const blueAllianceData = aggregateAllianceData(blueTeamsData)
 
     return (
         <>
@@ -253,25 +290,15 @@ export default function MatchSummaryPage() {
                                         </TabsContent>
                                         
                                         <TabsContent value="team-stats">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <h3 className="text-xl font-bold mb-2 text-red-500">Red Alliance</h3>
-                                                    <TeamStatsTable teams={redTeams} />
-                                                    <div className="mt-4">
-                                                        <h4 className="text-lg font-semibold mb-2">Red Alliance Comparison</h4>
-                                                        <RadarChart teamsData={redTeamsData} />
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <h3 className="text-xl font-bold mb-2 text-blue-500">Blue Alliance</h3>
-                                                    <TeamStatsTable teams={blueTeams} />
-                                                    <div className="mt-4">
-                                                        <h4 className="text-lg font-semibold mb-2">Blue Alliance Comparison</h4>
-                                                        <RadarChart teamsData={blueTeamsData} />
-                                                    </div>
-                                                </div>
+                                            <div className="mt-4">
+                                                <h3 className="text-xl font-bold mb-2 text-center">Alliance Comparison</h3>
+                                                <RadarChart 
+                                                    teamsData={{
+                                                        red: redAllianceData,
+                                                        blue: blueAllianceData
+                                                    }} 
+                                                />
                                             </div>
-                                            <h1> P.S values in chart are multiplied</h1>
                                         </TabsContent>
                                     </Tabs>
                                 </div>

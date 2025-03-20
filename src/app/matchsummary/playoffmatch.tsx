@@ -149,6 +149,62 @@ export default function PlayoffMatch({ matchId, matchDisplay }: PlayoffMatchProp
         }
     }, [redTeams, blueTeams])
 
+    const aggregateAllianceData = (teamsData: { [key: string]: AggregateData }) => {
+        const aggregatedData: AggregateData = {
+            team: 0,
+            standing: 0,
+            matchAggregateData: {} as any, // Assuming matchAggregateData is an object
+            matchesPlayed: 0,
+            autoPPG: 0,
+            teleopPPG: 0,
+            coralCyclesScored: 0,
+            algaeCyclesScored: 0,
+            autoL1Accuracy: 0,
+            autoL2Accuracy: 0,
+            autoL3Accuracy: 0,
+            autoL4Accuracy: 0,
+            teleopL1Accuracy: 0,
+            teleopL2Accuracy: 0,
+            teleopL3Accuracy: 0,
+            teleopL4Accuracy: 0,
+            teleopBargeAccuracy: 0,
+            teleopProcessorAccuracy: 0,
+            shallowAccuracy: 0,
+            deepAccuracy: 0,
+            endgamePPG: 0,
+            brokePercentage: 0,
+            playedDefenseMatches: 0,
+        }
+
+        for (const teamData of Object.values(teamsData)) {
+            aggregatedData.matchesPlayed += teamData.matchesPlayed
+            aggregatedData.autoPPG += teamData.autoPPG
+            aggregatedData.teleopPPG += teamData.teleopPPG
+            aggregatedData.coralCyclesScored += teamData.coralCyclesScored
+            aggregatedData.algaeCyclesScored += teamData.algaeCyclesScored
+            aggregatedData.autoL1Accuracy += teamData.autoL1Accuracy
+            aggregatedData.autoL2Accuracy += teamData.autoL2Accuracy
+            aggregatedData.autoL3Accuracy += teamData.autoL3Accuracy
+            aggregatedData.autoL4Accuracy += teamData.autoL4Accuracy
+            aggregatedData.teleopL1Accuracy += teamData.teleopL1Accuracy
+            aggregatedData.teleopL2Accuracy += teamData.teleopL2Accuracy
+            aggregatedData.teleopL3Accuracy += teamData.teleopL3Accuracy
+            aggregatedData.teleopL4Accuracy += teamData.teleopL4Accuracy
+            aggregatedData.teleopBargeAccuracy += teamData.teleopBargeAccuracy
+            aggregatedData.teleopProcessorAccuracy += teamData.teleopProcessorAccuracy
+            aggregatedData.shallowAccuracy += teamData.shallowAccuracy
+            aggregatedData.deepAccuracy += teamData.deepAccuracy
+            aggregatedData.endgamePPG += teamData.endgamePPG
+            aggregatedData.brokePercentage += teamData.brokePercentage
+            aggregatedData.playedDefenseMatches += teamData.playedDefenseMatches
+        }
+
+        return aggregatedData
+    }
+
+    const redAllianceData = aggregateAllianceData(redTeamsData)
+    const blueAllianceData = aggregateAllianceData(blueTeamsData)
+
     if (loading) {
         return (
             <div className="text-center py-10">
@@ -196,25 +252,15 @@ export default function PlayoffMatch({ matchId, matchDisplay }: PlayoffMatchProp
                     </TabsContent>
                     
                     <TabsContent value="team-stats">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <h3 className="text-xl font-bold mb-2 text-red-500">Red Alliance</h3>
-                                <TeamStatsTable teams={redTeams} />
-                                <div className="mt-4">
-                                    <h4 className="text-lg font-semibold mb-2">Red Alliance Comparison</h4>
-                                    <RadarChart teamsData={redTeamsData} />
-                                </div>
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-bold mb-2 text-blue-500">Blue Alliance</h3>
-                                <TeamStatsTable teams={blueTeams} />
-                                <div className="mt-4">
-                                    <h4 className="text-lg font-semibold mb-2">Blue Alliance Comparison</h4>
-                                    <RadarChart teamsData={blueTeamsData} />
-                                </div>
-                            </div>
+                        <div className="mt-4">
+                            <h3 className="text-xl font-bold mb-2 text-center">Alliance Comparison</h3>
+                            <RadarChart 
+                                teamsData={{
+                                    red: redAllianceData,
+                                    blue: blueAllianceData
+                                }} 
+                            />
                         </div>
-                        <h1> P.S values in chart are multiplied</h1>
                     </TabsContent>
                 </Tabs>
             </div>
