@@ -56,6 +56,10 @@ export function PitData({ team }: PitDataProps) {
                     <p>{pitData.robotSpeed} ft/s</p>
                 </div>
                 <div>
+                    <h3 className="font-semibold text-gray-400">Bumper Tolerance</h3>
+                    <p>{pitData.bumperTolerance} in</p>
+                </div>
+                <div>
                     <h3 className="font-semibold text-gray-400">Center of Gravity</h3>
                     <p>{pitData.centerOfGravity}</p>
                 </div>
@@ -74,6 +78,10 @@ export function PitData({ team }: PitDataProps) {
                 <div>
                     <h3 className="font-semibold text-gray-400">Coral Capability</h3>
                     <p>{pitData.coralCapability}/5</p>
+                </div>
+                <div>
+                    <h3 className="font-semibold text-gray-400">Driver Experience</h3>
+                    <p>{pitData.driverExperience}/4</p>
                 </div>
                 <div>
                     <h3 className="font-semibold text-gray-400">Climb Ability</h3>

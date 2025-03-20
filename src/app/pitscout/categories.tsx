@@ -27,11 +27,13 @@ import { doc, getDoc } from "firebase/firestore";
 export default function PitScoutCategories({ teamNumber }: { teamNumber: string }) {
     const [robotWeight, setRobotWeight] = useState<number>(0);
     const [robotSpeed, setRobotSpeed] = useState<number>(0);
+    const [bumperTolerance, setBumperTolerance] = useState<number>(0);
     const [centerOfGravity, setCenterOfGravity] = useState<string>("");
     const [drivetrainType, setDrivetrainType] = useState<string>("");
     const [defenseComfort, setDefenseComfort] = useState<number>(1);
     const [algaeCapability, setAlgaeCapability] = useState<number>(1);
     const [coralCapability, setCoralCapability] = useState<number>(1);
+    const [driverExperience, setDriverExperience] = useState<number>(0);
     const [climbAbility, setClimbAbility] = useState<string>("");
     const [pickupLocation, setPickupLocation] = useState<string>("");
     const [notes, setNotes] = useState<string>("");
@@ -55,11 +57,13 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                     // Update all state values with existing data
                     setRobotWeight(data.robotWeight || 0);
                     setRobotSpeed(data.robotSpeed || 0);
+                    setBumperTolerance(data.bumperTolerance || 0);
                     setCenterOfGravity(data.centerOfGravity || "");
                     setDrivetrainType(data.drivetrainType || "");
                     setDefenseComfort(data.defenseComfort || 1);
                     setAlgaeCapability(data.algaeCapability || 1);
                     setCoralCapability(data.coralCapability || 1);
+                    setDriverExperience(data.driverExperience || 0);
                     setClimbAbility(data.climbAbility || "");
                     setPickupLocation(data.pickupLocation || "");
                     setNotes(data.notes || "");
@@ -70,11 +74,13 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                     // Reset form for new team
                     setRobotWeight(0);
                     setRobotSpeed(0);
+                    setBumperTolerance(0);
                     setCenterOfGravity("");
                     setDrivetrainType("");
                     setDefenseComfort(1);
                     setAlgaeCapability(1);
                     setCoralCapability(1);
+                    setDriverExperience(0);
                     setClimbAbility("");
                     setPickupLocation("");
                     setNotes("");
@@ -103,11 +109,13 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
             const result = await submitPitData(teamNumber, {
                 robotWeight,
                 robotSpeed,
+                bumperTolerance,
                 centerOfGravity,
                 drivetrainType,
                 defenseComfort,
                 algaeCapability,
                 coralCapability,
+                driverExperience,
                 climbAbility,
                 pickupLocation,
                 notes
@@ -171,6 +179,17 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                                 className="bg-gray-700"
                             />
                         </div>
+
+                        <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="speed">Bumper Tolerance (in)</Label>
+                            <Input 
+                                type="number"
+                                id="speed"
+                                value={bumperTolerance}
+                                onChange={(e) => setBumperTolerance(Number(e.target.value))}
+                                className="bg-gray-700"
+                            />
+                        </div>
                     </div>
 
                     {/* Center of Gravity Selection */}
@@ -216,8 +235,8 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                                 className="flex flex-col gap-2 mt-2"
                             >
                                 {[
-                                    { value: "tank", label: "Tank" },
                                     { value: "swerve", label: "Swerve" },
+                                    { value: "tank", label: "Tank" },
                                     { value: "mecanum", label: "Mecanum" },
                                     { value: "other", label: "Other" }
                                 ].map((item) => (
@@ -283,6 +302,19 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                                     className="w-full"
                                 />
                                 <div className="text-right">Value: {coralCapability}</div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <Label>Driver Experience (0-4)</Label>
+                                <Slider 
+                                    value={[driverExperience]}
+                                    onValueChange={(value) => setDriverExperience(value[0])}
+                                    min={0}
+                                    max={4}
+                                    step={1}
+                                    className="w-full"
+                                />
+                                <div className="text-right">Years of Experience: {driverExperience}</div>
                             </div>
                         </CardContent>
                     </Card>
