@@ -238,6 +238,9 @@ export function MatchTable({ team }: MatchTableProps) {
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">Match {match.start.match}</span>
                             </div>
+                            <div> 
+                                {match.start.scoutName}
+                            </div>
                             {match.teleop.general && (
                                 <div className="mb-2">
                                     <span className="text-gray-400">General: </span>
