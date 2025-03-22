@@ -296,14 +296,24 @@ export default function MatchSummaryPage() {
                                         </TabsContent>
                                         
                                         <TabsContent value="team-stats">
-                                            <div className="mt-4">
-                                                <h3 className="text-xl font-bold mb-2 text-center">Alliance Comparison</h3>
-                                                <RadarChart 
-                                                    teamsData={{
-                                                        red: redAllianceData,
-                                                        blue: blueAllianceData
-                                                    }} 
-                                                />
+                                            
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="mt-4">
+                                                    <h3 className="text-xl font-bold mb-2 text-center">Alliance Comparison</h3>
+                                                    <RadarChart 
+                                                        teamsData={{
+                                                            red: redAllianceData,
+                                                            blue: blueAllianceData
+                                                        }} 
+                                                    />
+                                                </div>
+                                                 <div>
+                                                     <h3 className="text-xl font-bold mb-2 text-red-500">Red Alliance</h3>
+                                                     <TeamStatsTable teams={redTeams} />
+                                                     <h3 className="text-xl font-bold mb-2 text-blue-500">Blue Alliance</h3>
+                                                     <TeamStatsTable teams={blueTeams} />
+                                                    
+                                                 </div>
                                             </div>
                                         </TabsContent>
                                     </Tabs>
