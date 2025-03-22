@@ -40,6 +40,7 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
     shallowAccuracy: (data: AggregateData) => data.shallowAccuracy,
     deepAccuracy: (data: AggregateData) => data.deepAccuracy,
     playedDefenseMatches: (data: AggregateData) => data.playedDefenseMatches,
+    avgFouls: (data: AggregateData) => data.avgFouls,
     brokePercentage: (data: AggregateData) => data.brokePercentage,
   };
 
@@ -108,6 +109,7 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
               <TableCell>{(data.shallowAccuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{(data.deepAccuracy * 100).toFixed(1)}%</TableCell>
               <TableCell>{data.playedDefenseMatches}</TableCell>
+              <TableCell>{(data.avgFouls).toFixed(1)}</TableCell>
               <TableCell>{(data.brokePercentage * 100).toFixed(1)}%</TableCell>
             </TableRow>
           ))}
