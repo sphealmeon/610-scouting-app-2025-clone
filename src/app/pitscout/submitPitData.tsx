@@ -8,8 +8,14 @@ export interface PitScoutData {
     centerOfGravity: string;
     drivetrainType: string;
     defenseComfort: number;
-    algaeCapability: number;
-    coralCapability: number;
+    // algaeCapability: number;
+    // coralCapability: number;
+    l1Capability: number;
+    l2Capability: number;
+    l3Capability: number;
+    l4Capability: number;
+    netCapability: number;
+    processorCapability: number;
     driverExperience: number;
     climbAbility: string;
     pickupLocation: string;
