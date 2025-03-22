@@ -83,16 +83,32 @@ export const columns: ColumnDef<Data>[] = [
         header: "L4 Scored",
     },
     {
+        accessorKey: "teleop.l4Dropped",
+        header: "L4 Dropped",
+    },
+    {
         accessorKey: "teleop.l3Scored",
         header: "L3 Scored",
+    },
+    {
+        accessorKey: "teleop.l3Dropped",
+        header: "L3 Dropped",
     },
     {
         accessorKey: "teleop.l2Scored",
         header: "L2 Scored",
     },
     {
+        accessorKey: "teleop.l2Dropped",
+        header: "L2 Dropped",
+    },
+    {
         accessorKey: "teleop.l1Scored",
         header: "L1 Scored",
+    },
+    {
+        accessorKey: "teleop.l1Dropped",
+        header: "L1 Dropped",
     },
     {
         accessorKey: "teleop.processorScored",
