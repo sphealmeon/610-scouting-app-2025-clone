@@ -361,7 +361,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.teleop.park * 2,
     playedDefenseMatches: defenseMatches,
     brokePercentage: numMatches === 0 ? 0 : timesBroke / numMatches,
-    avgFouls: numMatches === 0 ? 0 : totalFouls,
+    avgFouls: numMatches === 0 ? 0 : totalFouls / numMatches,
     coralAverageScoringTime: totalData.teleop.coralAverageScoringTime,
     processorAverageScoringTime: totalData.teleop.processorAverageScoringTime,
     bargeAverageScoringTime: totalData.teleop.bargeAverageScoringTime,
