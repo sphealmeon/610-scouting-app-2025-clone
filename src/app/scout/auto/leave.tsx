@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { ScoutingData } from "../data";
 
 const Leave = ({ leaveState, setLeaveState, setMatchState }: { 
     leaveState: number, 
@@ -10,6 +11,11 @@ const Leave = ({ leaveState, setLeaveState, setMatchState }: {
         visible: false,
         message: "",
     });
+    const [fouls, setFouls] = useState(ScoutingData.teleop.fouls);
+
+    useEffect(() => {
+        ScoutingData.teleop.fouls = fouls;
+    }, [fouls]);
 
     const handleLeaveClick = () => {
         const newValue = leaveState === 0 ? 1 : 0;
@@ -20,6 +26,26 @@ const Leave = ({ leaveState, setLeaveState, setMatchState }: {
     const showPopup = (message: string) => {
         setPopup({ visible: true, message });
         setTimeout(() => setPopup({ visible: false, message: "" }), 2000);
+    };
+
+    const incrementFouls = () => {
+        setFouls(prev => {
+            const newValue = prev + 1;
+            ScoutingData.teleop.fouls = newValue;
+            return newValue;
+        });
+        showPopup("Added foul");
+    };
+
+    const decrementFouls = () => {
+        if (fouls > 0) {
+            setFouls(prev => {
+                const newValue = prev - 1;
+                ScoutingData.teleop.fouls = newValue;
+                return newValue;
+            });
+            showPopup("Removed foul");
+        }
     };
 
     return (
@@ -39,6 +65,25 @@ const Leave = ({ leaveState, setLeaveState, setMatchState }: {
             >
                 To Teleop
             </Button>
+
+            <div className="flex flex-col items-center mt-4">
+                <h2 className="text-lg font-semibold mb-2">Fouls: {fouls}</h2>
+                <div className="flex gap-4">
+                    <Button
+                        onClick={decrementFouls}
+                        className="w-16 h-16 text-2xl bg-red-700 hover:bg-red-600 text-white"
+                    >
+                        -
+                    </Button>
+                    <Button
+                        onClick={incrementFouls}
+                        className="w-16 h-16 text-2xl bg-green-700 hover:bg-green-600 text-white"
+                    >
+                        +
+                    </Button>
+                </div>
+            </div>
+
             {popup.visible && (
                 <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2
                               bg-black bg-opacity-80 text-white px-4 py-2 rounded">

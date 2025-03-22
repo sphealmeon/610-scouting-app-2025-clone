@@ -95,6 +95,7 @@ export const ScoutingData: Data = {
         park: 0,
         shallow: 0,
         deep: 0,
+        fouls: 0,
         missedShallow: 0,
         missedDeep: 0,
         playedDefense: 0,
@@ -218,6 +219,7 @@ export const resetData = () => {
     ScoutingData.teleop.park = 0;
     ScoutingData.teleop.shallow = 0;
     ScoutingData.teleop.deep = 0;
+    ScoutingData.teleop.fouls = 0;
     ScoutingData.teleop.missedShallow = 0;
     ScoutingData.teleop.missedDeep = 0;
     ScoutingData.teleop.playedDefense = 0;

@@ -1,8 +1,9 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label";
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { ScoutingData } from "../data";
+import { Button } from "@/components/ui/button";
 
 export default function NotesReview() {
     const [parkChecked, setParkChecked] = useState(ScoutingData.teleop.park === 1);
@@ -14,6 +15,29 @@ export default function NotesReview() {
     const [robotIssues, setRobotIssues] = useState(ScoutingData.teleop.reason);
     const [playedDefenseChecked, setPlayedDefenseChecked] = useState(ScoutingData.teleop.playedDefense === 1);
     const [brokenChecked, setBrokenChecked] = useState(false);
+    const [fouls, setFouls] = useState(ScoutingData.teleop.fouls);
+
+    useEffect(() => {
+        ScoutingData.teleop.fouls = fouls;
+    }, [fouls]);
+
+    const incrementFouls = () => {
+        setFouls(prev => {
+            const newValue = prev + 1;
+            ScoutingData.teleop.fouls = newValue;
+            return newValue;
+        });
+    };
+
+    const decrementFouls = () => {
+        if (fouls > 0) {
+            setFouls(prev => {
+                const newValue = prev - 1;
+                ScoutingData.teleop.fouls = newValue;
+                return newValue;
+            });
+        }
+    };
 
     const handleBrokenChange = (checked: boolean) => {
         setBrokenChecked(checked);
@@ -103,6 +127,25 @@ export default function NotesReview() {
                         />
                         <span className="text-2xl">Played Defense</span>
                     </label>
+
+                    {/* Fouls Counter Section */}
+                    <div className="flex items-center gap-4">
+                        <span className="text-2xl">Fouls: {fouls}</span>
+                        <div className="flex gap-2">
+                            <Button
+                                onClick={decrementFouls}
+                                className="w-8 h-8 text-xl bg-red-700 hover:bg-red-600 text-white p-0"
+                            >
+                                -
+                            </Button>
+                            <Button
+                                onClick={incrementFouls}
+                                className="w-8 h-8 text-xl bg-green-700 hover:bg-green-600 text-white p-0"
+                            >
+                                +
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </div>
             

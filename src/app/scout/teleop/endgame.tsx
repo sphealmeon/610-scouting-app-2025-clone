@@ -1,7 +1,7 @@
 import { ScoutingData } from "@/app/scout/data";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function EndGame() {
     const [endgameState, setEndgameState] = useState("none"); // none, park, shallow, deep
@@ -10,6 +10,11 @@ export default function EndGame() {
     const [hangStartTime, setHangStartTime] = useState<number | null>(null);
     const [hangType, setHangType] = useState<'shallow' | 'deep' | null>(null);
     const [hangInProgress, setHangInProgress] = useState(false);
+    const [fouls, setFouls] = useState(ScoutingData.teleop.fouls);
+
+    useEffect(() => {
+        ScoutingData.teleop.fouls = fouls;
+    }, [fouls]);
 
     const handleEndgameStateChange = (state: string) => {
         // If there's a hang in progress, calculate the time
@@ -68,6 +73,24 @@ export default function EndGame() {
         setHangStartTime(Date.now());
         setHangType(type);
         setHangInProgress(true);
+    };
+
+    const incrementFouls = () => {
+        setFouls(prev => {
+            const newValue = prev + 1;
+            ScoutingData.teleop.fouls = newValue;
+            return newValue;
+        });
+    };
+
+    const decrementFouls = () => {
+        if (fouls > 0) {
+            setFouls(prev => {
+                const newValue = prev - 1;
+                ScoutingData.teleop.fouls = newValue;
+                return newValue;
+            });
+        }
     };
 
     return (
@@ -172,6 +195,25 @@ export default function EndGame() {
                             className={`p-4 ${hangInProgress && hangType === 'deep' ? 'bg-blue-500 hover:bg-blue-600' : ''}`}
                         >
                             Deep
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Fouls Counter Section */}
+                <div className="flex flex-col items-center mt-8">
+                    <h2 className="text-lg font-semibold mb-2">Fouls: {fouls}</h2>
+                    <div className="flex gap-4">
+                        <Button
+                            onClick={decrementFouls}
+                            className="w-16 h-16 text-2xl bg-red-700 hover:bg-red-600 text-white"
+                        >
+                            -
+                        </Button>
+                        <Button
+                            onClick={incrementFouls}
+                            className="w-16 h-16 text-2xl bg-green-700 hover:bg-green-600 text-white"
+                        >
+                            +
                         </Button>
                     </div>
                 </div>

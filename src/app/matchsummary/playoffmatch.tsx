@@ -173,7 +173,13 @@ export default function PlayoffMatch({ matchId, matchDisplay }: PlayoffMatchProp
             deepAccuracy: 0,
             endgamePPG: 0,
             brokePercentage: 0,
+            avgFouls: 0,
             playedDefenseMatches: 0,
+            coralAverageScoringTime: 0,
+            processorAverageScoringTime: 0,
+            bargeAverageScoringTime: 0,
+            shallowAverageHangTime: 0,
+            deepAverageHangTime: 0
         }
 
         for (const teamData of Object.values(teamsData)) {
@@ -196,6 +202,7 @@ export default function PlayoffMatch({ matchId, matchDisplay }: PlayoffMatchProp
             aggregatedData.deepAccuracy += teamData.deepAccuracy
             aggregatedData.endgamePPG += teamData.endgamePPG
             aggregatedData.brokePercentage += teamData.brokePercentage
+            aggregatedData.avgFouls += teamData.avgFouls
             aggregatedData.playedDefenseMatches += teamData.playedDefenseMatches
         }
 

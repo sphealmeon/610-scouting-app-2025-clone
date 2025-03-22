@@ -225,6 +225,7 @@ export interface Data{
         general: string;
         reason: string;
         explanation: string;
+        fouls: number;
 
         coralAverageScoringTime: number;
         processorAverageScoringTime: number;
@@ -286,6 +287,7 @@ export interface AggregateData {
     endgamePPG: number;
     brokePercentage: number;
     playedDefenseMatches: number;
+    avgFouls: number;
     coralAverageScoringTime: number;
     processorAverageScoringTime: number;
     bargeAverageScoringTime: number;

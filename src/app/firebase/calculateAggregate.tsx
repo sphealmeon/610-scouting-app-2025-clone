@@ -64,6 +64,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
   let defenseMatches: number = 0;
   let timesShallowHang: number = 0;
   let timesDeepHang: number = 0;
+  let totalFouls: number = 0;
   
   // Initialize accumulators for timing data
   let totalCoralScoringTime: number = 0;
@@ -168,6 +169,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       missedShallow: 0,
       missedDeep: 0, 
       playedDefense: 0,
+      fouls: 0,
       general: "",
       reason: "",
       explanation: "",
@@ -199,6 +201,9 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       
       const matchData = document.data().matchData;
 
+      // Add fouls to total
+      totalFouls += matchData.teleop.fouls;
+      
       // Count shallow and deep hang times separately
       if (matchData.teleop.shallowAverageHangTime > 0) {
         timesShallowHang++;
@@ -229,6 +234,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
               value == "general" ||
               value == "reason" ||
               value == "explination" ||
+              value == "fouls" ||
               // Exclude timing fields from the general accumulation
               value == "coralAverageScoringTime" ||
               value == "processorAverageScoringTime" ||
@@ -306,7 +312,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.auto.l4 == 0
         ? 0
         : totalData.auto.l4 /
-          (totalData.auto.l4 + totalData.auto.droppedAlgae),
+          (totalData.auto.l4 + totalData.auto.droppedCoral),
           
     teleopL1Accuracy:
       totalData.teleop.l1Scored == 0
@@ -355,6 +361,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.teleop.park * 2,
     playedDefenseMatches: defenseMatches,
     brokePercentage: numMatches === 0 ? 0 : timesBroke / numMatches,
+    avgFouls: numMatches === 0 ? 0 : totalFouls,
     coralAverageScoringTime: totalData.teleop.coralAverageScoringTime,
     processorAverageScoringTime: totalData.teleop.processorAverageScoringTime,
     bargeAverageScoringTime: totalData.teleop.bargeAverageScoringTime,
