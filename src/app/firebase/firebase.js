@@ -4,16 +4,26 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 
-// North Bay Firebase
+// Testing Firebase
 const firebaseConfig = {
   apiKey: "<GOOGLE_API_KEY_REDACTED>",
-  authDomain: "northbay2025-579de.firebaseapp.com",
-  projectId: "northbay2025-579de",
-  storageBucket: "northbay2025-579de.firebasestorage.app",
-  messagingSenderId: "269537278319",
-  appId: "1:269537278319:web:a52ed74b8a67f2326f909a",
-  measurementId: "G-46SKJ44HKN"
+  authDomain: "jerry-remy-fcb.firebaseapp.com",
+  projectId: "jerry-remy-fcb",
+  storageBucket: "jerry-remy-fcb.firebasestorage.app",
+  messagingSenderId: "1060640648288",
+  appId: "1:1060640648288:web:8a2547f1f042960547e705"
 };
+
+// North Bay Firebase
+// const firebaseConfig = {
+//   apiKey: "<GOOGLE_API_KEY_REDACTED>",
+//   authDomain: "northbay2025-579de.firebaseapp.com",
+//   projectId: "northbay2025-579de",
+//   storageBucket: "northbay2025-579de.firebasestorage.app",
+//   messagingSenderId: "269537278319",
+//   appId: "1:269537278319:web:a52ed74b8a67f2326f909a",
+//   measurementId: "G-46SKJ44HKN"
+// };
 // const firebaseConfig = {
 //   apiKey: "<GOOGLE_API_KEY_REDACTED>",
 //   authDomain: "centennial2025-fe024.firebaseapp.com",
