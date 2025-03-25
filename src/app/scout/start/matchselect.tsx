@@ -11,10 +11,15 @@ import { FetchAlliance } from "@/app/blueAlliance/fetchTeamsInMatch";
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+interface TeamWithPosition {
+    number: string;
+    position: string;
+}
+
 export default function MatchSelect() {
     const [qualMatches, setQualMatches] = useState<any[]>([]); // Store qualification match data
     const [matchNumber, setMatchNumber] = useState("");
-    const [teams, setTeams] = useState<string[]>([]); // Teams for the selected match
+    const [teams, setTeams] = useState<TeamWithPosition[]>([]); // Teams & positions for the selected match
     const [selectedTeam, setSelectedTeam] = useState("");
     const [error, setError] = useState("");
     const [scoutingData, setScoutingData] = useState({
@@ -123,11 +128,11 @@ export default function MatchSelect() {
             );
 
             if (selectedMatch) {
-                const redTeams = selectedMatch.alliances.red.team_keys.map((team: string) =>
-                    team.replace("frc", "")
+                const redTeams = selectedMatch.alliances.red.team_keys.map((team: string, index: number) =>
+                    ({ number: team.replace("frc", ""), position: `Red ${index + 1}` })
                 );
-                const blueTeams = selectedMatch.alliances.blue.team_keys.map((team: string) =>
-                    team.replace("frc", "")
+                const blueTeams = selectedMatch.alliances.blue.team_keys.map((team: string, index: number) =>
+                    ({ number: team.replace("frc", ""), position: `Blue ${index + 1}` })
                 );
                 setTeams([...redTeams, ...blueTeams]);
             } else {
@@ -295,8 +300,8 @@ export default function MatchSelect() {
                             </SelectTrigger>
                             <SelectContent className="bg-gray-600 text-white">
                                 {teams.map((team) => (
-                                    <SelectItem key={team} value={team} className="text-white">
-                                        Team {team}
+                                    <SelectItem key={team.number} value={team.number} className="text-white">
+                                        {team.position}:  Team {team.number}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
