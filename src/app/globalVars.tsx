@@ -11,43 +11,40 @@ export const useApi = true;
 export const scoringTableSide = false;
 
 //blue alliance key for comp
-export const key = "2025onnob"; 
+export const key = "2025ontor"
+// export const key = "2025onnob"; 
 // export const key = "2025onsca"; 
 
 //list of all teams at comp, in case BA is broken
 export const teams = [
-    "216",
-    "244",
-    "288",
-    "610",
-    "771",
-    "865",
-    "1305",
-    "1310",
-    "1334",
-    "2013",
-    "2706",
-    "2708",
+    "854",
+    "2634",
     "2935",
-    "3543",
-    "3756",
-    "4069",
-    "4152",
-    "4946",
-    "5409",
-    "6859",
-    "6864",
-    "6865",
-    "6987",
-    "7476",
-    "7757",
-    "8081",
-    "8729",
-    "8731",
-    "9127",
-    "9589",
-    "9592",
-    "10464",
+    "3161",
+    "3560",
+    "4015",
+    "4308",
+    "4920",
+    "4976",
+    "5032",
+    "5719",
+    "6397",
+    "6632",
+    "6725",
+    "6975",
+    "7136",
+    "7520",
+    "7558",
+    "8850",
+    "9262",
+    "9562",
+    "9575",
+    "9659",
+    "9782",
+    "9785",
+    "10027",
+    "10279",
+    "10634",
 ];
 
 //lists all qualification matches
