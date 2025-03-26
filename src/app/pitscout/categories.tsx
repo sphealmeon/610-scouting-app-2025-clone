@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { db } from "@/app/firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { Toggle } from "@/components/ui/toggle";
 
 export default function PitScoutCategories({ teamNumber }: { teamNumber: string }) {
     const [robotWeight, setRobotWeight] = useState<number>(0);
@@ -31,8 +32,15 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
     const [centerOfGravity, setCenterOfGravity] = useState<string>("");
     const [drivetrainType, setDrivetrainType] = useState<string>("");
     const [defenseComfort, setDefenseComfort] = useState<number>(1);
-    const [algaeCapability, setAlgaeCapability] = useState<number>(1);
-    const [coralCapability, setCoralCapability] = useState<number>(1);
+    // const [algaeCapability, setAlgaeCapability] = useState<number>(1);
+    // const [coralCapability, setCoralCapability] = useState<number>(1);
+    const [l1Capability, setL1Capability] = useState(0);
+    const [l2Capability, setL2Capability] = useState(0);
+    const [l3Capability, setL3Capability] = useState(0);
+    const [l4Capability, setL4Capability] = useState(0);
+    const [netCapability, setNetCapability] = useState(0)
+    const [processorCapability, setProcessorCapability] = useState(0)
+
     const [driverExperience, setDriverExperience] = useState<number>(0);
     const [climbAbility, setClimbAbility] = useState<string>("");
     const [pickupLocation, setPickupLocation] = useState<string>("");
@@ -61,8 +69,15 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                     setCenterOfGravity(data.centerOfGravity || "");
                     setDrivetrainType(data.drivetrainType || "");
                     setDefenseComfort(data.defenseComfort || 1);
-                    setAlgaeCapability(data.algaeCapability || 1);
-                    setCoralCapability(data.coralCapability || 1);
+                    // setAlgaeCapability(data.algaeCapability || 1);
+                    // setCoralCapability(data.coralCapability || 1);
+                    setL1Capability(data.l1Capability || 0)
+                    setL2Capability(data.l2Capability || 0)
+                    setL3Capability(data.l3Capability || 0)
+                    setL4Capability(data.l4Capability || 0)
+                    setProcessorCapability(data.processorCapability || 0)
+                    setNetCapability(data.netCapability || 0)
+
                     setDriverExperience(data.driverExperience || 0);
                     setClimbAbility(data.climbAbility || "");
                     setPickupLocation(data.pickupLocation || "");
@@ -78,8 +93,15 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                     setCenterOfGravity("");
                     setDrivetrainType("");
                     setDefenseComfort(1);
-                    setAlgaeCapability(1);
-                    setCoralCapability(1);
+                    // setAlgaeCapability(1);
+                    // setCoralCapability(1)
+                    //  setL1Capability(data.l1Capability || 0)
+                    setL2Capability(0)
+                    setL3Capability(0)
+                    setL4Capability(0)
+                    setProcessorCapability(0)
+                    setNetCapability(0)
+;
                     setDriverExperience(0);
                     setClimbAbility("");
                     setPickupLocation("");
@@ -113,8 +135,14 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                 centerOfGravity,
                 drivetrainType,
                 defenseComfort,
-                algaeCapability,
-                coralCapability,
+                // algaeCapability,
+                // coralCapability,
+                l1Capability,
+                l2Capability,
+                l3Capability,
+                l4Capability,
+                netCapability,
+                processorCapability,
                 driverExperience,
                 climbAbility,
                 pickupLocation,
@@ -278,7 +306,25 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                             </div>
 
                             <div className="space-y-4">
-                                <Label>Algae Scoring Capability (1-5)</Label>
+                                <Label> Algae Scoring </Label>
+                                <div className="flex flex-row gap-2 ">
+                                    <Toggle 
+                                        className="w-1/2 border-2"
+                                        pressed={netCapability === 1}
+                                        onPressedChange={(pressed) => setNetCapability(pressed ? 1 : 0)}
+                                        >
+                                        Net
+                                    </Toggle>
+                                    <Toggle 
+                                        className="w-1/2 border-2"
+                                        pressed={processorCapability === 1}
+                                        onPressedChange={(pressed) => setProcessorCapability(pressed ? 1 : 0)}
+                                        >
+                                        Processor
+                                    </Toggle>
+                                </div>
+                               
+                                {/* <Label>Algae Scoring Capability (1-5)</Label>
                                 <Slider 
                                     value={[algaeCapability]}
                                     onValueChange={(value) => setAlgaeCapability(value[0])}
@@ -287,11 +333,45 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                                     step={1}
                                     className="w-full"
                                 />
-                                <div className="text-right">Value: {algaeCapability}</div>
+                                <div className="text-right">Value: {algaeCapability}</div> */}
+
                             </div>
 
                             <div className="space-y-4">
-                                <Label>Coral Scoring Capability (1-5)</Label>
+                                <Label> Coral Scoring </Label>
+                                <div className="flex flex-row gap-2 ">
+                                    <Toggle 
+                                        className="w-1/4 border-2"
+                                        pressed={l1Capability === 1}
+                                        onPressedChange={(pressed) => setL1Capability(pressed ? 1 : 0)}
+                                        >
+                                        L1
+                                    </Toggle>
+                                    <Toggle 
+                                        className="w-1/4 border-2"
+                                        pressed={l2Capability === 1}
+                                        onPressedChange={(pressed) => setL2Capability(pressed ? 1 : 0)}
+                                        >
+                                        L2
+                                    </Toggle>
+                                    <Toggle 
+                                        className="w-1/4 border-2"
+                                        pressed={l3Capability === 1}
+                                        onPressedChange={(pressed) => setL3Capability(pressed ? 1 : 0)}
+                                        >
+                                        L3
+                                    </Toggle>
+                                    <Toggle 
+                                        className="w-1/4 border-2"
+                                        pressed={l4Capability === 1}
+                                        onPressedChange={(pressed) => setL4Capability(pressed ? 1 : 0)}
+                                        >
+                                        L4
+                                    </Toggle>
+                                </div>
+                               
+
+                                {/* <Label>Coral Scoring Capability (1-5)</Label>
                                 <Slider 
                                     value={[coralCapability]}
                                     onValueChange={(value) => setCoralCapability(value[0])}
@@ -300,7 +380,7 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                                     step={1}
                                     className="w-full"
                                 />
-                                <div className="text-right">Value: {coralCapability}</div>
+                                <div className="text-right">Value: {coralCapability}</div> */}
                             </div>
 
                             <div className="space-y-4">

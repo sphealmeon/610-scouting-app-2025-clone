@@ -71,13 +71,32 @@ export function PitData({ team }: PitDataProps) {
                     <h3 className="font-semibold text-gray-400">Defense Comfort</h3>
                     <p>{pitData.defenseComfort}/5</p>
                 </div>
-                <div>
+                {/* <div>
                     <h3 className="font-semibold text-gray-400">Algae Capability</h3>
                     <p>{pitData.algaeCapability}/5</p>
                 </div>
                 <div>
                     <h3 className="font-semibold text-gray-400">Coral Capability</h3>
                     <p>{pitData.coralCapability}/5</p>
+                </div> */}
+                <div>
+                    <h3 className="font-semibold text-gray-400">Algae Capability</h3>
+                    <p>
+                        {pitData.netCapability === 1 && "Net "}
+                        {pitData.processorCapability === 1 && "Processor"}
+                        {pitData.netCapability === 0 && pitData.processorCapability === 0 && "None"}
+                    </p>
+                </div>
+                <div>
+                    <h3 className="font-semibold text-gray-400">Coral Capability</h3>
+                    <p>
+                        {pitData.l1Capability === 1 && "L1 "}
+                        {pitData.l2Capability === 1 && "L2 "}
+                        {pitData.l3Capability === 1 && "L3 "}
+                        {pitData.l4Capability === 1 && "L4"}
+                        {pitData.l1Capability === 0 && pitData.l2Capability === 0 && 
+                         pitData.l3Capability === 0 && pitData.l4Capability === 0 && "None"}
+                    </p>
                 </div>
                 <div>
                     <h3 className="font-semibold text-gray-400">Driver Experience</h3>
