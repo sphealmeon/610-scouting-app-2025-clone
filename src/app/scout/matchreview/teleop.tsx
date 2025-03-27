@@ -7,10 +7,13 @@ export default function TeleopReview() {
   const [scores, setScores] = useState({
     l4Made: ScoutingData.teleop.l4Scored,
     l4Missed: ScoutingData.teleop.l4Dropped,
+    l4DroppedInL1: ScoutingData.teleop.l4DroppedInL1,
     l3Made: ScoutingData.teleop.l3Scored,
     l3Missed: ScoutingData.teleop.l3Dropped,
+    l3DroppedInL1: ScoutingData.teleop.l3DroppedInL1,
     l2Made: ScoutingData.teleop.l2Scored,
     l2Missed: ScoutingData.teleop.l2Dropped,
+    l2DroppedInL1: ScoutingData.teleop.l2DroppedInL1,
     l1Made: ScoutingData.teleop.l1Scored,
     l1Missed: ScoutingData.teleop.l1Dropped,
     processorMade: ScoutingData.teleop.processorScored,
@@ -29,10 +32,13 @@ export default function TeleopReview() {
       switch(key) {
         case 'l4Made': ScoutingData.teleop.l4Scored = newValue; break;
         case 'l4Missed': ScoutingData.teleop.l4Dropped = newValue; break;
+        case 'l4DroppedInL1': ScoutingData.teleop.l4DroppedInL1 = newValue; break;
         case 'l3Made': ScoutingData.teleop.l3Scored = newValue; break;
         case 'l3Missed': ScoutingData.teleop.l3Dropped = newValue; break;
+        case 'l3DroppedInL1': ScoutingData.teleop.l3DroppedInL1 = newValue; break;
         case 'l2Made': ScoutingData.teleop.l2Scored = newValue; break;
         case 'l2Missed': ScoutingData.teleop.l2Dropped = newValue; break;
+        case 'l2DroppedInL1': ScoutingData.teleop.l2DroppedInL1 = newValue; break;
         case 'l1Made': ScoutingData.teleop.l1Scored = newValue; break;
         case 'l1Missed': ScoutingData.teleop.l1Dropped = newValue; break;
         case 'processorMade': ScoutingData.teleop.processorScored = newValue; break;
@@ -44,6 +50,77 @@ export default function TeleopReview() {
 
       return { ...prev, [key]: newValue };
     });
+  };
+
+  // Special handler for dropped in L1 cases
+  const handleDroppedInL1 = (level: 'l4' | 'l3' | 'l2', increment: number) => {
+    const key = `${level}DroppedInL1` as keyof typeof scores;
+    
+    if (increment > 0) {
+      // Incrementing a dropped in L1 value
+      setScores(prev => {
+        const newValue = prev[key] + 1;
+        
+        // Update the relevant properties in ScoutingData
+        switch(level) {
+          case 'l4':
+            ScoutingData.teleop.l4DroppedInL1 = newValue;
+            ScoutingData.teleop.l4Dropped++; // Count as missed
+            // No longer incrementing L1Scored
+            break;
+          case 'l3':
+            ScoutingData.teleop.l3DroppedInL1 = newValue;
+            ScoutingData.teleop.l3Dropped++; // Count as missed
+            // No longer incrementing L1Scored
+            break;
+          case 'l2':
+            ScoutingData.teleop.l2DroppedInL1 = newValue;
+            ScoutingData.teleop.l2Dropped++; // Count as missed
+            // No longer incrementing L1Scored
+            break;
+        }
+        
+        // Update the state for all affected values - no longer incrementing l1Made
+        return { 
+          ...prev, 
+          [key]: newValue,
+          [`${level}Missed`]: prev[`${level}Missed` as keyof typeof prev] + 1
+        };
+      });
+    } else {
+      // Decrementing a dropped in L1 value
+      setScores(prev => {
+        if (prev[key] <= 0) return prev; // Don't go below 0
+        
+        const newValue = prev[key] - 1;
+        
+        // Update the relevant properties in ScoutingData
+        switch(level) {
+          case 'l4':
+            ScoutingData.teleop.l4DroppedInL1 = newValue;
+            ScoutingData.teleop.l4Dropped--; // Decrease missed count
+            // No longer decrementing L1Scored
+            break;
+          case 'l3':
+            ScoutingData.teleop.l3DroppedInL1 = newValue;
+            ScoutingData.teleop.l3Dropped--; // Decrease missed count
+            // No longer decrementing L1Scored
+            break;
+          case 'l2':
+            ScoutingData.teleop.l2DroppedInL1 = newValue;
+            ScoutingData.teleop.l2Dropped--; // Decrease missed count
+            // No longer decrementing L1Scored
+            break;
+        }
+        
+        // Update the state for all affected values - no longer decrementing l1Made
+        return { 
+          ...prev, 
+          [key]: newValue,
+          [`${level}Missed`]: Math.max(0, prev[`${level}Missed` as keyof typeof prev] - 1)
+        };
+      });
+    }
   };
 
   return (
@@ -80,6 +157,37 @@ export default function TeleopReview() {
               </div>
             </div>
           ))}
+
+          {/* Dropped In L1 buttons */}
+          <div className="mt-4 border-t pt-3">
+            <h3 className="text-lg font-semibold mb-2">Dropped In L1</h3>
+            {[
+              { label: "L4 → L1", level: "l4" },
+              { label: "L3 → L1", level: "l3" },
+              { label: "L2 → L1", level: "l2" },
+            ].map(({ label, level }) => (
+              <div key={level} className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-2">
+                <span>{label}</span>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    className="bg-red-500 hover:bg-red-400"
+                    onClick={() => handleDroppedInL1(level as 'l4' | 'l3' | 'l2', -1)}
+                  >
+                    -
+                  </Button>
+                  <span className="w-8 text-center">
+                    {scores[`${level}DroppedInL1` as keyof typeof scores]}
+                  </span>
+                  <Button 
+                    className="bg-yellow-500 hover:bg-yellow-400"
+                    onClick={() => handleDroppedInL1(level as 'l4' | 'l3' | 'l2', 1)}
+                  >
+                    +
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
 
