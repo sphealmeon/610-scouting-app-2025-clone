@@ -86,6 +86,9 @@ export const ScoutingData: Data = {
         l3Dropped: 0,
         l2Dropped: 0,
         l1Dropped: 0,
+        l4DroppedInL1: 0,
+        l3DroppedInL1: 0,
+        l2DroppedInL1: 0,
         processorScored: 0,
         processorDropped: 0,
         bargeScored: 0,
@@ -210,6 +213,9 @@ export const resetData = () => {
     ScoutingData.teleop.l3Dropped = 0;
     ScoutingData.teleop.l2Dropped = 0;
     ScoutingData.teleop.l1Dropped = 0;
+    ScoutingData.teleop.l4DroppedInL1 = 0;
+    ScoutingData.teleop.l3DroppedInL1 = 0;
+    ScoutingData.teleop.l2DroppedInL1 = 0;
     ScoutingData.teleop.processorScored = 0;
     ScoutingData.teleop.processorDropped = 0;
     ScoutingData.teleop.bargeScored = 0;

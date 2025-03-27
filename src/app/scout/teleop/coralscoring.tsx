@@ -96,6 +96,26 @@ export default function CoralScoringSection() {
     setPickupTime(null);
   };
 
+  // Handler for "Dropped in L1" actions
+  const handleDroppedInL1 = (level: 'l4' | 'l3' | 'l2') => {
+    handleScoring(() => {
+      // Count it as a missed cycle for the original level
+      if (level === 'l4') {
+        ScoutingData.teleop.l4Dropped++;
+        ScoutingData.teleop.l4DroppedInL1++;
+      } else if (level === 'l3') {
+        ScoutingData.teleop.l3Dropped++;
+        ScoutingData.teleop.l3DroppedInL1++;
+      } else if (level === 'l2') {
+        ScoutingData.teleop.l2Dropped++;
+        ScoutingData.teleop.l2DroppedInL1++;
+      }
+      
+      // Also count it as a score in L1
+      ScoutingData.teleop.l1Scored++;
+    }, true);
+  };
+
   return (
     <div className="col-span-1">
       <div className="flex flex-row items-center justify-center gap-4 mb-8">
@@ -146,13 +166,23 @@ export default function CoralScoringSection() {
             >
               L4 Made
             </div>
-            <div
-              className={`${
-                !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
-              } bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.l4Dropped++, true)}
-            >
-              L4 Missed
+            <div className="flex gap-2">
+              <div
+                className={`${
+                  !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
+                } w-3/5 bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
+                onClick={() => handleScoring(() => ScoutingData.teleop.l4Dropped++, true)}
+              >
+                Missed
+              </div>
+              <div
+                className={`${
+                  !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-600'
+                } w-2/5 bg-yellow-700 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
+                onClick={() => handleDroppedInL1('l4')}
+              >
+                L1
+              </div>
             </div>
           </div>
 
@@ -166,13 +196,23 @@ export default function CoralScoringSection() {
             >
               L3 Made
             </div>
-            <div
-              className={`${
-                !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
-              } bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.l3Dropped++, true)}
-            >
-              L3 Missed
+            <div className="flex gap-2">
+              <div
+                className={`${
+                  !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
+                } w-3/5 bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
+                onClick={() => handleScoring(() => ScoutingData.teleop.l3Dropped++, true)}
+              >
+                Missed
+              </div>
+              <div
+                className={`${
+                  !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-600'
+                } w-2/5 bg-yellow-700 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
+                onClick={() => handleDroppedInL1('l3')}
+              >
+                L1
+              </div>
             </div>
           </div>
 
@@ -186,13 +226,23 @@ export default function CoralScoringSection() {
             >
               L2 Made
             </div>
-            <div
-              className={`${
-                !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
-              } bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
-              onClick={() => handleScoring(() => ScoutingData.teleop.l2Dropped++, true)}
-            >
-              L2 Missed
+            <div className="flex gap-2">
+              <div
+                className={`${
+                  !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-800'
+                } w-3/5 bg-red-900 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
+                onClick={() => handleScoring(() => ScoutingData.teleop.l2Dropped++, true)}
+              >
+                Missed
+              </div>
+              <div
+                className={`${
+                  !activePickup ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-600'
+                } w-2/5 bg-yellow-700 text-white font-bold py-3 rounded-sm cursor-pointer text-center border border-gray-500`}
+                onClick={() => handleDroppedInL1('l2')}
+              >
+                L1
+              </div>
             </div>
           </div>
 

@@ -246,6 +246,9 @@ export interface Data{
         l3Dropped: number;
         l2Dropped: number;
         l1Dropped: number;
+        l4DroppedInL1: number;
+        l3DroppedInL1: number;
+        l2DroppedInL1: number;
         processorScored: number;
         processorDropped: number;
         bargeScored: number;
