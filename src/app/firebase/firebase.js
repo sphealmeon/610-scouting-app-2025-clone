@@ -7,12 +7,12 @@ import { getAuth } from "firebase/auth";
 // North Bay Firebase
 const firebaseConfig = {
   apiKey: "<GOOGLE_API_KEY_REDACTED>",
-  authDomain: "northbay2025-579de.firebaseapp.com",
-  projectId: "northbay2025-579de",
-  storageBucket: "northbay2025-579de.firebasestorage.app",
-  messagingSenderId: "269537278319",
-  appId: "1:269537278319:web:a52ed74b8a67f2326f909a",
-  measurementId: "G-46SKJ44HKN"
+  authDomain: "testerforprovs.firebaseapp.com",
+  projectId: "testerforprovs",
+  storageBucket: "testerforprovs.firebasestorage.app",
+  messagingSenderId: "500770447478",
+  appId: "1:500770447478:web:347d9964ce1eafc2533f57",
+  measurementId: "G-EJ50Y6CTH0"
 };
 // const firebaseConfig = {
 //   apiKey: "<GOOGLE_API_KEY_REDACTED>",
