@@ -90,6 +90,15 @@ const Reef = ({ setLeaveState }: {
     return typeof slotData === 'object' && 'dropped' in slotData && slotData.dropped > 0;
   };
 
+  const getSlotDroppedInL1 = (level: string, slot: string) => {
+    // Only applicable for L2, L3, L4
+    if (level === 'L1') return false;
+    
+    const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
+    const slotData = ScoutingData.auto[slotKey];
+    return typeof slotData === 'object' && 'droppedInL1' in slotData && slotData.droppedInL1 > 0;
+  };
+
   const handleDroppedCoral = (level: string, slot: string) => {
     const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
     const slotData = ScoutingData.auto[slotKey];
@@ -104,6 +113,43 @@ const Reef = ({ setLeaveState }: {
         ScoutingData.auto.droppedCoral--;
         slotData.dropped--;
         showPopup(`Removed dropped coral at Level ${level}, Slot ${slot}`);
+      }
+    }
+  };
+
+  const handleDroppedInL1 = (level: string, slot: string) => {
+    // Only applicable for L2, L3, L4
+    if (level === 'L1') return;
+    
+    const slotKey = `${level.toLowerCase()}${slot}` as keyof typeof ScoutingData.auto;
+    const slotData = ScoutingData.auto[slotKey];
+    
+    if (typeof slotData === 'object' && 'droppedInL1' in slotData) {
+      if (slotData.droppedInL1 === 0) {
+        // Mark as dropped in L1
+        slotData.droppedInL1 = 1;
+        // Count as a missed cycle
+        ScoutingData.auto.droppedCoral++;
+        // But also add a score in L1
+        ScoutingData.auto.l1++;
+        // And add one to coral count for the L1 score
+        ScoutingData.auto.coral++;
+        // Auto-set leave when scoring
+        if (ScoutingData.auto.leave === 0) {
+          ScoutingData.auto.leave = 1;
+        }
+        setLeaveState(1);
+        showPopup(`Coral dropped in L1 from Level ${level}, Slot ${slot}`);
+      } else {
+        // Remove the dropped in L1 marking
+        slotData.droppedInL1 = 0;
+        // Remove from missed count
+        ScoutingData.auto.droppedCoral--;
+        // Remove from L1 score
+        ScoutingData.auto.l1--;
+        // Remove from coral count
+        ScoutingData.auto.coral--;
+        showPopup(`Removed coral dropped in L1 from Level ${level}, Slot ${slot}`);
       }
     }
   };
@@ -133,9 +179,9 @@ const Reef = ({ setLeaveState }: {
         ))}
       </div>
 
-      <div className="relative w-[400px] h-[400px]">
+      <div className="relative w-[450px] h-[450px]">
         <div className="absolute inset-0">
-          <svg viewBox="0 0 100 100" className="w-full h-full">
+          <svg viewBox="-10 -10 120 120" className="w-full h-full">
             {slots[level].map((slot, index) => {
               const totalSlots = slots[level].length;
               const isHexagon = level !== 'L1';
@@ -146,19 +192,31 @@ const Reef = ({ setLeaveState }: {
               const endAngle = (angle + (360 / totalSlots)) * (Math.PI / 180);
               const centerX = 50;
               const centerY = 50;
-              const radius = 40;
+              const radius = 35;
 
-              // Calculate positions for the section and drop button
+              // Calculate positions for the section and buttons
               const x1 = centerX + radius * Math.cos(startAngle);
               const y1 = centerY + radius * Math.sin(startAngle);
               const x2 = centerX + radius * Math.cos(endAngle);
               const y2 = centerY + radius * Math.sin(endAngle);
 
-              // Calculate drop button position (slightly outside the section)
+              // Calculate button positions
               const buttonAngle = (startAngle + endAngle) / 2;
-              const buttonRadius = radius + 5;
-              const buttonX = centerX + buttonRadius * Math.cos(buttonAngle);
-              const buttonY = centerY + buttonRadius * Math.sin(buttonAngle);
+              
+              // Missed button position (slightly outside the section)
+              const missedButtonRadius = radius + 5;
+              const missedButtonX = centerX + missedButtonRadius * Math.cos(buttonAngle);
+              const missedButtonY = centerY + missedButtonRadius * Math.sin(buttonAngle);
+              
+              // Dropped in L1 button position (even further outside)
+              const droppedInL1ButtonRadius = radius + 15;
+              const droppedInL1ButtonX = centerX + droppedInL1ButtonRadius * Math.cos(buttonAngle);
+              const droppedInL1ButtonY = centerY + droppedInL1ButtonRadius * Math.sin(buttonAngle);
+              
+              // Square button dimensions
+              const squareSize = 7;
+              const squareX = droppedInL1ButtonX - squareSize / 2;
+              const squareY = droppedInL1ButtonY - squareSize / 2;
 
               const path = `
                 M ${centerX} ${centerY}
@@ -173,8 +231,8 @@ const Reef = ({ setLeaveState }: {
                   <g onClick={() => handleHexagonClick(level, slot)}>
                     <path
                       d={path}
-                      fill={getSlotMade(level, slot) ? "#17803D" : "#7F1C1D"} // Updated colors
-                      stroke="black" // Updated stroke color
+                      fill={getSlotMade(level, slot) ? "#17803D" : "#7F1C1D"}
+                      stroke="black"
                       strokeWidth="0.5" 
                       className="cursor-pointer hover:opacity-80"
                     />
@@ -184,24 +242,55 @@ const Reef = ({ setLeaveState }: {
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fill="white"
-                      fontSize="6"
+                      fontSize="5"
                       className="pointer-events-none"
                     >
                       {slot}
                     </text>
                   </g>
                   
-                  {/* Drop Button */}
+                  {/* Missed Button */}
                   <circle
-                    cx={buttonX}
-                    cy={buttonY}
-                    r="2"
-                    fill={getSlotDropped(level, slot) ? "#EF4444" : "#4B5563"} // Red if dropped, dark grey if not
+                    cx={missedButtonX}
+                    cy={missedButtonY}
+                    r="2.5"
+                    fill={getSlotDropped(level, slot) ? "#EF4444" : "#4B5563"}
                     stroke="gray-700"
                     strokeWidth="0.5" 
                     className="cursor-pointer hover:fill-red-800"
                     onClick={() => handleDroppedCoral(level, slot)}
                   />
+
+                  {/* Dropped In L1 Button - Only show for L2, L3, and L4 */}
+                  {level !== 'L1' && (
+                    <g 
+                      onClick={() => handleDroppedInL1(level, slot)}
+                      className="cursor-pointer"
+                    >
+                      <rect
+                        x={squareX}
+                        y={squareY}
+                        width={squareSize}
+                        height={squareSize}
+                        fill={getSlotDroppedInL1(level, slot) ? "#10B981" : "#4B5563"}
+                        stroke="gray-700"
+                        strokeWidth="0.4"
+                        rx="1"
+                        className="hover:fill-green-800"
+                      />
+                      <text
+                        x={droppedInL1ButtonX}
+                        y={droppedInL1ButtonY + 0.5}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill="white"
+                        fontSize="3.5"
+                        className="pointer-events-none select-none"
+                      >
+                        L1
+                      </text>
+                    </g>
+                  )}
                 </g>
               );
             })}

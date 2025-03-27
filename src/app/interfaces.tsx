@@ -21,146 +21,182 @@ export interface Data{
         l4A: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l4B: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l4C: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l4D: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l4E: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l4F: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l4G: {
             made: number;   
             dropped: number;
+            droppedInL1: number;
         };
         l4H: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l4I: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l4J: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l4K: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l4L: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3A: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3B: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3C: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3D: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3E: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3F: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3G: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3H: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3I: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3J: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3K: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l3L: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l2A: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l2B: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };  
         l2C: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l2D: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l2E: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l2F: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l2G: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l2H: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l2I: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l2J: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l2K: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l2L: {
             made: number;
             dropped: number;
+            droppedInL1: number;
         };
         l1A: {
             made: number;
