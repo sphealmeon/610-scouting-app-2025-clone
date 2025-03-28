@@ -18,6 +18,7 @@ export interface Data{
         l3: number;
         l2: number;
         l1: number;
+        droppedInL1: number;
         l4A: {
             made: number;
             dropped: number;

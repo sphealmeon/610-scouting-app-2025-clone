@@ -111,8 +111,8 @@ export default function CoralScoringSection() {
         ScoutingData.teleop.l2DroppedInL1++;
       }
       
-      // Also count it as a score in L1
-      ScoutingData.teleop.l1Scored++;
+      // No longer count it as a score in L1 - will only affect PPG calculation
+      // ScoutingData.teleop.l1Scored++;
     }, true);
   };
 

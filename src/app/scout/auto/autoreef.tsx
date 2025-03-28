@@ -130,10 +130,8 @@ const Reef = ({ setLeaveState }: {
         slotData.droppedInL1 = 1;
         // Count as a missed cycle
         ScoutingData.auto.droppedCoral++;
-        // But also add a score in L1
-        ScoutingData.auto.l1++;
-        // And add one to coral count for the L1 score
-        ScoutingData.auto.coral++;
+        // Increment the overall droppedInL1 counter
+        ScoutingData.auto.droppedInL1++;
         // Auto-set leave when scoring
         if (ScoutingData.auto.leave === 0) {
           ScoutingData.auto.leave = 1;
@@ -145,10 +143,8 @@ const Reef = ({ setLeaveState }: {
         slotData.droppedInL1 = 0;
         // Remove from missed count
         ScoutingData.auto.droppedCoral--;
-        // Remove from L1 score
-        ScoutingData.auto.l1--;
-        // Remove from coral count
-        ScoutingData.auto.coral--;
+        // Decrement the overall droppedInL1 counter
+        ScoutingData.auto.droppedInL1--;
         showPopup(`Removed coral dropped in L1 from Level ${level}, Slot ${slot}`);
       }
     }
@@ -272,11 +268,11 @@ const Reef = ({ setLeaveState }: {
                         y={squareY}
                         width={squareSize}
                         height={squareSize}
-                        fill={getSlotDroppedInL1(level, slot) ? "#10B981" : "#4B5563"}
+                        fill={getSlotDroppedInL1(level, slot) ? "#FBBF24" : "#4B5563"}
                         stroke="gray-700"
                         strokeWidth="0.4"
                         rx="1"
-                        className="hover:fill-green-800"
+                        className="hover:fill-yellow-500"
                       />
                       <text
                         x={droppedInL1ButtonX}

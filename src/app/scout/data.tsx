@@ -21,6 +21,7 @@ export const ScoutingData: Data = {
         l3: 0,
         l2: 0,
         l1: 0,
+        droppedInL1: 0,
         l4A: { made: 0, dropped: 0, droppedInL1: 0 },
         l4B: { made: 0, dropped: 0, droppedInL1: 0 },
         l4C: { made: 0, dropped: 0, droppedInL1: 0 },
@@ -150,6 +151,7 @@ export const resetData = () => {
     ScoutingData.auto.l3 = 0;
     ScoutingData.auto.l2 = 0;
     ScoutingData.auto.l1 = 0;
+    ScoutingData.auto.droppedInL1 = 0;
     ScoutingData.auto.l4A = { made: 0, dropped: 0, droppedInL1: 0 };
     ScoutingData.auto.l4B = { made: 0, dropped: 0, droppedInL1: 0 };
     ScoutingData.auto.l4C = { made: 0, dropped: 0, droppedInL1: 0 };
