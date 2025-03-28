@@ -40,11 +40,11 @@ const RadarChart = ({ teamsData }: RadarChartProps) => {
         }
 
         const stats = [
-            { key: 'coralCyclesScored', label: 'Teleop Coral Cycles', multiplier: 3 },
-            { key: 'algaeCyclesScored', label: 'Teleop Algae Cycles', multiplier: 5 },
+            { key: 'coralCyclesScored', label: 'Teleop Coral Cycles', multiplier: 3.5 },
+            { key: 'algaeCyclesScored', label: 'Teleop Algae Cycles', multiplier: 2 },
             { key: 'autoPPG', label: 'Auto PPG', multiplier: 1 },
-            { key: 'teleopPPG', label: 'Teleop PPG', multiplier: 0.7 },
-            { key: 'endgamePPG', label: 'Endgame PPG', multiplier: 1.2 },
+            { key: 'teleopPPG', label: 'Teleop PPG', multiplier: 1 },
+            { key: 'endgamePPG', label: 'Endgame PPG', multiplier: 2 },
         ];
 
         return stats.map(({ key, label, multiplier }) => {
@@ -77,7 +77,7 @@ const RadarChart = ({ teamsData }: RadarChartProps) => {
         >
             <RechartsRadarChart 
                 data={formatData()}
-                outerRadius="80%"
+                outerRadius="75%"
             >
                 <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
                 <PolarAngleAxis dataKey="stat" />

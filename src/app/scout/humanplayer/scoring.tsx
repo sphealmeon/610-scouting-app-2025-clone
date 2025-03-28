@@ -4,6 +4,8 @@ import { submitHPData } from "@/app/scout/humanplayer/submitHP";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { key, useApi } from "@/app/globalVars";
+import { ScoutingData } from "../data";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 interface MatchTeams {
     red: number[];
     blue: number[];
@@ -14,11 +16,20 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
     const [redTeam, setRedTeam] = useState<string>("");
     const [blueTeam, setBlueTeam] = useState<string>("");
     const [matchTeams, setMatchTeams] = useState<MatchTeams | null>(null);
+    const [alliance, setAlliance] = useState<string>("blue"); // Use the strict type
+
     const [feedbackMessage, setFeedbackMessage] = useState<string>("");
     const [scores, setScores] = useState({
         red: { redScored: 0, redMissed: 0, team: 0, match: 0 },
         blue: { blueScored: 0, blueMissed: 0, team: 0, match: 0 }
     });
+    const switchAlliance = (value: string) => {
+        setAlliance(value)
+    }
+
+    const handleAllianceChange = (value: string) => {
+            ScoutingData.start.alliance = value;
+        };
 
     useEffect(() => {
         const fetchMatches = async () => {
@@ -169,7 +180,7 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                         </SelectContent>
                     </Select>
 
-                    <Select onValueChange={setBlueTeam} value={blueTeam} disabled={!matchTeams}>
+                    {/* <Select onValueChange={setBlueTeam} value={blueTeam} disabled={!matchTeams}>
                         <SelectTrigger className="w-[180px] bg-blue-100">
                             <SelectValue placeholder="Select Blue Team" />
                         </SelectTrigger>
@@ -195,7 +206,14 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                                 </SelectItem>
                             ))}
                         </SelectContent>
-                    </Select>
+                    </Select> */}
+                     <Tabs defaultValue="red" onValueChange={switchAlliance} className="w-64 mb-6">
+            <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
+                <TabsTrigger value="red" className="data-[state=active]:bg-red-500 hover:bg-red-400 data-[state=active]:text-white">Red</TabsTrigger>
+                <TabsTrigger value="blue" className="data-[state=active]:bg-blue-500 hover:bg-blue-400 data-[state=active]:text-white">Blue</TabsTrigger>
+            </TabsList>
+        </Tabs>
+        
                 </div>
             </div>
 
@@ -205,8 +223,42 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                 </div>
             )}
 
+
+       
             <div className="grid grid-cols-2 gap-4 w-full">
-                <div
+                {alliance == "blue" && matchTeams?.blue && matchTeams.blue.map((team) => (
+                    <>
+                        <div
+                            className="flex items-center justify-center h-60 text-3xl font-bold bg-green-500 hover:bg-green-400 text-white text-center cursor-pointer rounded-lg"
+                            onClick={handleBlueScored}
+                        >
+                            {team} Scored
+                        </div>
+                        <div
+                            className="flex items-center justify-center h-60 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
+                            onClick={handleBlueMissed}
+                        >
+                            {team} Missed
+                        </div>
+                    </>
+                ))}
+                {alliance == "red" && matchTeams?.red && matchTeams.red.map((team) => (
+                    <>
+                        <div
+                            className="flex items-center justify-center h-60 text-3xl font-bold bg-green-500 hover:bg-green-400 text-white text-center cursor-pointer rounded-lg"
+                            onClick={handleRedScored}
+                        >
+                            {team} Scored
+                        </div>
+                        <div
+                            className="flex items-center justify-center h-60 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
+                            onClick={handleRedMissed}
+                        >
+                            {team} Missed
+                        </div>
+                    </>
+                ))}
+                {/* <div
                     className="flex items-center justify-center h-60 text-3xl font-bold bg-blue-500 hover:bg-blue-400 text-white text-center cursor-pointer rounded-lg"
                     onClick={handleBlueScored}
                 >
@@ -230,6 +282,18 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                 >
                     Red Missed
                 </div>
+                <div
+                    className="flex items-center justify-center h-60 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
+                    onClick={handleRedMissed}
+                >
+                    Red Missed
+                </div>
+                <div
+                    className="flex items-center justify-center h-60 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
+                    onClick={handleRedMissed}
+                >
+                    Red Missed
+                </div> */}
                 <Button className="bg-green-700 hover:bg-green-600 h-20 text-xl font-bold" onClick={handleExit}>
                     Back to Start
                 </Button>
