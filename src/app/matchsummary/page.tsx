@@ -202,6 +202,7 @@ export default function MatchSummaryPage() {
             deepAccuracy: 0,
             endgamePPG: 0,
             brokePercentage: 0,
+            weightedBrokePercentage: 0,
             avgFouls: 0,
             playedDefenseMatches: 0,
             coralAverageScoringTime: 0,
@@ -231,6 +232,7 @@ export default function MatchSummaryPage() {
             aggregatedData.deepAccuracy += teamData.deepAccuracy
             aggregatedData.endgamePPG += teamData.endgamePPG
             aggregatedData.brokePercentage += teamData.brokePercentage
+            aggregatedData.weightedBrokePercentage += teamData.weightedBrokePercentage
             aggregatedData.playedDefenseMatches += teamData.playedDefenseMatches
         }
 

@@ -117,6 +117,7 @@ export default function ImportantTable({ teamData }: { teamData: AggregateData[]
     endgamePPG: (data: AggregateData & { power: number }) => data.endgamePPG,
     totalPPG: (data: AggregateData & { power: number }) => data.autoPPG + data.teleopPPG + data.endgamePPG,
     brokePercentage: (data: AggregateData & { power: number }) => data.brokePercentage,
+    weightedBroke: (data: AggregateData & { power: number }) => data.weightedBrokePercentage,
   };
 
   const sortData = (key: keyof typeof sortKeys) => {
@@ -368,6 +369,7 @@ export default function ImportantTable({ teamData }: { teamData: AggregateData[]
                    key === 'teleopPPG' ? 'Teleop PPG' : 
                    key === 'endgamePPG' ? 'Endgame PPG' : 
                    key === 'brokePercentage' ? 'Broke %' : 
+                   key === 'weightedBroke' ? 'W-Broke %' :
                    key === 'power' ? 'Power Rating' :
                    key.charAt(0).toUpperCase() + key.slice(1)}
                   {sortConfig.key === key ? (
@@ -400,6 +402,7 @@ export default function ImportantTable({ teamData }: { teamData: AggregateData[]
               <TableCell>{data.endgamePPG.toFixed(1)}</TableCell>
               <TableCell>{(data.autoPPG + data.teleopPPG + data.endgamePPG).toFixed(1)}</TableCell>
               <TableCell>{(data.brokePercentage * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.weightedBrokePercentage * 100).toFixed(1)}%</TableCell>
             </TableRow>
           ))}
         </TableBody>

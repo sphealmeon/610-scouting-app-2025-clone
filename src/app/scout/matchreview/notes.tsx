@@ -15,6 +15,8 @@ export default function NotesReview() {
     const [robotIssues, setRobotIssues] = useState(ScoutingData.teleop.reason);
     const [playedDefenseChecked, setPlayedDefenseChecked] = useState(ScoutingData.teleop.playedDefense === 1);
     const [brokenChecked, setBrokenChecked] = useState(false);
+    const [breakSeverity, setBreakSeverity] = useState(ScoutingData.teleop.breakSeverity || 1);
+    const [breakDuration, setBreakDuration] = useState(ScoutingData.teleop.breakDuration || '');
     const [fouls, setFouls] = useState(ScoutingData.teleop.fouls);
 
     useEffect(() => {
@@ -45,6 +47,25 @@ export default function NotesReview() {
             const defaultText = "Robot issue is:";
             setRobotIssues(defaultText);
             ScoutingData.teleop.reason = defaultText;
+            
+            // Set default values
+            const severity = ScoutingData.teleop.breakSeverity || 1;
+            setBreakSeverity(severity);
+            // Ensure it's stored as a number
+            ScoutingData.teleop.breakSeverity = Number(severity);
+            
+            const duration = ScoutingData.teleop.breakDuration || 0;
+            setBreakDuration(duration === 0 ? '' : duration.toString());
+            // Ensure it's stored as a number
+            ScoutingData.teleop.breakDuration = Number(duration);
+            
+            console.log("DEBUG - Broken checked:");
+            console.log("Severity:", ScoutingData.teleop.breakSeverity, typeof ScoutingData.teleop.breakSeverity);
+            console.log("Duration:", ScoutingData.teleop.breakDuration, typeof ScoutingData.teleop.breakDuration);
+        } else {
+            // Clear reason when unchecked
+            setRobotIssues("");
+            ScoutingData.teleop.reason = "";
         }
     };
 
@@ -174,6 +195,56 @@ export default function NotesReview() {
                             />
                             <Label className="text-xl">Broken</Label>
                         </div>
+                        
+                        {brokenChecked && (
+                            <div className="space-y-4 mb-4">
+                                <div>
+                                    <Label className="text-xl mb-2">Severity: {breakSeverity}</Label>
+                                    <div className="flex items-center gap-4">
+                                        <span className="text-lg font-semibold">1</span>
+                                        <div className="w-1/3">
+                                            <input 
+                                                type="range" 
+                                                min="1" 
+                                                max="5" 
+                                                step="1"
+                                                value={breakSeverity} 
+                                                onChange={(e) => {
+                                                    const value = parseInt(e.target.value);
+                                                    setBreakSeverity(value);
+                                                    // Ensure it's stored as a number
+                                                    ScoutingData.teleop.breakSeverity = Number(value);
+                                                    console.log("Severity set to:", ScoutingData.teleop.breakSeverity, typeof ScoutingData.teleop.breakSeverity);
+                                                }}
+                                                className="w-full accent-green-500" 
+                                                style={{ padding: "0", margin: "0" }}
+                                            />
+                                        </div>
+                                        <span className="text-lg font-semibold">5</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <Label className="text-xl mb-2">Breakage time (seconds) </Label>
+                                    <input 
+                                        type="number" 
+                                        min="0" 
+                                        max="150"
+                                        value={breakDuration} 
+                                        onChange={(e) => {
+                                            const inputValue = e.target.value;
+                                            setBreakDuration(inputValue);
+                                            // Ensure it's stored as a number or 0 if empty
+                                            ScoutingData.teleop.breakDuration = inputValue === '' ? 0 : Number(inputValue);
+                                            console.log("Duration set to:", ScoutingData.teleop.breakDuration, typeof ScoutingData.teleop.breakDuration);
+                                        }}
+                                        className="w-24 p-2 border rounded" 
+                                        placeholder="0"
+                                    />
+                                </div>
+                            </div>
+                        )}
+                        
                         <Label className="text-xl mb-2">Robot Issues</Label>
                         <Textarea 
                             value={robotIssues}

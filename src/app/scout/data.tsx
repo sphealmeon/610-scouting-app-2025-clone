@@ -106,6 +106,8 @@ export const ScoutingData: Data = {
         general: "",
         reason: "",
         explanation: "",
+        breakSeverity: 0,
+        breakDuration: 0,
 
         coralAverageScoringTime: 0,
         processorAverageScoringTime: 0,
@@ -234,6 +236,8 @@ export const resetData = () => {
     ScoutingData.teleop.general = "";
     ScoutingData.teleop.reason = "";
     ScoutingData.teleop.explanation = "";
+    ScoutingData.teleop.breakSeverity = 0;
+    ScoutingData.teleop.breakDuration = 0;
 
     ScoutingData.teleop.coralAverageScoringTime = 0;
     ScoutingData.teleop.processorAverageScoringTime = 0;

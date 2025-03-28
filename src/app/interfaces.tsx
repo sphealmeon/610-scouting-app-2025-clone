@@ -266,6 +266,8 @@ export interface Data{
         reason: string;
         explanation: string;
         fouls: number;
+        breakSeverity: number;
+        breakDuration: number;
 
         coralAverageScoringTime: number;
         processorAverageScoringTime: number;
@@ -326,6 +328,7 @@ export interface AggregateData {
     deepAccuracy: number;
     endgamePPG: number;
     brokePercentage: number;
+    weightedBrokePercentage: number;
     playedDefenseMatches: number;
     avgFouls: number;
     coralAverageScoringTime: number;
@@ -365,6 +368,4 @@ export interface PitData {
     climbAbility: string;
     pickupLocation: string;
     notes: string;
-
-    
 }

@@ -42,6 +42,7 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
     playedDefenseMatches: (data: AggregateData) => data.playedDefenseMatches,
     avgFouls: (data: AggregateData) => data.avgFouls,
     brokePercentage: (data: AggregateData) => data.brokePercentage,
+    weightedBroke: (data: AggregateData) => data.weightedBrokePercentage,
   };
 
   const sortData = (key: keyof typeof sortKeys) => {
@@ -111,6 +112,7 @@ export default function AllTable({ teamData }: { teamData: AggregateData[] }) {
               <TableCell>{data.playedDefenseMatches}</TableCell>
               <TableCell>{(data.avgFouls).toFixed(1)}</TableCell>
               <TableCell>{(data.brokePercentage * 100).toFixed(1)}%</TableCell>
+              <TableCell>{(data.weightedBrokePercentage * 100).toFixed(1)}%</TableCell>
             </TableRow>
           ))}
         </TableBody>

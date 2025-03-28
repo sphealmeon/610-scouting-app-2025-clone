@@ -72,6 +72,8 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
   let totalBargeScoringTime: number = 0;
   let totalShallowHangTime: number = 0;
   let totalDeepHangTime: number = 0;
+  let weightedBrokePercentage: number = 0;
+  let totalBreakScore: number = 0;
 
   const totalData: Data = {
     start: {
@@ -177,6 +179,8 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       general: "",
       reason: "",
       explanation: "",
+      breakDuration: 0,
+      breakSeverity: 0,
 
       coralAverageScoringTime: 0,
       processorAverageScoringTime: 0,
@@ -194,10 +198,46 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
 
   // Calculate averages for all matches
   const querySnapshot = await getDocs(collection(db, team + ""));
+  console.log(`Found ${querySnapshot.size} documents for team ${team}`);
+  
   querySnapshot.forEach((document) => {
     if (!(document.id == "aggregate")) {
-      if (document.data().matchData["teleop"]["reason"] != "") {
+      // Debug the complete document structure
+      const docData = document.data();
+      console.log(`---- DOCUMENT ${document.id} ----`);
+      console.log("Document structure:", JSON.stringify(docData, null, 2));
+      
+      // Specifically check the data path we're using
+      if (docData.matchData && docData.matchData.teleop) {
+        console.log("teleop data:", docData.matchData.teleop);
+        console.log("reason:", docData.matchData.teleop.reason);
+        console.log("breakSeverity:", docData.matchData.teleop.breakSeverity, typeof docData.matchData.teleop.breakSeverity);
+        console.log("breakDuration:", docData.matchData.teleop.breakDuration, typeof docData.matchData.teleop.breakDuration);
+      } else {
+        console.log("ERROR: Missing expected data structure in document");
+        console.log("docData.matchData exists:", !!docData.matchData);
+        if (docData.matchData) {
+          console.log("docData.matchData.teleop exists:", !!docData.matchData.teleop);
+        }
+      }
+      
+      if (docData.matchData && docData.matchData.teleop && docData.matchData.teleop.reason !== "") {
         timesBroke++;
+        
+        // Use explicit type conversion to ensure numbers
+        const rawSeverity = docData.matchData.teleop.breakSeverity;
+        const rawDuration = docData.matchData.teleop.breakDuration;
+        
+        const breakSeverity = typeof rawSeverity === 'string' ? parseFloat(rawSeverity) : (rawSeverity || 0);
+        const breakDuration = typeof rawDuration === 'string' ? parseFloat(rawDuration) : (rawDuration || 0);
+        
+        console.log(`Converted values: severity=${breakSeverity}, duration=${breakDuration}`);
+        
+        const matchBreakScore = (breakDuration/150) * (breakSeverity/5);
+        totalBreakScore += matchBreakScore;
+        
+        console.log(`Match ${document.id} Break Score: ${matchBreakScore.toFixed(4)}`);
+        console.log(`Running Total: ${totalBreakScore.toFixed(4)}`);
       }
       if (document.data().matchData["teleop"]["playedDefense"] == 1) {
         defenseMatches++;
@@ -264,6 +304,13 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
   totalData.teleop.deepAverageHangTime = timesDeepHang > 0 ? totalDeepHangTime / timesDeepHang : 0;
 
   // Create aggregate data
+  console.log("=== FINAL CALCULATION ===");
+  console.log(`Total Matches: ${numMatches}`);
+  console.log(`Times Broke: ${timesBroke}`);
+  console.log(`Total Break Score: ${totalBreakScore.toFixed(4)}`);
+  console.log(`Weighted Broke Percentage: ${(totalBreakScore/numMatches).toFixed(4)}`);
+  console.log("========================");
+
   const aggregateData: AggregateData = {
     matchAggregateData: totalData,
     team: team,
@@ -369,6 +416,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
       totalData.teleop.park * 2,
     playedDefenseMatches: defenseMatches,
     brokePercentage: numMatches === 0 ? 0 : timesBroke / numMatches,
+    weightedBrokePercentage: numMatches === 0 ? 0 : totalBreakScore / numMatches,
     avgFouls: numMatches === 0 ? 0 : totalFouls / numMatches,
     coralAverageScoringTime: totalData.teleop.coralAverageScoringTime,
     processorAverageScoringTime: totalData.teleop.processorAverageScoringTime,
