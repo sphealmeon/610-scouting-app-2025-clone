@@ -35,10 +35,21 @@ export default function MatchSelect() {
         const matchNum = match.match_number;
         const setNum = match.set_number;
         
-        if (level === "qf") return `Quarterfinal ${setNum} Match ${matchNum}`;
-        if (level === "sf") return `Semifinal ${setNum} Match ${matchNum}`;
-        if (level === "f") return `Final ${matchNum}`;
-        return `Playoff Match ${matchNum}`;
+        if (level === "sf") {
+            // Display as Playoff 1-8 to match our static IDs
+            // Semifinal set 1, match 1 -> Playoff 1 (1001)
+            // Semifinal set 1, match 2 -> Playoff 2 (1002)
+            // Semifinal set 2, match 1 -> Playoff 3 (1003)
+            // etc.
+            const playoffNum = ((setNum - 1)) + matchNum;
+            return `Playoff ${playoffNum}`;
+        } else if (level === "f") {
+            // Finals match our static Final 1-3
+            return `Final ${matchNum}`;
+        }
+        
+        // Fallback
+        return `${level.toUpperCase()} ${setNum}-${matchNum}`;
     };
     
     const matchverify = () : boolean => {
@@ -74,10 +85,10 @@ export default function MatchSelect() {
                     
                     // Filter for playoff matches (qf, sf, f)
                     const playoffMatches = data
-                        .filter((match: any) => ["qf", "sf", "f"].includes(match.comp_level))
+                        .filter((match: any) => ["sf", "f"].includes(match.comp_level))
                         .sort((a: any, b: any) => {
                             // Sort by competition level first (qf, sf, f)
-                            const levelOrder = { qf: 1, sf: 2, f: 3 };
+                            const levelOrder = { sf: 1, f: 2 };
                             if (levelOrder[a.comp_level as keyof typeof levelOrder] !== levelOrder[b.comp_level as keyof typeof levelOrder]) {
                                 return levelOrder[a.comp_level as keyof typeof levelOrder] - levelOrder[b.comp_level as keyof typeof levelOrder];
                             }
@@ -109,21 +120,22 @@ export default function MatchSelect() {
                 
                 // Define static playoff matches for non-API scenario
                 const staticPlayoffMatches = [
-                    { display: "Quarterfinal 1-1", id: "qf_1_1", comp_level: "qf", set_number: 1, match_number: 1 },
-                    { display: "Quarterfinal 1-2", id: "qf_1_2", comp_level: "qf", set_number: 1, match_number: 2 },
-                    { display: "Quarterfinal 2-1", id: "qf_2_1", comp_level: "qf", set_number: 2, match_number: 1 },
-                    { display: "Quarterfinal 2-2", id: "qf_2_2", comp_level: "qf", set_number: 2, match_number: 2 },
-                    { display: "Quarterfinal 3-1", id: "qf_3_1", comp_level: "qf", set_number: 3, match_number: 1 },
-                    { display: "Quarterfinal 3-2", id: "qf_3_2", comp_level: "qf", set_number: 3, match_number: 2 },
-                    { display: "Quarterfinal 4-1", id: "qf_4_1", comp_level: "qf", set_number: 4, match_number: 1 },
-                    { display: "Quarterfinal 4-2", id: "qf_4_2", comp_level: "qf", set_number: 4, match_number: 2 },
-                    { display: "Semifinal 1-1", id: "sf_1_1", comp_level: "sf", set_number: 1, match_number: 1 },
-                    { display: "Semifinal 1-2", id: "sf_1_2", comp_level: "sf", set_number: 1, match_number: 2 },
-                    { display: "Semifinal 2-1", id: "sf_2_1", comp_level: "sf", set_number: 2, match_number: 1 },
-                    { display: "Semifinal 2-2", id: "sf_2_2", comp_level: "sf", set_number: 2, match_number: 2 },
-                    { display: "Final 1", id: "f_1_1", comp_level: "f", set_number: 1, match_number: 1 },
-                    { display: "Final 2", id: "f_1_2", comp_level: "f", set_number: 1, match_number: 2 },
-                    { display: "Final 3", id: "f_1_3", comp_level: "f", set_number: 1, match_number: 3 }
+                    { display: "Playoff 1", id: "1001" },
+                    { display: "Playoff 2", id: "1002" },
+                    { display: "Playoff 3", id: "1003" },
+                    { display: "Playoff 4", id: "1004" },
+                    { display: "Playoff 5", id: "1005" },
+                    { display: "Playoff 6", id: "1006" },
+                    { display: "Playoff 7", id: "1007" },
+                    { display: "Playoff 8", id: "1008" },
+                    { display: "Playoff 9", id: "1009" },
+                    { display: "Playoff 10", id: "1010" },
+                    { display: "Playoff 11", id: "1011" },
+                    { display: "Playoff 12", id: "1012" },
+                    { display: "Playoff 13", id: "1013" },
+                    { display: "Final 1", id: "1014" },
+                    { display: "Final 2", id: "1015" },
+                    { display: "Final 3", id: "1016" }
                 ];
                 setPlayoffMatches(staticPlayoffMatches);
             }
@@ -145,8 +157,7 @@ export default function MatchSelect() {
             matchType = "playoff";
             matchData = playoffMatches.find((m: any) => {
                 if (useApi) {
-                    // For API data, check comp_level, set_number, and match_number combined
-                    return `${m.comp_level}_${m.set_number}_${m.match_number}` === value;
+                    return createPlayoffMatchId(m) === value;
                 } else {
                     return m.id === value;
                 }
@@ -158,14 +169,11 @@ export default function MatchSelect() {
             if (matchType === "qm") {
                 ScoutingData.start.match = parseInt(value);
             } else {
-                // For playoff matches, store the match info differently
-                ScoutingData.start.match = parseInt(value.split('_').pop() || "0");
-                // If your ScoutingData interface doesn't have matchKey, you might need to add it
-                // Store the full match identifier as a custom property
-                (ScoutingData.start as any).matchIdentifier = value;
+                // For playoff matches, use the ID directly from our static numbering system
+                ScoutingData.start.match = parseInt(value);
             }
         } else {
-            ScoutingData.start.match = matchType === "qm" ? parseInt(value) : parseInt(value.split('_').pop() || "0");
+            ScoutingData.start.match = parseInt(value);
         }
         
         setIsPlayoff(activeTab === "playoff");
@@ -249,7 +257,26 @@ export default function MatchSelect() {
 
     // Create a match ID for playoff matches (API mode)
     const createPlayoffMatchId = (match: any): string => {
-        return `${match.comp_level}_${match.set_number}_${match.match_number}`;
+        const level = match.comp_level;
+        const matchNum = match.match_number;
+        const setNum = match.set_number;
+        
+        // Map to our static IDs based on match type and number
+        if (level === "sf") {
+            // Calculate which playoff match this corresponds to (1-13)
+            // Semifinal set 1, match 1 -> Playoff 1 (1001)
+            // Semifinal set 1, match 2 -> Playoff 2 (1002)
+            // Semifinal set 2, match 1 -> Playoff 3 (1003)
+            // etc.
+            const playoffNum = ((setNum - 1)) + matchNum;
+            return (1000 + playoffNum).toString();
+        } else if (level === "f") {
+            // Finals map to 1014-1016
+            return (1013 + matchNum).toString();
+        }
+        
+        // Fallback - shouldn't happen with our filtered list
+        return `${level}_${setNum}_${matchNum}`;
     };
 
     return (
@@ -340,7 +367,7 @@ export default function MatchSelect() {
             </Tabs>
     
             {/* Alliance Selection - Only shown when API is off or in Playoff mode */}
-            {(isPlayoff || !useApi) && (
+            {(!useApi) && (
                 <Tabs defaultValue="red" onValueChange={handleAllianceChange} className="w-64 mb-6">
                     <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
                         <TabsTrigger value="red" className="data-[state=active]:bg-red-500 data-[state=active]:text-white">Red</TabsTrigger>
