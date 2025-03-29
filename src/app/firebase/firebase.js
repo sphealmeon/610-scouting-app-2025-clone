@@ -4,7 +4,6 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 
-// North Bay Firebase
 const firebaseConfig = {
   apiKey: "<GOOGLE_API_KEY_REDACTED>",
   authDomain: "practicescouting.firebaseapp.com",
