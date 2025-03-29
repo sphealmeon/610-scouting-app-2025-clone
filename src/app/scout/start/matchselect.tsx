@@ -24,12 +24,13 @@ export default function MatchSelect() {
     const [error, setError] = useState("");
     const [scoutingData, setScoutingData] = useState({
         start: {
-            match: "",
+            match: "" as string | number,
             team: "",
             scoutName: ""
         }
     });
     const [isPlayoff, setIsPlayoff] = useState(false);
+    const [isPractice, setIsPractice] = useState(false);
     const [activeTab, setActiveTab] = useState<string>("qualification");
     const [loading, setLoading] = useState<boolean>(true);
     
@@ -106,14 +107,18 @@ export default function MatchSelect() {
     }, [useApi]);
 
     const handleMatchNumberChange = async (value: string) => {
-        // For playoff matches, set isPlayoff based on the ID format
-        setIsPlayoff(parseInt(value) >= 1000);
+        // Only set playoff state based on match number if not in practice mode
+        if (!isPractice) {
+            setIsPlayoff(parseInt(value) >= 1000 && parseInt(value) < 2000);
+            // Set match number in ScoutingData as integer for non-practice matches
+            ScoutingData.start.match = parseInt(value);
+        } else {
+            // For practice matches, store the actual text value
+            ScoutingData.start.match = value;
+        }
         
-        // Set match number in ScoutingData
-        ScoutingData.start.match = parseInt(value);
-        
-        if (ScoutingData.start.team && !isPlayoff) {
-            const alliance = await FetchAlliance(ScoutingData.start.match, ScoutingData.start.team);
+        if (ScoutingData.start.team && !isPlayoff && !isPractice) {
+            const alliance = await FetchAlliance(parseInt(value), ScoutingData.start.team);
             ScoutingData.start.alliance = alliance;
         }
         
@@ -121,7 +126,7 @@ export default function MatchSelect() {
         setSelectedTeam("");
         setError("");
 
-        if (useApi && !isPlayoff) {
+        if (useApi && !isPlayoff && !isPractice) {
             // Finding teams for selected match
             const selectedMatch = qualMatches.find(
                 (m: any) => m.match_number === parseInt(value, 10)
@@ -153,10 +158,14 @@ export default function MatchSelect() {
     const handleTeamSelection = async (value: string) => {
         //Write to data: team number
         ScoutingData.start.team = parseInt(value);
-        if (ScoutingData.start.match && !isPlayoff) {
-            const alliance = await FetchAlliance(ScoutingData.start.match, parseInt(value));
+        
+        // Only fetch alliance for qualification matches
+        if (ScoutingData.start.match && !isPlayoff && !isPractice && useApi) {
+            const matchNum = typeof ScoutingData.start.match === 'string' ? parseInt(ScoutingData.start.match) : ScoutingData.start.match;
+            const alliance = await FetchAlliance(matchNum, parseInt(value));
             ScoutingData.start.alliance = alliance;
         }
+        
         setSelectedTeam(value);
         setError(""); // Clear any error when a valid team is selected
 
@@ -178,6 +187,7 @@ export default function MatchSelect() {
     const handleTabChange = (value: string) => {
         setActiveTab(value);
         setIsPlayoff(value === "playoff");
+        setIsPractice(value === "practice");
         // Reset selections when changing tabs
         setMatchNumber("");
         setSelectedTeam("");
@@ -205,9 +215,10 @@ export default function MatchSelect() {
     
             {/* Match Type Tabs */}
             <Tabs defaultValue="qualification" onValueChange={handleTabChange} className="w-64 mb-6">
-                <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
-                    <TabsTrigger value="qualification">Qualification</TabsTrigger>
-                    <TabsTrigger value="playoff">Playoff</TabsTrigger>
+                <TabsList className="grid w-full max-w-md grid-cols-3 mx-auto">
+                    <TabsTrigger value="qualification" className="text-sm">Qualification</TabsTrigger>
+                    <TabsTrigger value="playoff" className="text-sm">Playoff</TabsTrigger>
+                    <TabsTrigger value="practice" className="text-sm">Practice</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="qualification">
@@ -265,10 +276,21 @@ export default function MatchSelect() {
                         />
                     )}
                 </TabsContent>
+
+                <TabsContent value="practice">
+                    <Input
+                        type="text"
+                        placeholder="Enter Practice Match Name"
+                        className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6 mx-auto"
+                        onChange={(e) => {
+                            handleMatchNumberChange(e.target.value);
+                        }}
+                    />
+                </TabsContent>
             </Tabs>
     
-            {/* Alliance Selection - Only shown when API is off or in Playoff mode */}
-            {(isPlayoff || !useApi) && (
+            {/* Alliance Selection - Only shown when API is off or in Playoff/Practice mode */}
+            {(isPlayoff || !useApi || isPractice) && (
                 <Tabs defaultValue="red" onValueChange={handleAllianceChange} className="w-64 mb-6">
                     <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
                         <TabsTrigger value="red" className="data-[state=active]:bg-red-500 data-[state=active]:text-white">Red</TabsTrigger>
@@ -280,16 +302,7 @@ export default function MatchSelect() {
             {/* Team Selection Section */}
             {matchNumber && (
                 <>
-                    {isPlayoff ? (
-                        // Manual team input for playoffs/finals
-                        <Input
-                            min="1"
-                            type="number"
-                            placeholder="Enter Team Number"
-                            className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6"
-                            onChange={(e) => handleTeamSelection(e.target.value)}
-                        />
-                    ) : useApi ? (
+                    {!isPlayoff && !isPractice && useApi ? (
                         // Team dropdown for qualification matches with API
                         <Select
                             onValueChange={handleTeamSelection}
@@ -307,13 +320,21 @@ export default function MatchSelect() {
                             </SelectContent>
                         </Select>
                     ) : (
-                        // Manual team input for non-API qualification matches
+                        // Manual team input for playoffs/practice/non-API matches
                         <Input
-                            min="1"
                             type="number"
-                            placeholder="Enter Team Number"
+                            min="1"
+                            max="9999"
+                            required
+                            placeholder="Enter Team Number (1-9999)"
                             className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6"
-                            onChange={(e) => handleTeamSelection(e.target.value)}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                // Only allow numbers and ensure it's within valid range
+                                if (/^\d+$/.test(value) && parseInt(value) > 0 && parseInt(value) <= 9999) {
+                                    handleTeamSelection(value);
+                                }
+                            }}
                         />
                     )}
                 </>
