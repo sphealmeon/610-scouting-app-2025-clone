@@ -211,13 +211,12 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                             ))}
                         </SelectContent>
                     </Select> */}
-                     <Tabs defaultValue="red" onValueChange={switchAlliance} className="w-64 mb-6">
-            <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
-                <TabsTrigger value="red" className="data-[state=active]:bg-red-500 hover:bg-red-400 data-[state=active]:text-white">Red</TabsTrigger>
-                <TabsTrigger value="blue" className="data-[state=active]:bg-blue-500 hover:bg-blue-400 data-[state=active]:text-white">Blue</TabsTrigger>
-            </TabsList>
-        </Tabs>
-        
+                    <Tabs defaultValue="red" onValueChange={switchAlliance} className="w-64 mb-6">
+                        <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
+                            <TabsTrigger value="red" className="data-[state=active]:bg-red-500 hover:bg-red-400 data-[state=active]:text-white">Red</TabsTrigger>
+                            <TabsTrigger value="blue" className="data-[state=active]:bg-blue-500 hover:bg-blue-400 data-[state=active]:text-white">Blue</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
                 </div>
             </div>
 
@@ -233,13 +232,13 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                 {alliance == "blue" && matchTeams?.blue && matchTeams.blue.map((team) => (
                     <>
                         <div
-                            className="flex items-center justify-center h-60 text-3xl font-bold bg-green-500 hover:bg-green-400 text-white text-center cursor-pointer rounded-lg"
+                            className="flex items-center justify-center h-40 text-3xl font-bold bg-green-500 hover:bg-green-400 text-white text-center cursor-pointer rounded-lg"
                             onClick={handleBlueScored}
                         >
-                            {team} Scored
+                            {team} Pickup
                         </div>
                         <div
-                            className="flex items-center justify-center h-60 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
+                            className="flex items-center justify-center h-40 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
                             onClick={handleBlueMissed}
                         >
                             {team} Missed
