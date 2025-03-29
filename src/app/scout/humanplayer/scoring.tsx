@@ -16,7 +16,7 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
     const [redTeam, setRedTeam] = useState<string>("");
     const [blueTeam, setBlueTeam] = useState<string>("");
     const [matchTeams, setMatchTeams] = useState<MatchTeams | null>(null);
-    const [alliance, setAlliance] = useState<string>("blue"); // Use the strict type
+    const [alliance, setAlliance] = useState<string>("red"); // Use the strict type
 
     const [feedbackMessage, setFeedbackMessage] = useState<string>("");
     const [scores, setScores] = useState({
@@ -50,7 +50,11 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                     }
 
                     const data = await request.json();
-                    const selectedMatch = data.find((m: any) => m.match_number === parseInt(match));
+                    const qualMatches = data
+                        .filter((match: any) => match.comp_level === "qm")
+                        .sort((a: any, b: any) => a.match_number - b.match_number);
+                    
+                    const selectedMatch = qualMatches.find((m: any) => m.match_number === parseInt(match));
                     
                     if (selectedMatch) {
                         const redTeams = selectedMatch.alliances.red.team_keys.map((team: string) =>
