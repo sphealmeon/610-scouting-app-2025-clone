@@ -130,7 +130,8 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                 blueScored: prev.blue.blueScored + 1
             }
         }));
-        setFeedbackMessage("Blue team scored!");
+        // setFeedbackMessage("Blue team scored!");
+        setFeedbackMessage("Blue team picked up!");
     };
 
     const handleRedScored = () => {
@@ -141,7 +142,8 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                 redScored: prev.red.redScored + 1
             }
         }));
-        setFeedbackMessage("Red team scored!");
+        // setFeedbackMessage("Red team scored!");
+        setFeedbackMessage("Red team picked up!");
     };
 
     const handleBlueMissed = () => {
@@ -248,13 +250,13 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                 {alliance == "red" && matchTeams?.red && matchTeams.red.map((team) => (
                     <>
                         <div
-                            className="flex items-center justify-center h-60 text-3xl font-bold bg-green-500 hover:bg-green-400 text-white text-center cursor-pointer rounded-lg"
+                            className="flex items-center justify-center h-40 text-3xl font-bold bg-green-500 hover:bg-green-400 text-white text-center cursor-pointer rounded-lg"
                             onClick={handleRedScored}
                         >
-                            {team} Scored
+                            {team} Pickup
                         </div>
                         <div
-                            className="flex items-center justify-center h-60 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
+                            className="flex items-center justify-center h-40 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
                             onClick={handleRedMissed}
                         >
                             {team} Missed
