@@ -56,20 +56,49 @@ const RadarChart = ({ teamsData }: RadarChartProps) => {
         }
 
         const stats = [
-            { key: 'coralCyclesScored', label: 'Teleop Coral Cycles', multiplier: 1 },
-            { key: 'algaeCyclesScored', label: 'Teleop Algae Cycles', multiplier: 1 },
-            { key: 'autoPPG', label: 'Auto PPG', multiplier: 1 },
-            { key: 'teleopPPG', label: 'Teleop PPG', multiplier: 1 },
+            { key: 'coralCyclesScored', label: 'Coral Cycles', multiplier: 1 },
+            { key: 'algaeCyclesScored', label: 'Algae Cycles', multiplier: 1 },
+            { 
+                key: 'autoPieces', 
+                label: 'Auto Pieces', 
+                multiplier: 1,
+                calculateValue: (teamData: AggregateData) => {
+                    // Calculate auto pieces from the match aggregate data
+                    // This is an approximation based on auto scoring
+                    const autoData = teamData.matchAggregateData?.auto || {};
+                    const coral = autoData.coral || 0;
+                    const algae = autoData.algae || 0;
+                    return coral + algae;
+                }
+            },
+            { 
+                key: 'totalPPG', 
+                label: 'Total PPG', 
+                multiplier: 1,
+                calculateValue: (teamData: AggregateData) => {
+                    return (teamData.autoPPG || 0) + (teamData.teleopPPG || 0) + (teamData.endgamePPG || 0);
+                }
+            },
             { key: 'endgamePPG', label: 'Endgame PPG', multiplier: 1 },
         ];
 
         // First pass: collect all values to find maximums for each stat
         const maxValues: Record<string, number> = {};
-        stats.forEach(({ key }) => {
+        stats.forEach(({ key, calculateValue }) => {
             maxValues[key] = 0;
             Object.values(teamsData).forEach((teamData) => {
-                if (teamData && teamData[key as keyof AggregateData] !== undefined) {
-                    const value = teamData[key as keyof AggregateData] as number;
+                if (teamData) {
+                    let value: number;
+                    
+                    // Use the calculateValue function if provided, otherwise use the key directly
+                    if (calculateValue) {
+                        value = calculateValue(teamData);
+                    } else if (teamData[key as keyof AggregateData] !== undefined) {
+                        value = teamData[key as keyof AggregateData] as number;
+                    } else {
+                        value = 0;
+                    }
+                    
                     if (value > maxValues[key]) {
                         maxValues[key] = value;
                     }
@@ -77,11 +106,21 @@ const RadarChart = ({ teamsData }: RadarChartProps) => {
             });
         });
 
-        return stats.map(({ key, label, multiplier }) => {
+        return stats.map(({ key, label, multiplier, calculateValue }) => {
             const dataPoint: RadarChartData = { stat: label };
             Object.entries(teamsData).forEach(([teamNumber, teamData]) => {
-                if (teamData && teamData[key as keyof AggregateData] !== undefined) {
-                    const value = teamData[key as keyof AggregateData] as number;
+                if (teamData) {
+                    let value: number;
+                    
+                    // Use the calculateValue function if provided, otherwise use the key directly
+                    if (calculateValue) {
+                        value = calculateValue(teamData);
+                    } else if (teamData[key as keyof AggregateData] !== undefined) {
+                        value = teamData[key as keyof AggregateData] as number;
+                    } else {
+                        value = 0;
+                    }
+                    
                     // Store the original value for tooltip display
                     dataPoint[`team${teamNumber}Value`] = value;
                     // Store the normalized value (0-90 scale) for radar visualization
