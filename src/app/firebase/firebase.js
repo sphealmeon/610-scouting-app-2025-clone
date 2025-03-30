@@ -5,25 +5,25 @@ import { getAuth } from "firebase/auth";
 // Your web app's Firebase configuration
 
 // North Bay Firebase
-// const firebaseConfig = {
-//   apiKey: "<GOOGLE_API_KEY_REDACTED>",
-//   authDomain: "testerforprovs-40e7c.firebaseapp.com",
-//   projectId: "testerforprovs-40e7c",
-//   storageBucket: "testerforprovs-40e7c.firebasestorage.app",
-//   messagingSenderId: "367006669430",
-//   appId: "1:367006669430:web:8a86bdec96e8e3f136dd57",
-//   measurementId: "G-QG6585K66E"
-// };
-
 const firebaseConfig = {
   apiKey: "<GOOGLE_API_KEY_REDACTED>",
-  authDomain: "northbay2025-579de.firebaseapp.com",
-  projectId: "northbay2025-579de",
-  storageBucket: "northbay2025-579de.firebasestorage.app",
-  messagingSenderId: "269537278319",
-  appId: "1:269537278319:web:a52ed74b8a67f2326f909a",
-  measurementId: "G-46SKJ44HKN"
+  authDomain: "testerforprovs-40e7c.firebaseapp.com",
+  projectId: "testerforprovs-40e7c",
+  storageBucket: "testerforprovs-40e7c.firebasestorage.app",
+  messagingSenderId: "367006669430",
+  appId: "1:367006669430:web:8a86bdec96e8e3f136dd57",
+  measurementId: "G-QG6585K66E"
 };
+
+// const firebaseConfig = {
+//   apiKey: "<GOOGLE_API_KEY_REDACTED>",
+//   authDomain: "northbay2025-579de.firebaseapp.com",
+//   projectId: "northbay2025-579de",
+//   storageBucket: "northbay2025-579de.firebasestorage.app",
+//   messagingSenderId: "269537278319",
+//   appId: "1:269537278319:web:a52ed74b8a67f2326f909a",
+//   measurementId: "G-46SKJ44HKN"
+// };
 
 
 // const firebaseConfig = {
