@@ -1,8 +1,7 @@
 "use client"
 
-import { PolarAngleAxis, PolarGrid, Radar, RadarChart as RechartsRadarChart, Legend } from "recharts"
+import { PolarAngleAxis, PolarGrid, Radar, RadarChart as RechartsRadarChart, Legend, ResponsiveContainer, Tooltip } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { AggregateData } from "../interfaces"
 
 interface RadarChartProps {
@@ -14,24 +13,41 @@ interface RadarChartData {
     [key: string]: any
 }
 
+// Custom tooltip component to display original values
+const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+        return (
+            <div className="bg-green-800 border rounded-md shadow-md p-2">
+                <p className="font-medium">{label}</p>
+                {payload.map((entry: any, index: number) => {
+                    const teamKey = entry.dataKey;
+                    const valueKey = `${teamKey}Value`;
+                    const value = entry.payload[valueKey];
+                    
+                    return (
+                        <div key={index} className="flex items-center gap-2">
+                            <div className="w-3 h-3" style={{ backgroundColor: entry.color }}></div>
+                            <p style={{ color: entry.color }}>
+                                {entry.name}: {value !== undefined ? value.toFixed(2) : "N/A"}
+                            </p>
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    }
+    return null;
+};
+
 // Define colors for teams
 const teamColors = [
-    "hsl(152, 100%, 30%)", // Green
     "hsl(12, 100%, 40%)",  // Red
     "hsl(200, 100%, 40%)", // Blue
+    "hsl(152, 100%, 30%)", // Green
     "hsl(45, 100%, 45%)",  // Yellow
     "hsl(280, 100%, 45%)", // Purple
     "hsl(25, 100%, 45%)"   // Orange
 ]
-
-const chartConfig = {
-    team1: { label: "Team 1", color: teamColors[0] },
-    team2: { label: "Team 2", color: teamColors[1] },
-    team3: { label: "Team 3", color: teamColors[2] },
-    team4: { label: "Team 4", color: teamColors[3] },
-    team5: { label: "Team 5", color: teamColors[4] },
-    team6: { label: "Team 6", color: teamColors[5] },
-} satisfies ChartConfig
 
 const RadarChart = ({ teamsData }: RadarChartProps) => {
     const formatData = (): RadarChartData[] => {
@@ -40,20 +56,39 @@ const RadarChart = ({ teamsData }: RadarChartProps) => {
         }
 
         const stats = [
-            { key: 'coralCyclesScored', label: 'Teleop Coral Cycles', multiplier: 3 },
-            { key: 'algaeCyclesScored', label: 'Teleop Algae Cycles', multiplier: 5 },
+            { key: 'coralCyclesScored', label: 'Teleop Coral Cycles', multiplier: 1 },
+            { key: 'algaeCyclesScored', label: 'Teleop Algae Cycles', multiplier: 1 },
             { key: 'autoPPG', label: 'Auto PPG', multiplier: 1 },
-            { key: 'teleopPPG', label: 'Teleop PPG', multiplier: 0.7 },
-            { key: 'endgamePPG', label: 'Endgame PPG', multiplier: 1.2 },
+            { key: 'teleopPPG', label: 'Teleop PPG', multiplier: 1 },
+            { key: 'endgamePPG', label: 'Endgame PPG', multiplier: 1 },
         ];
+
+        // First pass: collect all values to find maximums for each stat
+        const maxValues: Record<string, number> = {};
+        stats.forEach(({ key }) => {
+            maxValues[key] = 0;
+            Object.values(teamsData).forEach((teamData) => {
+                if (teamData && teamData[key as keyof AggregateData] !== undefined) {
+                    const value = teamData[key as keyof AggregateData] as number;
+                    if (value > maxValues[key]) {
+                        maxValues[key] = value;
+                    }
+                }
+            });
+        });
 
         return stats.map(({ key, label, multiplier }) => {
             const dataPoint: RadarChartData = { stat: label };
             Object.entries(teamsData).forEach(([teamNumber, teamData]) => {
                 if (teamData && teamData[key as keyof AggregateData] !== undefined) {
                     const value = teamData[key as keyof AggregateData] as number;
-                    dataPoint[`team${teamNumber}`] = value * multiplier;
+                    // Store the original value for tooltip display
+                    dataPoint[`team${teamNumber}Value`] = value;
+                    // Store the normalized value (0-90 scale) for radar visualization
+                    // Using 90 instead of 100 to leave a small gap around the edges
+                    dataPoint[`team${teamNumber}`] = maxValues[key] > 0 ? (value / maxValues[key]) * 90 : 0;
                 } else {
+                    dataPoint[`team${teamNumber}Value`] = 0;
                     dataPoint[`team${teamNumber}`] = 0;
                 }
             });
@@ -70,32 +105,41 @@ const RadarChart = ({ teamsData }: RadarChartProps) => {
         );
     }
 
+    // Debug - display data
+    console.log("Formatted data:", formatData());
+    
     return (
-        <ChartContainer
-            config={chartConfig}
-            className="mx-auto aspect-square max-h-[400px]"
-        >
-            <RechartsRadarChart 
-                data={formatData()}
-                outerRadius="80%"
-            >
-                <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                <PolarAngleAxis dataKey="stat" />
-                <PolarGrid />
-                {Object.keys(teamsData).map((teamNumber, index) => (
-                    <Radar
-                        key={teamNumber}
-                        name={`Team ${teamNumber}`}
-                        dataKey={`team${teamNumber}`}
-                        fill={teamColors[index % teamColors.length]}
-                        fillOpacity={0.6}
-                        stroke={teamColors[index % teamColors.length]}
-                    />
-                ))}
-                <Legend />
-            </RechartsRadarChart>
-        </ChartContainer>
+        <Card className="w-full">
+            <CardHeader>
+                {/* <CardTitle>Team Comparison</CardTitle> */}
+            </CardHeader>
+            <CardContent>
+                <div className="w-full h-[400px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <RechartsRadarChart data={formatData()}>
+                            <PolarGrid />
+                            <PolarAngleAxis dataKey="stat" />
+                            <Tooltip content={<CustomTooltip />} />
+                            {Object.keys(teamsData).map((teamNumber, index) => (
+                                <Radar
+                                    key={teamNumber}
+                                    name={`Team ${teamNumber}`}
+                                    dataKey={`team${teamNumber}`}
+                                    fill={teamColors[index % teamColors.length]}
+                                    fillOpacity={0.6}
+                                    stroke={teamColors[index % teamColors.length]}
+                                />
+                            ))}
+                            <Legend />
+                        </RechartsRadarChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="text-xs text-center text-muted-foreground mt-2">
+                    Chart displays data proportionally. Hover for actual values.
+                </div>
+            </CardContent>
+        </Card>
     );
-}
+};
 
 export default RadarChart;

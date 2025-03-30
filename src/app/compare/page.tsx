@@ -46,14 +46,8 @@ export default function ComparePage() {
 
                     {/* Right Column - Chart and Data */}
                     <div className="space-y-8">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Team Comparison</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <RadarChart teamsData={teamsData} />
-                            </CardContent>
-                        </Card>
+                        Team Comparison
+                        <RadarChart teamsData={teamsData} />
 
                         
                     </div>
