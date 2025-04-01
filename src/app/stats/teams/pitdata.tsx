@@ -68,6 +68,10 @@ export function PitData({ team }: PitDataProps) {
                     <p>{pitData.drivetrainType}</p>
                 </div>
                 <div>
+                    <h3 className="font-semibold text-gray-400">Swerve Controls</h3>
+                    <p>{pitData.swerveControls}</p>
+                </div>
+                <div>
                     <h3 className="font-semibold text-gray-400">Defense Comfort</h3>
                     <p>{pitData.defenseComfort}/5</p>
                 </div>
