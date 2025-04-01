@@ -7,6 +7,7 @@ export interface PitScoutData {
     bumperClearance: number;
     centerOfGravity: string;
     drivetrainType: string;
+    swerveControls: string;
     defenseComfort: number;
     // algaeCapability: number;
     // coralCapability: number;

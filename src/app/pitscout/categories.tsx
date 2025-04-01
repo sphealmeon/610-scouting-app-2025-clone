@@ -31,6 +31,7 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
     const [bumperClearance, setBumperClearance] = useState<number>(0);
     const [centerOfGravity, setCenterOfGravity] = useState<string>("");
     const [drivetrainType, setDrivetrainType] = useState<string>("");
+    const [swerveControls, setSwerveControls] = useState<string>("");
     const [defenseComfort, setDefenseComfort] = useState<number>(1);
     // const [algaeCapability, setAlgaeCapability] = useState<number>(1);
     // const [coralCapability, setCoralCapability] = useState<number>(1);
@@ -68,6 +69,7 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                     setBumperClearance(data.bumperClearance || 0);
                     setCenterOfGravity(data.centerOfGravity || "");
                     setDrivetrainType(data.drivetrainType || "");
+                    setSwerveControls(data.swerveControls || "");
                     setDefenseComfort(data.defenseComfort || 1);
                     // setAlgaeCapability(data.algaeCapability || 1);
                     // setCoralCapability(data.coralCapability || 1);
@@ -92,6 +94,7 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                     setBumperClearance(0);
                     setCenterOfGravity("");
                     setDrivetrainType("");
+                    setSwerveControls("");
                     setDefenseComfort(1);
                     // setAlgaeCapability(1);
                     // setCoralCapability(1)
@@ -134,6 +137,7 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                 bumperClearance,
                 centerOfGravity,
                 drivetrainType,
+                swerveControls,
                 defenseComfort,
                 // algaeCapability,
                 // coralCapability,
@@ -254,7 +258,7 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
 
                     {/* Drivetrain Type Selection */}
                     <Card>
-                        <CardContent className="pt-6">
+                        <CardContent className="pt-6 space-y-4">
                             <Label>Drivetrain Type</Label>
                             <RadioGroup 
                                 value={drivetrainType} 
@@ -262,15 +266,44 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                                 className="flex flex-col gap-2 mt-2"
                             >
                                 {[
-                                    { value: "swerve", label: "Swerve" },
-                                    { value: "tank", label: "Tank" },
-                                    { value: "mecanum", label: "Mecanum" },
-                                    { value: "other", label: "Other" }
+                                    { value: "Swerve", label: "Swerve" },
+                                    { value: "Tank", label: "Tank" },
+                                    { value: "Mecanum", label: "Mecanum" },
+                                    { value: "Other", label: "Other" }
                                 ].map((item) => (
                                     <div key={item.value} className="flex items-center space-x-2">
                                         <div className={`
                                             flex items-center rounded-md border-2 px-3 py-2 w-full
                                             ${drivetrainType === item.value 
+                                                ? 'border-green-500 bg-green-500/20' 
+                                                : 'border-gray-700'
+                                            }
+                                        `}>
+                                            <RadioGroupItem value={item.value} id={`dt-${item.value}`} />
+                                            <Label htmlFor={`dt-${item.value}`} className="ml-2 cursor-pointer w-full">
+                                                {item.label}
+                                            </Label>
+                                        </div>
+                                    </div>
+                                ))}
+                            </RadioGroup>
+
+                            <div className="space-y-4"></div>
+                            <Label>Swerve Orientation</Label>
+                            <RadioGroup 
+                                value={swerveControls} 
+                                onValueChange={setSwerveControls}
+                                className="flex flex-col gap-2 mt-2"
+                            >
+                                {[
+                                    { value: "Robot Oriented", label: "Robot Oriented" },
+                                    { value: "Field Oriented", label: "Field Oriented" },
+                                    { value: "Not Swerve", label: "Not Swerve" }
+                                ].map((item) => (
+                                    <div key={item.value} className="flex items-center space-x-2">
+                                        <div className={`
+                                            flex items-center rounded-md border-2 px-3 py-2 w-full
+                                            ${swerveControls === item.value 
                                                 ? 'border-green-500 bg-green-500/20' 
                                                 : 'border-gray-700'
                                             }
@@ -408,9 +441,9 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                                 className="flex flex-col gap-2 mt-2"
                             >
                                 {[
-                                    { value: "none", label: "No Climb" },
-                                    { value: "shallow", label: "Shallow" },
-                                    { value: "deep", label: "Deep" }
+                                    { value: "None", label: "No Climb" },
+                                    { value: "Shallow", label: "Shallow" },
+                                    { value: "Deep", label: "Deep" }
                                 ].map((item) => (
                                     <div key={item.value} className="flex items-center space-x-2">
                                         <div className={`
@@ -439,9 +472,9 @@ export default function PitScoutCategories({ teamNumber }: { teamNumber: string 
                     <Label className="mb-4 block text-lg">Pickup Location Preference</Label>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         {[
-                            { value: "floor", label: "Floor" },
-                            { value: "hybrid", label: "Hybrid" },
-                            { value: "station", label: "Coral Station" }
+                            { value: "Floor", label: "Floor" },
+                            { value: "Hybrid", label: "Hybrid" },
+                            { value: "Coral Station", label: "Coral Station" }
                         ].map((item) => (
                             <Button
                                 key={item.value}
