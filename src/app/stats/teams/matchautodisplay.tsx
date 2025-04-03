@@ -14,7 +14,7 @@ export function MatchAutoDisplay({ matches }: MatchAutoDisplayProps) {
     
     const matchOptions = matches
         .filter(match => match?.start?.match)
-        .sort((a, b) => a.start.match - b.start.match)
+        .sort((a, b) => Number(a.start.match) - Number(b.start.match))
         .map(match => ({
             value: String(match.start.match),
             label: `Match ${match.start.match}`

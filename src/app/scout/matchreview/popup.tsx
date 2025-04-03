@@ -39,7 +39,12 @@ export default function Popup({
                         <Button
                             className="bg-green-500 hover:bg-green-400"
                             onClick={() => {
-                                SubmitMatch({team: ScoutingData.start.team, match: ScoutingData.start.match, matchData: ScoutingData})
+                                SubmitMatch({ 
+                                    team: ScoutingData.start.team, 
+                                    match: typeof ScoutingData.start.match === 'string' ? parseInt(ScoutingData.start.match) : ScoutingData.start.match, 
+                                    matchData: ScoutingData 
+                                });
+                                // SubmitMatch({team: ScoutingData.start.team, match: ScoutingData.start.match, matchData: ScoutingData})
                                 setMatchState(0);
                                 resetData();
                                 setConfirm(false);

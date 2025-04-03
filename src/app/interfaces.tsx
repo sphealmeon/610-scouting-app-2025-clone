@@ -3,7 +3,7 @@ export interface Data{
     start: {
         preload: number;
         team: number;
-        match: number;
+        match: number | string;
         position: string;
         scoutName: string;
         alliance: string;

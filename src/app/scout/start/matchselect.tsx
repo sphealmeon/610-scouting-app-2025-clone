@@ -31,6 +31,7 @@ export default function MatchSelect() {
         }
     });
     const [isPlayoff, setIsPlayoff] = useState(false);
+    const [isPractice, setIsPractice] = useState(false);
     const [activeTab, setActiveTab] = useState<string>("qualification");
     const [loading, setLoading] = useState<boolean>(true);
     
@@ -151,14 +152,14 @@ export default function MatchSelect() {
     }, [useApi]);
 
     const handleMatchNumberChange = async (value: string) => {
-        let matchData: any;
-        let matchType: string;
+        let matchData: any = null;
+        let matchType: "qm" | "playoff" | "practice" = "qm"; // Default to qual match
         
-        // Determine if we're dealing with a qualification or playoff match
+        // Determine if we're dealing with a qualification, playoff, or practice match
         if (activeTab === "qualification") {
             matchType = "qm";
             matchData = qualMatches.find((m: any) => String(m.match_number) === value);
-        } else {
+        } else if (activeTab === "playoff") {
             matchType = "playoff";
             matchData = playoffMatches.find((m: any) => {
                 if (useApi) {
@@ -167,10 +168,16 @@ export default function MatchSelect() {
                     return m.id === value;
                 }
             });
+        } else if (activeTab === "practice") {
+            matchType = "practice";
+            // No match data needed for practice matches
         }
         
         // Set match number and match key in ScoutingData
-        if (matchData) {
+        if (matchType === "practice") {
+            // For practice matches, store as string to preserve the name
+            ScoutingData.start.match = value;
+        } else if (matchData) {
             if (matchType === "qm") {
                 ScoutingData.start.match = parseInt(value);
             } else {
@@ -178,10 +185,12 @@ export default function MatchSelect() {
                 ScoutingData.start.match = parseInt(value);
             }
         } else {
+            // If no match data (manual entry), store as number
             ScoutingData.start.match = parseInt(value);
         }
         
         setIsPlayoff(activeTab === "playoff");
+        setIsPractice(activeTab === "practice");
         setMatchNumber(value);
         setSelectedTeam("");
         setError("");
@@ -206,12 +215,12 @@ export default function MatchSelect() {
             setTeams([]);
         }
 
-        // Update scouting data
+        // Update scouting data with the match value
         setScoutingData(prev => ({
             ...prev,
             start: {
                 ...prev.start,
-                match: value
+                match: value // Store match as string in the state
             }
         }));
     };
@@ -237,7 +246,7 @@ export default function MatchSelect() {
             ...prev,
             start: {
                 ...prev.start,
-                team: value // Update the team number in ScoutingData
+                team: value // Store team as string in the state
             }
         }));
     };
@@ -250,6 +259,7 @@ export default function MatchSelect() {
     const handleTabChange = (value: string) => {
         setActiveTab(value);
         setIsPlayoff(value === "playoff");
+        setIsPractice(value === "practice");
         // Reset selections when changing tabs
         setMatchNumber("");
         setSelectedTeam("");
@@ -301,9 +311,10 @@ export default function MatchSelect() {
     
             {/* Match Type Tabs */}
             <Tabs defaultValue="qualification" onValueChange={handleTabChange} className="w-64 mb-6">
-                <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
+                <TabsList className="grid w-full max-w-md grid-cols-3 mx-auto">
                     <TabsTrigger value="qualification">Qualification</TabsTrigger>
                     <TabsTrigger value="playoff">Playoff</TabsTrigger>
+                    <TabsTrigger value="practice">Practice</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="qualification">
@@ -369,10 +380,19 @@ export default function MatchSelect() {
                         </Select>
                     )}
                 </TabsContent>
+                
+                <TabsContent value="practice">
+                    <Input
+                        type="text"
+                        placeholder="Enter Practice Match Name"
+                        className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6 mx-auto"
+                        onChange={(e) => handleMatchNumberChange(e.target.value)}
+                    />
+                </TabsContent>
             </Tabs>
     
-            {/* Alliance Selection - Only shown when API is off or in Playoff mode */}
-            {(!useApi) && (
+            {/* Alliance Selection - Only shown when API is off or in Playoff/Practice mode */}
+            {(!useApi || isPlayoff || isPractice) && (
                 <Tabs defaultValue="red" onValueChange={handleAllianceChange} className="w-64 mb-6">
                     <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
                         <TabsTrigger value="red" className="data-[state=active]:bg-red-500 data-[state=active]:text-white">Red</TabsTrigger>
@@ -384,8 +404,8 @@ export default function MatchSelect() {
             {/* Team Selection Section */}
             {matchNumber && (
                 <>
-                    {!useApi ? (
-                        // Manual team input
+                    {!useApi || isPlayoff || isPractice ? (
+                        // Manual team input for non-API, playoffs, or practice matches
                         <Input
                             min="1"
                             type="number"
@@ -394,7 +414,7 @@ export default function MatchSelect() {
                             onChange={(e) => handleTeamSelection(e.target.value)}
                         />
                     ) : teams.length > 0 ? (
-                        // Team dropdown for matches with API
+                        // Team dropdown for qualification matches with API
                         <Select
                             onValueChange={handleTeamSelection}
                             disabled={!matchNumber}

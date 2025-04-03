@@ -159,7 +159,7 @@ export function MatchTable({ team }: MatchTableProps) {
                         match.start?.match !== undefined && 
                         match.start.match !== 0  // Exclude match 0
                     )
-                    .sort((a, b) => a.start.match - b.start.match)
+                    .sort((a, b) => Number(a.start.match) - Number(b.start.match))
                 
                 setData(validMatches)
             } catch (error) {

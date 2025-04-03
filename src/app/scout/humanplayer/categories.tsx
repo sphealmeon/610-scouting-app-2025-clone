@@ -40,12 +40,14 @@ export default function HPCategories() {
                     match: redMatch,
                     redScored: redScored,
                     redMissed: redMissed,
+                    teams: {}
                 },
                 blue: {
                     team: blueTeam,
                     match: blueMatch,
                     blueScored: blueScored,
                     blueMissed: blueMissed,
+                    teams: {}
                 }
             });
 
