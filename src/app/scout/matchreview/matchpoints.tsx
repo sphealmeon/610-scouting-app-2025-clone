@@ -133,7 +133,7 @@ function handleRemoveallCoralClick(){
                 onClick={
                     () => {
                         CalculateAggregate({ team: ScoutingData.start.team });
-                        SubmitMatch({ 
+                         SubmitMatch({ 
                             team: ScoutingData.start.team, 
                             match: typeof ScoutingData.start.match === 'string' ? parseInt(ScoutingData.start.match) : ScoutingData.start.match, 
                             matchData: ScoutingData 
