@@ -7,6 +7,7 @@ import { MainHeader } from "@/components/MainHeader"
 import { teams } from "@/app/globalVars"
 import { key, useApi } from "@/app/globalVars"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { markAsUntransferable } from "worker_threads"
 
 interface MatchData {
     teams: string[];
@@ -225,7 +226,7 @@ export default function MatchSummary() {
             try {
                 console.log("Starting data fetch");
                 const allMatchData: Record<string, string[]> = {};
-                
+                console.log("TEAMMMMSS", teams);
                 // Go through each team
                 for (const team of teams) {
                     try {
@@ -249,7 +250,7 @@ export default function MatchSummary() {
                         console.error(`Error fetching data for team ${team}:`, teamError);
                     }
                 }
-                
+                console.log("FETCHEDD MATCH DATA", allMatchData);
                 // Process the collected data
                 Object.entries(allMatchData).forEach(([matchNum, teamsWithData]) => {
                     setMatchSummaries(prev => ({
@@ -277,17 +278,23 @@ export default function MatchSummary() {
     const getMissingScouts = (matchNum: string): {position: string, scout: string, team: string}[] => {
         const assignments = scoutAssignments[matchNum];
         const mappings = positionMappings[matchNum];
+        console.log("SCOUT DATA", matchNum, assignments, mappings);
         
         if (!assignments || !mappings) return [];
         
         const matchData = matchSummaries[matchNum];
+        console.log("MATCHING DATA", matchData);
         if (!matchData || matchData.totalScouted === 6) return [];
         
         const missingScouts: {position: string, scout: string, team: string}[] = [];
         
         // Check each position
         Object.entries(assignments).forEach(([position, scout]) => {
+            console.log("POSITION", position);
+            console.log("SCOUT", scout);
             const teamNumber = mappings[position];
+            console.log("NUMMBER", teamNumber);
+            console.log("MATCH DATA teams", matchData.teams);
             
             // If this team's data is missing, add the scout to missing list
             if (teamNumber && !matchData.teams.includes(teamNumber)) {
