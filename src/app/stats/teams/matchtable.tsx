@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table"
 
 // Calculate coral cycles for a match
-const calculateCoralCycles = (match: Data): number => {
+const calculateTotalCoralCycles = (match: Data): number => {
     // Count all coral pieces scored
     let total = 0;
     
@@ -37,6 +37,20 @@ const calculateCoralCycles = (match: Data): number => {
     
     return total;
 };
+
+const calculateTeleCycles = (match: Data): number => {
+    // Count all coral pieces scored
+    let total = 0;
+    
+    // Teleop coral (L1-L4)
+    if (match.teleop?.l1Scored) total += match.teleop.l1Scored;
+    if (match.teleop?.l2Scored) total += match.teleop.l2Scored;
+    if (match.teleop?.l3Scored) total += match.teleop.l3Scored;
+    if (match.teleop?.l4Scored) total += match.teleop.l4Scored;
+    
+    return total;
+};
+
 
 // Calculate algae cycles for a match
 const calculateAlgaeCycles = (match: Data): number => {
@@ -62,8 +76,13 @@ export const columns: ColumnDef<Data>[] = [
     },
     {
         id: "coralCycles",
-        header: "Coral Cycles",
-        cell: ({ row }) => calculateCoralCycles(row.original)
+        header: "TOTAL Coral Cycles",
+        cell: ({ row }) => calculateTotalCoralCycles(row.original)
+    },
+    {
+        id: "coralTeleCycles",
+        header: "TELEOP Coral Cycles",
+        cell: ({ row }) => calculateTeleCycles(row.original)
     },
     {
         id: "algaeCycles",
