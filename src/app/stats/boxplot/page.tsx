@@ -150,28 +150,6 @@ export default function BoxPlotPage() {
       <div className="bg-white rounded-lg shadow p-4 mb-6">
         <BoxPlotChart teamsData={allTeamsData} title="Team Coral Cycles Distribution" />
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Object.entries(allTeamsData)
-          .sort(([_, cyclesA], [__, cyclesB]) => {
-            // Sort by average coral cycles (descending)
-            const avgA = cyclesA.reduce((sum, val) => sum + Number(val), 0) / cyclesA.length;
-            const avgB = cyclesB.reduce((sum, val) => sum + Number(val), 0) / cyclesB.length;
-            return avgB - avgA;
-          })
-          .map(([team, cycles]) => (
-            <div key={team} className="bg-white rounded-lg shadow p-4">
-              <h2 className="text-xl font-semibold mb-2">Team {team}</h2>
-              <p>Matches: {cycles.length}</p>
-              <p>Average Cycles: {(cycles.reduce((sum, val) => sum + Number(val), 0) / cycles.length).toFixed(2)}</p>
-              <p>Max Cycles: {Math.max(...cycles.map(Number))}</p>
-              <p className="mt-2 text-sm text-gray-600">
-                Cycles by match: {cycles.join(", ")}
-              </p>
-            </div>
-          ))
-        }
-      </div>
     </div>
   );
 }
