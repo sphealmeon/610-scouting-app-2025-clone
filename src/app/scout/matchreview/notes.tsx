@@ -201,7 +201,7 @@ export default function NotesReview() {
                                 <div>
                                     <div className="flex items-center gap-4">
                                         <span className="text-lg font-semibold">1</span>
-                                        <div className="w-1/3">
+                                        <div className="w-full">
                                             <div className="grid grid-cols-5 mb-1 text-xs text-center mx-auto">
                                                 <div>Brownouts</div>
                                                 <div>Minor</div>
