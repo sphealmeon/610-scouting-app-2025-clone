@@ -104,7 +104,7 @@ const boxplotPlugin = {
       // Draw outliers
       if (outliers && outliers.length > 0) {
         ctx.fillStyle = 'red';
-        outliers.forEach(outlier => {
+        outliers.forEach((outlier: any) => {
           const yOutlier = yScale.getPixelForValue(outlier);
           ctx.beginPath();
           ctx.arc(x, yOutlier, 3, 0, Math.PI * 2);
