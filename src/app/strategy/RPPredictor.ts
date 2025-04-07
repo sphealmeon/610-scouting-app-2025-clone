@@ -208,12 +208,12 @@ export const predictMatch = (
 
 // New RP Prediction functions
 
-// Auto RP - earned by scoring at least 9 coral pieces in auto (3 per robot)
+// Auto RP - earned by scoring at least 1 coral piece in auto (3 leaves)
 export const predictAutoRP = (alliance: AllianceCapabilities): boolean => {
   const totalAutoCoralPieces = alliance.teams.reduce((sum, team) => sum + (team.autoCoralPieces || 0), 0);
   // Apply reliability factor
   const adjustedAutoCoralPieces = totalAutoCoralPieces * alliance.teams.reduce((product, team) => product * team.reliability, 1);
-  return adjustedAutoCoralPieces >= 9; // Threshold for Auto RP
+  return adjustedAutoCoralPieces >= 1; // Threshold for Auto RP
 };
 
 // Coral RP - earned by filling 6 branches (50% of the 12 branches)
@@ -225,7 +225,7 @@ export const predictCoralRP = (alliance: AllianceCapabilities): boolean => {
   const adjustedCoralPieces = totalCoralPieces * alliance.teams.reduce((product, team) => product * team.reliability, 1);
   
   // We need about 6 branches filled, which requires approximately 6 coral pieces
-  return adjustedCoralPieces >= 6;
+  return adjustedCoralPieces >= 24;
 };
 
 // Barge RP - earned by filling the barge (requires at least 2 robots with barge capabilities)
