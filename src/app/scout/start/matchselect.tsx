@@ -404,7 +404,7 @@ export default function MatchSelect() {
             {/* Team Selection Section */}
             {matchNumber && (
                 <>
-                    {!useApi || isPlayoff || isPractice ? (
+                    {!useApi || isPractice ? (
                         // Manual team input for non-API, playoffs, or practice matches
                         <Input
                             min="1"
