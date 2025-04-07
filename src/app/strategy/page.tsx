@@ -4,6 +4,7 @@ import { useState } from "react";
 import MatchPredictor from "@/app/strategy/MatchPredictor";
 import PlayoffPredictor from "@/app/strategy/PlayoffPredictor";
 import RankingsPredictor from "@/app/strategy/RankingsPredictor";
+import PredictionAccuracy from "@/app/strategy/PredictionAccuracy";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function StrategyPage() {
@@ -16,6 +17,7 @@ export default function StrategyPage() {
           <TabsTrigger value="match-predictor">Match Predictor</TabsTrigger>
           <TabsTrigger value="playoff-predictor">Playoff Predictor</TabsTrigger>
           <TabsTrigger value="rankings-predictor">Rankings Predictor</TabsTrigger>
+          <TabsTrigger value="prediction-accuracy">Prediction Accuracy</TabsTrigger>
         </TabsList>
         
         <TabsContent value="match-predictor">
@@ -28,6 +30,10 @@ export default function StrategyPage() {
         
         <TabsContent value="rankings-predictor">
           <RankingsPredictor />
+        </TabsContent>
+        
+        <TabsContent value="prediction-accuracy">
+          <PredictionAccuracy />
         </TabsContent>
       </Tabs>
     </div>
