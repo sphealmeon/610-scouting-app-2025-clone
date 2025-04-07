@@ -336,6 +336,11 @@ export interface AggregateData {
     bargeAverageScoringTime: number;
     shallowAverageHangTime: number;
     deepAverageHangTime: number;
+    autoNotes?: number;
+    teleopNotes?: number;
+    maxAutoNotes?: number;
+    maxTeleopNotes?: number;
+    reliability?: number;
 }
 
 

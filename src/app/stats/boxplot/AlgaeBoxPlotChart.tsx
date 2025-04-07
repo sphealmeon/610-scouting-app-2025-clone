@@ -7,6 +7,7 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  LineController,
   Title,
   Tooltip,
   Legend,
@@ -21,6 +22,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  LineController,
   Title,
   Tooltip,
   Legend
@@ -104,7 +106,7 @@ const boxplotPlugin = {
       // Draw outliers
       if (outliers && outliers.length > 0) {
         ctx.fillStyle = 'red';
-        outliers.forEach((outlier: any) => {
+        outliers.forEach((outlier: number) => {
           const yOutlier = yScale.getPixelForValue(outlier);
           ctx.beginPath();
           ctx.arc(x, yOutlier, 3, 0, Math.PI * 2);

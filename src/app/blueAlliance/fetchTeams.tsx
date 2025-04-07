@@ -5,7 +5,7 @@ export const FetchTeams = ({ setTeams }: { setTeams: Function }) => {
     fetch(`https://www.thebluealliance.com/api/v3/event/${key}/teams`, {
       method: "GET",
       headers: {
-        "X-TBA-Auth-Key": "x3Sqnzlw0RuZZ4LcGbByIaHC5bpxa11X3YDA6NknR1VhFzYwcIyJsrAhNGh2cTcW",
+        "X-TBA-Auth-Key": "ZsbRGTknrkbJAl3OBXVaRh8loiP9ecki3Ag2q1DpExs7yRg9g0RVsXTY3edbMBQO",
       },
     })
       .then((response) => {
