@@ -6,9 +6,12 @@ import PlayoffPredictor from "@/app/strategy/PlayoffPredictor";
 import RankingsPredictor from "@/app/strategy/RankingsPredictor";
 import PredictionAccuracy from "@/app/strategy/PredictionAccuracy";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MainHeader } from "@/components/MainHeader";
 
 export default function StrategyPage() {
   return (
+    <>
+    <MainHeader/>
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-4">Strategy Tools</h1>
       <p className="text-gray-500 dark:text-gray-400 mb-6">
@@ -40,5 +43,6 @@ export default function StrategyPage() {
         </TabsContent>
       </Tabs>
     </div>
+    </>
   );
 }
