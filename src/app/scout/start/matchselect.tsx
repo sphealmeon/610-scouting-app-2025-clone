@@ -392,7 +392,7 @@ export default function MatchSelect() {
             </Tabs>
     
             {/* Alliance Selection - Only shown when API is off or in Playoff/Practice mode */}
-            {(!useApi || isPractice) && (
+            {(!useApi || isPlayoff || isPractice) && (
                 <Tabs defaultValue="red" onValueChange={handleAllianceChange} className="w-64 mb-6">
                     <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
                         <TabsTrigger value="red" className="data-[state=active]:bg-red-500 data-[state=active]:text-white">Red</TabsTrigger>
