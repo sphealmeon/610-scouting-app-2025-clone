@@ -239,9 +239,9 @@ export const predictBargeRP = (alliance: AllianceCapabilities): boolean => {
   if (deepHangCapableRobots >= 1) return true;
   
   // Otherwise, check traditional barge criteria
-  const bargeCapableRobots = alliance.teams.filter(team => team.hasBarge).length;
+  const shallowHangCapableRobots = alliance.teams.filter(team => team.shallowAccuracy || 0 > 0).length;
   
-  if (bargeCapableRobots < 2) return false;
+  if (shallowHangCapableRobots < 2) return false;
   
   // Calculate average barge accuracy across the alliance
   const allianceBargeAccuracy = alliance.teams.reduce((sum, team) => 
@@ -252,7 +252,7 @@ export const predictBargeRP = (alliance: AllianceCapabilities): boolean => {
     product * team.reliability, 1);
   
   // Threshold - need good barge accuracy and at least 2 barge-capable robots
-  return adjustedBargeAccuracy >= 0.6 && bargeCapableRobots >= 2;
+  return adjustedBargeAccuracy >= 0.6 && shallowHangCapableRobots >= 2;
 };
 
 /**
