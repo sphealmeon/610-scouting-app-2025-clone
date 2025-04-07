@@ -26,11 +26,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getTeams } from "./TBAService";
+import { getTeams, getQualificationMatches, getRankings, TeamRankingData } from "./TBAService";
 import {
   TeamCapabilities,
   AllianceCapabilities,
-  convertToTeamCapabilities
+  convertToTeamCapabilities,
+  predictMatch
 } from "./RPPredictor";
 import {
   Alliance,
@@ -139,6 +140,8 @@ const PlayoffPredictor = () => {
   });
   const [playoffResults, setPlayoffResults] = useState<PlayoffBracket | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [teamCapabilities, setTeamCapabilities] = useState<Record<number, TeamCapabilities>>({});
+  const [predictedRankings, setPredictedRankings] = useState<{teamNumber: number, rank: number}[]>([]);
 
   useEffect(() => {
     const loadTeams = async () => {
@@ -146,6 +149,18 @@ const PlayoffPredictor = () => {
         const teamsData = await getTeams();
         const teamNumbers = teamsData.map((team) => team.team_number);
         setTeams(teamNumbers);
+        
+        // Fetch capabilities for all teams
+        const capabilities: Record<number, TeamCapabilities> = {};
+        for (const teamNumber of teamNumbers) {
+          const capability = await fetchTeamData(teamNumber);
+          capabilities[teamNumber] = capability;
+        }
+        setTeamCapabilities(capabilities);
+        
+        // Calculate predicted rankings
+        const rankings = await calculatePredictedRankings(teamNumbers, capabilities);
+        setPredictedRankings(rankings);
       } catch (error) {
         console.error("Error loading teams:", error);
       } finally {
@@ -155,6 +170,72 @@ const PlayoffPredictor = () => {
 
     loadTeams();
   }, []);
+  
+  // Calculate predicted rankings based on team performance data
+  const calculatePredictedRankings = async (teamNumbers: number[], capabilities: Record<number, TeamCapabilities>) => {
+    try {
+      // Get TBA data for context
+      const tbaRankings = await getRankings();
+      const qualMatches = await getQualificationMatches();
+      
+      // Create simple ranking array to hold results
+      const rankings: {teamNumber: number, rank: number, totalScore: number}[] = [];
+      
+      // For each team, calculate a score based on their match performance
+      for (const teamNumber of teamNumbers) {
+        const capability = capabilities[teamNumber];
+        if (!capability) continue;
+        
+        // Calculate total score potential (using same metrics as calculateEnhancedScore)
+        const totalPPG = capability.autoPPG + capability.teleopPPG + capability.endgamePPG;
+        
+        // Add any bonuses or adjustments
+        let adjustedScore = totalPPG;
+        
+        // Bonus for high auto score
+        if (capability.autoPPG > 15) adjustedScore += 5;
+        
+        // Bonus for processor/barge capability
+        if (capability.hasProcessor) adjustedScore += 3;
+        if (capability.hasBarge) adjustedScore += 3;
+        
+        // Bonus for deep hang capability
+        if (capability.deepAccuracy && capability.deepAccuracy > 0.5) adjustedScore += 5;
+        
+        // Reliability factor
+        adjustedScore *= capability.reliability;
+        
+        // Add to rankings array
+        rankings.push({
+          teamNumber,
+          rank: 0, // Will be assigned after sorting
+          totalScore: adjustedScore
+        });
+      }
+      
+      // Sort by total score
+      rankings.sort((a, b) => b.totalScore - a.totalScore);
+      
+      // Assign ranks
+      rankings.forEach((team, index) => {
+        team.rank = index + 1;
+      });
+      
+      // Return just what we need (teamNumber and rank)
+      return rankings.map(team => ({
+        teamNumber: team.teamNumber,
+        rank: team.rank
+      }));
+    } catch (error) {
+      console.error("Error calculating predicted rankings:", error);
+      
+      // Fallback to just using team numbers if needed
+      return teamNumbers.map((teamNumber, index) => ({
+        teamNumber,
+        rank: index + 1
+      }));
+    }
+  };
 
   const handleTeamChange = (allianceNumber: string, position: number, value: string) => {
     const teamNumber = parseInt(value) || 0;
@@ -163,6 +244,58 @@ const PlayoffPredictor = () => {
       newInputs[allianceNumber].teams[position] = teamNumber;
       return newInputs;
     });
+  };
+
+  const autoFillByPPG = () => {
+    if (teams.length < 24) {
+      alert("Not enough teams to fill all alliance slots");
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      // Get a copy of all teams ranked by our predicted rankings
+      const teamsWithRanks = [...predictedRankings]
+        .filter(team => team.teamNumber > 0);
+      
+      // Create 8 alliances with 3 teams each
+      const newAllianceInputs: AllianceInputs = { ...allianceInputs };
+      
+      // First, assign captains (top 8 teams by rank)
+      for (let i = 0; i < 8; i++) {
+        if (i < teamsWithRanks.length) {
+          newAllianceInputs[(i+1).toString()].teams[0] = teamsWithRanks[i].teamNumber;
+          // Remove this team from the pool
+          teamsWithRanks.splice(i, 1);
+        }
+      }
+      
+      // Second, assign first picks using snake draft (alliances 1->8)
+      for (let i = 0; i < 8; i++) {
+        if (teamsWithRanks.length > 0) {
+          newAllianceInputs[(i+1).toString()].teams[1] = teamsWithRanks[0].teamNumber;
+          // Remove this team from the pool
+          teamsWithRanks.splice(0, 1);
+        }
+      }
+      
+      // Finally, assign second picks using snake draft in REVERSE (alliances 8->1)
+      for (let i = 7; i >= 0; i--) {
+        if (teamsWithRanks.length > 0) {
+          newAllianceInputs[(i+1).toString()].teams[2] = teamsWithRanks[0].teamNumber;
+          // Remove this team from the pool
+          teamsWithRanks.splice(0, 1);
+        }
+      }
+      
+      setAllianceInputs(newAllianceInputs);
+    } catch (error) {
+      console.error("Error auto-filling teams:", error);
+      alert("Error auto-filling teams");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSimulatePlayoffs = async () => {
@@ -288,7 +421,16 @@ const PlayoffPredictor = () => {
             </div>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-6 space-y-4">
+            <Button
+              onClick={autoFillByPPG}
+              disabled={loading}
+              variant="outline"
+              className="w-full"
+            >
+              Auto-Fill from Rankings
+            </Button>
+
             <Button
               onClick={handleSimulatePlayoffs}
               disabled={
@@ -408,20 +550,6 @@ const PlayoffPredictor = () => {
               </div>
             </CardContent>
           </Card>
-
-          {/* Champion */}
-          {playoffResults.winner && (
-            <Card className="bg-yellow-50 dark:bg-yellow-950/20 border-yellow-300">
-              <CardHeader>
-                <CardTitle className="text-center">Event Champion</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center text-xl font-bold">
-                  {getAllianceDisplay(playoffResults.winner)}
-                </div>
-              </CardContent>
-            </Card>
-          )}
         </div>
       )}
     </div>
