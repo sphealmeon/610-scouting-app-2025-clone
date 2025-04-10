@@ -180,7 +180,8 @@ export default function PlayoffMatch({ matchId, matchDisplay }: PlayoffMatchProp
             processorAverageScoringTime: 0,
             bargeAverageScoringTime: 0,
             shallowAverageHangTime: 0,
-            deepAverageHangTime: 0
+            deepAverageHangTime: 0,
+            weightedBrokePercentage: 0
         }
 
         for (const teamData of Object.values(teamsData)) {

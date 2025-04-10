@@ -7,7 +7,7 @@ export const defaultPowerWeights = {
   teleopPPG: 1.0,
   endgamePPG: 1.5,
   brokePercentage: -3.0,
-  weightedBroke: 0, // Higher penalty for weighted broke
+  weightedBroke: 0, 
   coralCyclesScored: 0.5,
   algaeCyclesScored: 0.3,
 };

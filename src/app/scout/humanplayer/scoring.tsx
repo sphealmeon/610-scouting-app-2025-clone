@@ -4,9 +4,42 @@ import { submitHPData } from "@/app/scout/humanplayer/submitHP";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { key, useApi } from "@/app/globalVars";
+import { ScoutingData } from "../data";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+interface TeamPickupData {
+    scored: number;
+    missed: number;
+}
+
+interface TeamPickupCollection {
+    [teamNumber: string]: TeamPickupData;
+}
+
 interface MatchTeams {
     red: number[];
     blue: number[];
+}
+
+interface AllianceScores {
+    redScored: number;
+    redMissed: number;
+    team: number;
+    match: number;
+    teams: TeamPickupCollection;
+}
+
+interface BlueAllianceScores {
+    blueScored: number;
+    blueMissed: number;
+    team: number;
+    match: number;
+    teams: TeamPickupCollection;
+}
+
+interface Scores {
+    red: AllianceScores;
+    blue: BlueAllianceScores;
 }
 
 export default function HumanPlayerMain({ setMatchState }: { setMatchState: Function }) {
@@ -14,11 +47,32 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
     const [redTeam, setRedTeam] = useState<string>("");
     const [blueTeam, setBlueTeam] = useState<string>("");
     const [matchTeams, setMatchTeams] = useState<MatchTeams | null>(null);
+    const [alliance, setAlliance] = useState<string>("red"); // Use the strict type
+
     const [feedbackMessage, setFeedbackMessage] = useState<string>("");
-    const [scores, setScores] = useState({
-        red: { redScored: 0, redMissed: 0, team: 0, match: 0 },
-        blue: { blueScored: 0, blueMissed: 0, team: 0, match: 0 }
+    const [scores, setScores] = useState<Scores>({
+        red: { 
+            redScored: 0, 
+            redMissed: 0, 
+            team: 0, 
+            match: 0,
+            teams: {} 
+        },
+        blue: { 
+            blueScored: 0, 
+            blueMissed: 0, 
+            team: 0, 
+            match: 0, 
+            teams: {} 
+        }
     });
+    const switchAlliance = (value: string) => {
+        setAlliance(value)
+    }
+
+    const handleAllianceChange = (value: string) => {
+            ScoutingData.start.alliance = value;
+        };
 
     useEffect(() => {
         const fetchMatches = async () => {
@@ -39,7 +93,11 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                     }
 
                     const data = await request.json();
-                    const selectedMatch = data.find((m: any) => m.match_number === parseInt(match));
+                    const qualMatches = data
+                        .filter((match: any) => match.comp_level === "qm")
+                        .sort((a: any, b: any) => a.match_number - b.match_number);
+                    
+                    const selectedMatch = qualMatches.find((m: any) => m.match_number === parseInt(match));
                     
                     if (selectedMatch) {
                         const redTeams = selectedMatch.alliances.red.team_keys.map((team: string) =>
@@ -91,13 +149,15 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                     team: parseInt(redTeam || "0"),
                     match: parseInt(match),
                     redScored: scores.red.redScored,
-                    redMissed: scores.red.redMissed
+                    redMissed: scores.red.redMissed,
+                    teams: scores.red.teams
                 },
                 blue: {
                     team: parseInt(blueTeam || "0"),
                     match: parseInt(match),
                     blueScored: scores.blue.blueScored,
-                    blueMissed: scores.blue.blueMissed
+                    blueMissed: scores.blue.blueMissed,
+                    teams: scores.blue.teams
                 }
             });
             handleExit();
@@ -107,48 +167,112 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
         }
     };
 
-    const handleBlueScored = () => {
-        setScores(prev => ({
-            ...prev,
-            blue: {
-                ...prev.blue,
-                blueScored: prev.blue.blueScored + 1
-            }
-        }));
-        setFeedbackMessage("Blue team scored!");
+    const handleBlueScored = (team: string) => {
+        setScores(prev => {
+            // Create a copy of the current team data or initialize if it doesn't exist
+            const teamData = (prev.blue.teams[team] || { scored: 0, missed: 0 });
+            
+            // Update the team's data
+            const updatedTeamData = {
+                ...teamData,
+                scored: teamData.scored + 1
+            };
+            
+            // Update the entire state
+            return {
+                ...prev,
+                blue: {
+                    ...prev.blue,
+                    blueScored: prev.blue.blueScored + 1,
+                    teams: {
+                        ...prev.blue.teams,
+                        [team]: updatedTeamData
+                    }
+                }
+            };
+        });
+        setFeedbackMessage(`Team ${team} (Blue) picked up!`);
     };
 
-    const handleRedScored = () => {
-        setScores(prev => ({
-            ...prev,
-            red: {
-                ...prev.red,
-                redScored: prev.red.redScored + 1
-            }
-        }));
-        setFeedbackMessage("Red team scored!");
+    const handleRedScored = (team: string) => {
+        setScores(prev => {
+            // Create a copy of the current team data or initialize if it doesn't exist
+            const teamData = (prev.red.teams[team] || { scored: 0, missed: 0 });
+            
+            // Update the team's data
+            const updatedTeamData = {
+                ...teamData,
+                scored: teamData.scored + 1
+            };
+            
+            // Update the entire state
+            return {
+                ...prev,
+                red: {
+                    ...prev.red,
+                    redScored: prev.red.redScored + 1,
+                    teams: {
+                        ...prev.red.teams,
+                        [team]: updatedTeamData
+                    }
+                }
+            };
+        });
+        setFeedbackMessage(`Team ${team} (Red) picked up!`);
     };
 
-    const handleBlueMissed = () => {
-        setScores(prev => ({
-            ...prev,
-            blue: {
-                ...prev.blue,
-                blueMissed: prev.blue.blueMissed + 1
-            }
-        }));
-        setFeedbackMessage("Blue team missed!");
+    const handleBlueMissed = (team: string) => {
+        setScores(prev => {
+            // Create a copy of the current team data or initialize if it doesn't exist
+            const teamData = (prev.blue.teams[team] || { scored: 0, missed: 0 });
+            
+            // Update the team's data
+            const updatedTeamData = {
+                ...teamData,
+                missed: teamData.missed + 1
+            };
+            
+            // Update the entire state
+            return {
+                ...prev,
+                blue: {
+                    ...prev.blue,
+                    blueMissed: prev.blue.blueMissed + 1,
+                    teams: {
+                        ...prev.blue.teams,
+                        [team]: updatedTeamData
+                    }
+                }
+            };
+        });
+        setFeedbackMessage(`Team ${team} (Blue) missed!`);
     };
 
-    const handleRedMissed = () => {
-        setScores(prev => ({
-            ...prev,
-            red: {
-                ...prev.red,
-                redMissed: prev.red.redMissed + 1
-            }
-        }));
-        setFeedbackMessage("Red team missed!");
+    const handleRedMissed = (team: string) => {
+        setScores(prev => {
+            // Create a copy of the current team data or initialize if it doesn't exist
+            const teamData = (prev.red.teams[team] || { scored: 0, missed: 0 });
+            
+            // Update the team's data
+            const updatedTeamData = {
+                ...teamData,
+                missed: teamData.missed + 1
+            };
+            
+            // Update the entire state
+            return {
+                ...prev,
+                red: {
+                    ...prev.red,
+                    redMissed: prev.red.redMissed + 1,
+                    teams: {
+                        ...prev.red.teams,
+                        [team]: updatedTeamData
+                    }
+                }
+            };
+        });
+        setFeedbackMessage(`Team ${team} (Red) missed!`);
     };
 
     return (
@@ -169,7 +293,7 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                         </SelectContent>
                     </Select>
 
-                    <Select onValueChange={setBlueTeam} value={blueTeam} disabled={!matchTeams}>
+                    {/* <Select onValueChange={setBlueTeam} value={blueTeam} disabled={!matchTeams}>
                         <SelectTrigger className="w-[180px] bg-blue-100">
                             <SelectValue placeholder="Select Blue Team" />
                         </SelectTrigger>
@@ -195,7 +319,13 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
                                 </SelectItem>
                             ))}
                         </SelectContent>
-                    </Select>
+                    </Select> */}
+                    <Tabs defaultValue="red" onValueChange={switchAlliance} className="w-64 mb-6">
+                        <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
+                            <TabsTrigger value="red" className="data-[state=active]:bg-red-500 hover:bg-red-400 data-[state=active]:text-white">Red</TabsTrigger>
+                            <TabsTrigger value="blue" className="data-[state=active]:bg-blue-500 hover:bg-blue-400 data-[state=active]:text-white">Blue</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
                 </div>
             </div>
 
@@ -206,30 +336,42 @@ export default function HumanPlayerMain({ setMatchState }: { setMatchState: Func
             )}
 
             <div className="grid grid-cols-2 gap-4 w-full">
-                <div
-                    className="flex items-center justify-center h-60 text-3xl font-bold bg-blue-500 hover:bg-blue-400 text-white text-center cursor-pointer rounded-lg"
-                    onClick={handleBlueScored}
-                >
-                    Blue Scored
-                </div>
-                <div
-                    className="flex items-center justify-center h-60 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
-                    onClick={handleRedScored}
-                >
-                    Red Scored
-                </div>
-                <div
-                    className="flex items-center justify-center h-60 text-3xl font-bold bg-blue-500 hover:bg-blue-400 text-white text-center cursor-pointer rounded-lg"
-                    onClick={handleBlueMissed}
-                >
-                    Blue Missed
-                </div>
-                <div
-                    className="flex items-center justify-center h-60 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
-                    onClick={handleRedMissed}
-                >
-                    Red Missed
-                </div>
+                {alliance == "blue" && matchTeams?.blue && matchTeams.blue.map((team) => (
+                    <>
+                        <div
+                            key={`${team}-scored`}
+                            className="flex items-center justify-center h-40 text-3xl font-bold bg-green-500 hover:bg-green-400 text-white text-center cursor-pointer rounded-lg"
+                            onClick={() => handleBlueScored(team.toString())}
+                        >
+                            {team} Pickup
+                        </div>
+                        <div
+                            key={`${team}-missed`}
+                            className="flex items-center justify-center h-40 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
+                            onClick={() => handleBlueMissed(team.toString())}
+                        >
+                            {team} Missed
+                        </div>
+                    </>
+                ))}
+                {alliance == "red" && matchTeams?.red && matchTeams.red.map((team) => (
+                    <>
+                        <div
+                            key={`${team}-scored`}
+                            className="flex items-center justify-center h-40 text-3xl font-bold bg-green-500 hover:bg-green-400 text-white text-center cursor-pointer rounded-lg"
+                            onClick={() => handleRedScored(team.toString())}
+                        >
+                            {team} Pickup
+                        </div>
+                        <div
+                            key={`${team}-missed`}
+                            className="flex items-center justify-center h-40 text-3xl font-bold bg-red-500 hover:bg-red-400 text-white text-center cursor-pointer rounded-lg"
+                            onClick={() => handleRedMissed(team.toString())}
+                        >
+                            {team} Missed
+                        </div>
+                    </>
+                ))}
                 <Button className="bg-green-700 hover:bg-green-600 h-20 text-xl font-bold" onClick={handleExit}>
                     Back to Start
                 </Button>

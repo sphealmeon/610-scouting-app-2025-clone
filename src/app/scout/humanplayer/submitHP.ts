@@ -1,18 +1,29 @@
 import { db } from "@/app/firebase/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
+interface TeamPickupData {
+    scored: number;
+    missed: number;
+}
+
+interface TeamPickupCollection {
+    [teamNumber: string]: TeamPickupData;
+}
+
 export interface HPData {
     red: {
         team: number;
         match: number;
         redScored: number;
         redMissed: number;
+        teams: TeamPickupCollection;
     };
     blue: {
         team: number;
         match: number;
         blueScored: number;
         blueMissed: number;
+        teams: TeamPickupCollection;
     };
 }
 
@@ -69,6 +80,83 @@ export const submitHPData = async (data: HPData) => {
             fieldGoalPercentage: blueFGPercentage,
             pointsPerGame: bluePPG
         });
+
+        // Store individual team data for this match
+        if (data.red.teams) {
+            for (const teamNumber in data.red.teams) {
+                const teamData = data.red.teams[teamNumber];
+                const teamRef = doc(db, "teamHumanplayers", teamNumber);
+                const teamDoc = await getDoc(teamRef);
+                const existingTeamData = teamDoc.data() || {
+                    teamNumber: parseInt(teamNumber),
+                    totalScored: 0,
+                    totalMissed: 0,
+                    matchesPlayed: 0,
+                    matches: {}
+                };
+
+                // Add match-specific data
+                const matchKey = `match_${data.red.match}`;
+                existingTeamData.matches[matchKey] = {
+                    match: data.red.match,
+                    scored: teamData.scored,
+                    missed: teamData.missed,
+                    percentage: teamData.scored + teamData.missed > 0 
+                        ? (teamData.scored / (teamData.scored + teamData.missed)) * 100 
+                        : 0
+                };
+
+                // Update aggregate data
+                existingTeamData.totalScored += teamData.scored;
+                existingTeamData.totalMissed += teamData.missed;
+                existingTeamData.matchesPlayed = Object.keys(existingTeamData.matches).length;
+
+                // Calculate total percentage
+                existingTeamData.pickupPercentage = existingTeamData.totalScored + existingTeamData.totalMissed > 0 
+                    ? (existingTeamData.totalScored / (existingTeamData.totalScored + existingTeamData.totalMissed)) * 100 
+                    : 0;
+
+                await setDoc(teamRef, existingTeamData);
+            }
+        }
+
+        if (data.blue.teams) {
+            for (const teamNumber in data.blue.teams) {
+                const teamData = data.blue.teams[teamNumber];
+                const teamRef = doc(db, "teamHumanplayers", teamNumber);
+                const teamDoc = await getDoc(teamRef);
+                const existingTeamData = teamDoc.data() || {
+                    teamNumber: parseInt(teamNumber),
+                    totalScored: 0,
+                    totalMissed: 0,
+                    matchesPlayed: 0,
+                    matches: {}
+                };
+
+                // Add match-specific data
+                const matchKey = `match_${data.blue.match}`;
+                existingTeamData.matches[matchKey] = {
+                    match: data.blue.match,
+                    scored: teamData.scored,
+                    missed: teamData.missed,
+                    percentage: teamData.scored + teamData.missed > 0 
+                        ? (teamData.scored / (teamData.scored + teamData.missed)) * 100 
+                        : 0
+                };
+
+                // Update aggregate data
+                existingTeamData.totalScored += teamData.scored;
+                existingTeamData.totalMissed += teamData.missed;
+                existingTeamData.matchesPlayed = Object.keys(existingTeamData.matches).length;
+
+                // Calculate total percentage
+                existingTeamData.pickupPercentage = existingTeamData.totalScored + existingTeamData.totalMissed > 0 
+                    ? (existingTeamData.totalScored / (existingTeamData.totalScored + existingTeamData.totalMissed)) * 100 
+                    : 0;
+
+                await setDoc(teamRef, existingTeamData);
+            }
+        }
 
         return { success: true, message: "HP data submitted for both teams" };
     } catch (error) {

@@ -199,10 +199,16 @@ export default function NotesReview() {
                         {brokenChecked && (
                             <div className="space-y-4 mb-4">
                                 <div>
-                                    <Label className="text-xl mb-2">Severity: {breakSeverity}</Label>
                                     <div className="flex items-center gap-4">
                                         <span className="text-lg font-semibold">1</span>
-                                        <div className="w-1/3">
+                                        <div className="w-full">
+                                            <div className="grid grid-cols-5 mb-1 text-xs text-center mx-auto">
+                                                <div>Brownouts</div>
+                                                <div>Minor</div>
+                                                <div>Forced<br/>to D</div>
+                                                <div>Beach/<br/>DC</div>
+                                                <div>Disastrous</div>
+                                            </div>
                                             <input 
                                                 type="range" 
                                                 min="1" 

@@ -5,14 +5,38 @@ import { getAuth } from "firebase/auth";
 // Your web app's Firebase configuration
 
 // North Bay Firebase
+
 const firebaseConfig = {
-  apiKey: "<GOOGLE_API_KEY_REDACTED>",
-  authDomain: "mcmaster2025-3d59d.firebaseapp.com",
-  projectId: "mcmaster2025-3d59d",
-  storageBucket: "mcmaster2025-3d59d.firebasestorage.app",
-  messagingSenderId: "805365301289",
-  appId: "1:805365301289:web:d51bae008d80204091dc38"
+  apiKey: "AIzaSyCXkXAmWvR5vBgFZIn1uMTASf2TZfKjzDk",
+  authDomain: "ontscience.firebaseapp.com",
+  projectId: "ontscience",
+  storageBucket: "ontscience.firebasestorage.app",
+  messagingSenderId: "124951310341",
+  appId: "1:124951310341:web:6b980f246e3e6b21142c6c"
 };
+
+
+// const firebaseConfig = {
+//   apiKey: "<GOOGLE_API_KEY_REDACTED>",
+//   authDomain: "testerforprovs-40e7c.firebaseapp.com",
+//   projectId: "testerforprovs-40e7c",
+//   storageBucket: "testerforprovs-40e7c.firebasestorage.app",
+//   messagingSenderId: "367006669430",
+//   appId: "1:367006669430:web:8a86bdec96e8e3f136dd57",
+//   measurementId: "G-QG6585K66E"
+// };
+
+// const firebaseConfig = {
+//   apiKey: "<GOOGLE_API_KEY_REDACTED>",
+//   authDomain: "northbay2025-579de.firebaseapp.com",
+//   projectId: "northbay2025-579de",
+//   storageBucket: "northbay2025-579de.firebasestorage.app",
+//   messagingSenderId: "269537278319",
+//   appId: "1:269537278319:web:a52ed74b8a67f2326f909a",
+//   measurementId: "G-46SKJ44HKN"
+// };
+
+
 // const firebaseConfig = {
 //   apiKey: "<GOOGLE_API_KEY_REDACTED>",
 //   authDomain: "centennial2025-fe024.firebaseapp.com",

@@ -18,6 +18,7 @@ interface TeamWithPosition {
 
 export default function MatchSelect() {
     const [qualMatches, setQualMatches] = useState<any[]>([]); // Store qualification match data
+    const [playoffMatches, setPlayoffMatches] = useState<any[]>([]); // Store playoff match data
     const [matchNumber, setMatchNumber] = useState("");
     const [teams, setTeams] = useState<TeamWithPosition[]>([]); // Teams & positions for the selected match
     const [selectedTeam, setSelectedTeam] = useState("");
@@ -30,28 +31,32 @@ export default function MatchSelect() {
         }
     });
     const [isPlayoff, setIsPlayoff] = useState(false);
+    const [isPractice, setIsPractice] = useState(false);
     const [activeTab, setActiveTab] = useState<string>("qualification");
     const [loading, setLoading] = useState<boolean>(true);
     
-    // Define playoff matches with their Firebase IDs, similar to match summary
-    const playoffMatches = [
-        { display: "Playoff 1", id: "1001" },
-        { display: "Playoff 2", id: "1002" },
-        { display: "Playoff 3", id: "1003" },
-        { display: "Playoff 4", id: "1004" },
-        { display: "Playoff 5", id: "1005" },
-        { display: "Playoff 6", id: "1006" },
-        { display: "Playoff 7", id: "1007" },
-        { display: "Playoff 8", id: "1008" },
-        { display: "Playoff 9", id: "1009" },
-        { display: "Playoff 10", id: "1010" },
-        { display: "Playoff 11", id: "1011" },
-        { display: "Playoff 12", id: "1012" },
-        { display: "Playoff 13", id: "1013" },
-        { display: "Final 1", id: "1014" },
-        { display: "Final 2", id: "1015" },
-        { display: "Final 3", id: "1016" }
-    ];
+    // Function to format playoff match display name
+    const formatPlayoffMatchName = (match: any) => {
+        const level = match.comp_level;
+        const matchNum = match.match_number;
+        const setNum = match.set_number;
+        
+        if (level === "sf") {
+            // Display as Playoff 1-8 to match our static IDs
+            // Semifinal set 1, match 1 -> Playoff 1 (1001)
+            // Semifinal set 1, match 2 -> Playoff 2 (1002)
+            // Semifinal set 2, match 1 -> Playoff 3 (1003)
+            // etc.
+            const playoffNum = ((setNum - 1)) + matchNum;
+            return `Playoff ${playoffNum}`;
+        } else if (level === "f") {
+            // Finals match our static Final 1-3
+            return `Final ${matchNum}`;
+        }
+        
+        // Fallback
+        return `${level.toUpperCase()} ${setNum}-${matchNum}`;
+    };
     
     const matchverify = () : boolean => {
         return selectedTeam !== "" && matchNumber !== "";
@@ -78,15 +83,35 @@ export default function MatchSelect() {
                     }
 
                     const data = await request.json();
+                    
                     // Filter for qualification matches
                     const qualMatches = data
                         .filter((match: any) => match.comp_level === "qm")
                         .sort((a: any, b: any) => a.match_number - b.match_number);
                     
+                    // Filter for playoff matches (qf, sf, f)
+                    const playoffMatches = data
+                        .filter((match: any) => ["sf", "f"].includes(match.comp_level))
+                        .sort((a: any, b: any) => {
+                            // Sort by competition level first (qf, sf, f)
+                            const levelOrder = { sf: 1, f: 2 };
+                            if (levelOrder[a.comp_level as keyof typeof levelOrder] !== levelOrder[b.comp_level as keyof typeof levelOrder]) {
+                                return levelOrder[a.comp_level as keyof typeof levelOrder] - levelOrder[b.comp_level as keyof typeof levelOrder];
+                            }
+                            // Then by set number
+                            if (a.set_number !== b.set_number) {
+                                return a.set_number - b.set_number;
+                            }
+                            // Finally by match number
+                            return a.match_number - b.match_number;
+                        });
+                    
                     setQualMatches(qualMatches);
+                    setPlayoffMatches(playoffMatches);
                 } catch (err) {
                     console.error("Error fetching matches:", err);
                     setQualMatches([]);
+                    setPlayoffMatches([]);
                 }
             }
             else {
@@ -98,6 +123,27 @@ export default function MatchSelect() {
                     comp_level: "qm"
                 }));
                 setQualMatches(formattedMatches);
+                
+                // Define static playoff matches for non-API scenario
+                const staticPlayoffMatches = [
+                    { display: "Playoff 1", id: "1001" },
+                    { display: "Playoff 2", id: "1002" },
+                    { display: "Playoff 3", id: "1003" },
+                    { display: "Playoff 4", id: "1004" },
+                    { display: "Playoff 5", id: "1005" },
+                    { display: "Playoff 6", id: "1006" },
+                    { display: "Playoff 7", id: "1007" },
+                    { display: "Playoff 8", id: "1008" },
+                    { display: "Playoff 9", id: "1009" },
+                    { display: "Playoff 10", id: "1010" },
+                    { display: "Playoff 11", id: "1011" },
+                    { display: "Playoff 12", id: "1012" },
+                    { display: "Playoff 13", id: "1013" },
+                    { display: "Final 1", id: "1014" },
+                    { display: "Final 2", id: "1015" },
+                    { display: "Final 3", id: "1016" }
+                ];
+                setPlayoffMatches(staticPlayoffMatches);
             }
             setLoading(false);
         };
@@ -106,46 +152,75 @@ export default function MatchSelect() {
     }, [useApi]);
 
     const handleMatchNumberChange = async (value: string) => {
-        // For playoff matches, set isPlayoff based on the ID format
-        setIsPlayoff(parseInt(value) >= 1000);
+        let matchData: any = null;
+        let matchType: "qm" | "playoff" | "practice" = "qm"; // Default to qual match
         
-        // Set match number in ScoutingData
-        ScoutingData.start.match = parseInt(value);
-        
-        if (ScoutingData.start.team && !isPlayoff) {
-            const alliance = await FetchAlliance(ScoutingData.start.match, ScoutingData.start.team);
-            ScoutingData.start.alliance = alliance;
+        // Determine if we're dealing with a qualification, playoff, or practice match
+        if (activeTab === "qualification") {
+            matchType = "qm";
+            matchData = qualMatches.find((m: any) => String(m.match_number) === value);
+        } else if (activeTab === "playoff") {
+            matchType = "playoff";
+            matchData = playoffMatches.find((m: any) => {
+                if (useApi) {
+                    return createPlayoffMatchId(m) === value;
+                } else {
+                    return m.id === value;
+                }
+            });
+        } else if (activeTab === "practice") {
+            matchType = "practice";
+            // No match data needed for practice matches
         }
         
+        // Set match number and match key in ScoutingData
+        if (matchType === "practice") {
+            // For practice matches, store as string to preserve the name
+            ScoutingData.start.match = value;
+        } else if (matchData) {
+            if (matchType === "qm") {
+                ScoutingData.start.match = parseInt(value);
+            } else {
+                // For playoff matches, use the ID directly from our static numbering system
+                ScoutingData.start.match = parseInt(value);
+            }
+        } else {
+            // If no match data (manual entry), store as number
+            ScoutingData.start.match = parseInt(value);
+        }
+        
+        setIsPlayoff(activeTab === "playoff");
+        setIsPractice(activeTab === "practice");
         setMatchNumber(value);
         setSelectedTeam("");
         setError("");
 
-        if (useApi && !isPlayoff) {
+        // Fetch teams for the selected match if using API
+        if (useApi && matchData) {
             // Finding teams for selected match
-            const selectedMatch = qualMatches.find(
-                (m: any) => m.match_number === parseInt(value, 10)
+            const redTeams = matchData.alliances.red.team_keys.map((team: string, index: number) =>
+                ({ number: team.replace("frc", ""), position: `Red ${index + 1}` })
             );
-
-            if (selectedMatch) {
-                const redTeams = selectedMatch.alliances.red.team_keys.map((team: string, index: number) =>
-                    ({ number: team.replace("frc", ""), position: `Red ${index + 1}` })
-                );
-                const blueTeams = selectedMatch.alliances.blue.team_keys.map((team: string, index: number) =>
-                    ({ number: team.replace("frc", ""), position: `Blue ${index + 1}` })
-                );
-                setTeams([...redTeams, ...blueTeams]);
-            } else {
-                setTeams([]);
+            const blueTeams = matchData.alliances.blue.team_keys.map((team: string, index: number) =>
+                ({ number: team.replace("frc", ""), position: `Blue ${index + 1}` })
+            );
+            setTeams([...redTeams, ...blueTeams]);
+            
+            // If this is a qual match and a team is selected, determine alliance
+            if (matchType === "qm" && ScoutingData.start.team) {
+                const alliance = await FetchAlliance(parseInt(value), ScoutingData.start.team);
+                ScoutingData.start.alliance = alliance;
             }
+        } else {
+            setTeams([]);
         }
 
-        // Update scouting data
+        // Update scouting data with the match value
         setScoutingData(prev => ({
             ...prev,
             start: {
                 ...prev.start,
-                match: value
+                match: value // Store match as string in the state
             }
         }));
     };
@@ -153,10 +228,16 @@ export default function MatchSelect() {
     const handleTeamSelection = async (value: string) => {
         //Write to data: team number
         ScoutingData.start.team = parseInt(value);
-        if (ScoutingData.start.match && !isPlayoff) {
-            const alliance = await FetchAlliance(ScoutingData.start.match, parseInt(value));
+        
+        // Determine alliance if it's a qualification match and API is enabled
+        if (activeTab === "qualification" && useApi) {
+            const alliance = await FetchAlliance(
+                typeof ScoutingData.start.match === 'number' ? ScoutingData.start.match : parseInt(String(ScoutingData.start.match)), 
+                parseInt(value)
+            );
             ScoutingData.start.alliance = alliance;
         }
+        
         setSelectedTeam(value);
         setError(""); // Clear any error when a valid team is selected
 
@@ -165,7 +246,7 @@ export default function MatchSelect() {
             ...prev,
             start: {
                 ...prev.start,
-                team: value // Update the team number in ScoutingData
+                team: value // Store team as string in the state
             }
         }));
     };
@@ -178,6 +259,7 @@ export default function MatchSelect() {
     const handleTabChange = (value: string) => {
         setActiveTab(value);
         setIsPlayoff(value === "playoff");
+        setIsPractice(value === "practice");
         // Reset selections when changing tabs
         setMatchNumber("");
         setSelectedTeam("");
@@ -186,6 +268,30 @@ export default function MatchSelect() {
     // Handle alliance change
     const handleAllianceChange = (value: string) => {
         ScoutingData.start.alliance = value;
+    };
+
+    // Create a match ID for playoff matches (API mode)
+    const createPlayoffMatchId = (match: any): string => {
+        const level = match.comp_level;
+        const matchNum = match.match_number;
+        const setNum = match.set_number;
+        
+        // Map to our static IDs based on match type and number
+        if (level === "sf") {
+            // Calculate which playoff match this corresponds to (1-13)
+            // Semifinal set 1, match 1 -> Playoff 1 (1001)
+            // Semifinal set 1, match 2 -> Playoff 2 (1002)
+            // Semifinal set 2, match 1 -> Playoff 3 (1003)
+            // etc.
+            const playoffNum = ((setNum - 1)) + matchNum;
+            return (1000 + playoffNum).toString();
+        } else if (level === "f") {
+            // Finals map to 1014-1016
+            return (1013 + matchNum).toString();
+        }
+        
+        // Fallback - shouldn't happen with our filtered list
+        return `${level}_${setNum}_${matchNum}`;
     };
 
     return (
@@ -205,9 +311,10 @@ export default function MatchSelect() {
     
             {/* Match Type Tabs */}
             <Tabs defaultValue="qualification" onValueChange={handleTabChange} className="w-64 mb-6">
-                <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
+                <TabsList className="grid w-full max-w-md grid-cols-3 mx-auto">
                     <TabsTrigger value="qualification">Qualification</TabsTrigger>
                     <TabsTrigger value="playoff">Playoff</TabsTrigger>
+                    <TabsTrigger value="practice">Practice</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="qualification">
@@ -240,7 +347,25 @@ export default function MatchSelect() {
                 
                 <TabsContent value="playoff">
                     {useApi ? (
-                        // Dropdown for playoff matches
+                        // Dropdown for TBA playoff matches
+                        <Select onValueChange={handleMatchNumberChange} disabled={loading}>
+                            <SelectTrigger className="w-64 bg-gray-600 text-white py-6 mx-auto">
+                                <SelectValue placeholder={loading ? "Loading..." : "Select Playoff Match"} />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-600 text-white">
+                                {playoffMatches.map((match) => (
+                                    <SelectItem 
+                                        key={createPlayoffMatchId(match)} 
+                                        value={createPlayoffMatchId(match)} 
+                                        className="text-white"
+                                    >
+                                        {formatPlayoffMatchName(match)}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    ) : (
+                        // Dropdown for static playoff matches
                         <Select onValueChange={handleMatchNumberChange}>
                             <SelectTrigger className="w-64 bg-gray-600 text-white py-6 mx-auto">
                                 <SelectValue placeholder="Select Playoff Match" />
@@ -253,22 +378,21 @@ export default function MatchSelect() {
                                 ))}
                             </SelectContent>
                         </Select>
-                    ) : (
-                        // Manual input for playoff match
-                        <Input
-                            min="1001"
-                            max="1016"
-                            type="number"
-                            placeholder="Enter Playoff Match ID (1001-1016)"
-                            className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6 mx-auto"
-                            onChange={(e) => handleMatchNumberChange(e.target.value)}
-                        />
                     )}
+                </TabsContent>
+                
+                <TabsContent value="practice">
+                    <Input
+                        type="text"
+                        placeholder="Enter Practice Match Name"
+                        className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6 mx-auto"
+                        onChange={(e) => handleMatchNumberChange(e.target.value)}
+                    />
                 </TabsContent>
             </Tabs>
     
-            {/* Alliance Selection - Only shown when API is off or in Playoff mode */}
-            {(isPlayoff || !useApi) && (
+            {/* Alliance Selection - Only shown when API is off or in Playoff/Practice mode */}
+            {(!useApi || isPlayoff || isPractice) && (
                 <Tabs defaultValue="red" onValueChange={handleAllianceChange} className="w-64 mb-6">
                     <TabsList className="grid w-full max-w-md grid-cols-2 mx-auto">
                         <TabsTrigger value="red" className="data-[state=active]:bg-red-500 data-[state=active]:text-white">Red</TabsTrigger>
@@ -280,8 +404,8 @@ export default function MatchSelect() {
             {/* Team Selection Section */}
             {matchNumber && (
                 <>
-                    {isPlayoff ? (
-                        // Manual team input for playoffs/finals
+                    {!useApi || isPractice ? (
+                        // Manual team input for non-API, playoffs, or practice matches
                         <Input
                             min="1"
                             type="number"
@@ -289,7 +413,7 @@ export default function MatchSelect() {
                             className="mb-6 w-64 bg-gray-600 text-white placeholder-gray-400 py-6"
                             onChange={(e) => handleTeamSelection(e.target.value)}
                         />
-                    ) : useApi ? (
+                    ) : teams.length > 0 ? (
                         // Team dropdown for qualification matches with API
                         <Select
                             onValueChange={handleTeamSelection}
@@ -307,7 +431,7 @@ export default function MatchSelect() {
                             </SelectContent>
                         </Select>
                     ) : (
-                        // Manual team input for non-API qualification matches
+                        // Manual team input if no teams loaded
                         <Input
                             min="1"
                             type="number"

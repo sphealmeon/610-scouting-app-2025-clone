@@ -1,14 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { submitHPData } from "./submitHP";
 import { toast } from "sonner";
+import { key, useApi } from "@/app/globalVars";
+import { useState, useEffect } from "react";
+interface MatchTeams {
+    red: number[];
+    blue: number[];
+}
 
 export default function HPCategories() {
+    const [match, setMatch] = useState<string>("");
     const [redTeam, setRedTeam] = useState<number>(0);
     const [redMatch, setRedMatch] = useState<number>(0);
     const [redScored, setRedScored] = useState<number>(0);
@@ -18,6 +24,7 @@ export default function HPCategories() {
     const [blueScored, setBlueScored] = useState<number>(0);
     const [blueMissed, setBlueMissed] = useState<number>(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [matchTeams, setMatchTeams] = useState<MatchTeams | null>(null);
 
     const handleSubmit = async () => {
         if (!redTeam || !blueTeam) {
@@ -33,12 +40,14 @@ export default function HPCategories() {
                     match: redMatch,
                     redScored: redScored,
                     redMissed: redMissed,
+                    teams: {}
                 },
                 blue: {
                     team: blueTeam,
                     match: blueMatch,
                     blueScored: blueScored,
                     blueMissed: blueMissed,
+                    teams: {}
                 }
             });
 
@@ -64,6 +73,48 @@ export default function HPCategories() {
         }
     };
 
+        useEffect( () => {
+            const fetchMatches = async () => {
+                if (useApi) {
+                    try {
+                        const request = await fetch(
+                            "https://www.thebluealliance.com/api/v3/event/" + key + "/matches",
+                            {
+                                method: "GET",
+                                headers: {
+                                    "X-TBA-Auth-Key": "ZsbRGTknrkbJAl3OBXVaRh8loiP9ecki3Ag2q1DpExs7yRg9g0RVsXTY3edbMBQO",
+                                },
+                            }
+                        );
+    
+                        if (!request.ok) {
+                            throw new Error("Failed to fetch matches");
+                        }
+    
+                        const data = await request.json();
+                        const selectedMatch = data.find((m: any) => m.match_number === parseInt(match));
+                        
+                        if (selectedMatch) {
+                            const redTeams = selectedMatch.alliances.red.team_keys.map((team: string) =>
+                                team.replace("frc", "")
+                            );
+                            const blueTeams = selectedMatch.alliances.blue.team_keys.map((team: string) =>
+                                team.replace("frc", "")
+                            );
+                            setMatchTeams({ red: redTeams, blue: blueTeams });
+                        }
+                    } catch (err) {
+                        console.error("Error fetching matches:", err);
+                    }
+                }
+        
+            };
+
+        if (match) {
+            fetchMatches();
+        }
+    }, [match]);
+        
     return (
         <div className="flex flex-col gap-8 p-4 max-w-[1400px] mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -168,4 +219,4 @@ export default function HPCategories() {
             </Button>
         </div>
     );
-} 
+}

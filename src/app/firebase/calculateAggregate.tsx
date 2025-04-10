@@ -311,6 +311,10 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
   console.log(`Weighted Broke Percentage: ${(totalBreakScore/numMatches).toFixed(4)}`);
   console.log("========================");
 
+  // THIS IS THE CORRECT SCORING:
+  // Auto: L1=3, L2=4, L3=6, L4=7, Leave=3
+  // Teleop: L1=2, L2=3, L3=4, L4=5
+  // Endgame: Park=2, Shallow=6, Deep=12
   const aggregateData: AggregateData = {
     matchAggregateData: totalData,
     team: team,

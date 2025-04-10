@@ -3,7 +3,7 @@ export interface Data{
     start: {
         preload: number;
         team: number;
-        match: number;
+        match: number | string;
         position: string;
         scoutName: string;
         alliance: string;
@@ -336,6 +336,11 @@ export interface AggregateData {
     bargeAverageScoringTime: number;
     shallowAverageHangTime: number;
     deepAverageHangTime: number;
+    autoNotes?: number;
+    teleopNotes?: number;
+    maxAutoNotes?: number;
+    maxTeleopNotes?: number;
+    reliability?: number;
 }
 
 

@@ -2,6 +2,7 @@ import { Data } from "../interfaces";
 import { CalculateAggregate } from "./calculateAggregate";
 import { db } from "./firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { toast } from "sonner";
 
 /**
  * Submits the match data to the database
@@ -18,17 +19,25 @@ export const SubmitMatch = async ({
   match: number;
   matchData: Data;
 }) => {
-  console.log(matchData);
-
   try {
-    await setDoc(doc(db, team + "", match + ""), {
+    const timeout = 10000;
+    const setDocPromise = setDoc(doc(db, team + "", match + ""), {
       matchData,
     });
-    CalculateAggregate({ team });
-    console.log("Match submitted");
+
+    await Promise.race([
+      setDocPromise,
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Firebase setDoc operation timed out")), timeout)
+      )
+    ]);
+
+    await CalculateAggregate({ team });
+    
+    // Show success toast
+    toast.success("Match data submitted successfully");
   } catch (e) {
     console.error(e);
-    // Store failed submission in localStorage
     const failedSubmissions = JSON.parse(localStorage.getItem('failedSubmissions') || '[]');
     failedSubmissions.push({
       team,
@@ -37,5 +46,8 @@ export const SubmitMatch = async ({
       timestamp: new Date().toISOString(),
     });
     localStorage.setItem('failedSubmissions', JSON.stringify(failedSubmissions));
+    
+    // Show error toast
+    toast.error("Failed to submit match data. It will be saved locally and can be resubmitted later.");
   }
 };

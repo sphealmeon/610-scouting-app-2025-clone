@@ -25,9 +25,11 @@ const links = [
   { link: "/pitscout", label: "Pit Scouting" },
   { link: "/matchsummary", label: "Match Summary" },
   { link: "/stats/teams", label: "Team Stats" },
+  { link: "/stats/boxplot", label: "Boxplot" },
   { link: "/picklist", label: "Picklist" },
   { link: "/history", label: "History"},
-  { link: "/thirdbot", label: "Third Bot"}
+  { link: "/thirdbot", label: "Third Bot"},
+  { link: "/strategy", label: "Strategy"}
 ];
 
 export function MainHeader() {

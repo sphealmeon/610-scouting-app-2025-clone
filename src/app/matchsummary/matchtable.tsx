@@ -60,7 +60,7 @@ export function MatchTable({ matchData, teams = [] }: MatchTableProps) {
 
     // Combine and sort by team number
     const allTeamPoints = [...teamPoints, ...missingTeams]
-        .sort((a, b) => a.team - b.team);
+        .sort((a, b) => Number(a.team) - Number(b.team));
 
     // Calculate alliance totals
     const allianceTotals = {
