@@ -8,24 +8,14 @@ import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "<GOOGLE_API_KEY_REDACTED>",
-  authDomain: "dcmpont.firebaseapp.com",
-  projectId: "dcmpont",
-  storageBucket: "dcmpont.firebasestorage.app",
-  messagingSenderId: "477429432148",
-  appId: "1:477429432148:web:573c3933082ce2d7b412c1",
-  measurementId: "G-3BMZLTCQ30"
+  authDomain: "curie-407af.firebaseapp.com",
+  projectId: "curie-407af",
+  storageBucket: "curie-407af.firebasestorage.app",
+  messagingSenderId: "674408017603",
+  appId: "1:674408017603:web:a17855b3f3be4d542dfc76",
+  measurementId: "G-6MJ8GTDNML"
 };
 
-
-// const firebaseConfig = {
-//   apiKey: "<GOOGLE_API_KEY_REDACTED>",
-//   authDomain: "testerforprovs-40e7c.firebaseapp.com",
-//   projectId: "testerforprovs-40e7c",
-//   storageBucket: "testerforprovs-40e7c.firebasestorage.app",
-//   messagingSenderId: "367006669430",
-//   appId: "1:367006669430:web:8a86bdec96e8e3f136dd57",
-//   measurementId: "G-QG6585K66E"
-// };
 
 // const firebaseConfig = {
 //   apiKey: "<GOOGLE_API_KEY_REDACTED>",

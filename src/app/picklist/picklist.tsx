@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { teams } from "@/app/globalVars";
+import { FetchTeams } from "@/app/blueAlliance/fetchTeams";
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DataTable } from "../stats/teams/teamtable";
@@ -254,9 +254,14 @@ const PicklistPage = () => {
     const [isNoteDialogOpen, setIsNoteDialogOpen] = useState(false);
     const [currentTeamForNote, setCurrentTeamForNote] = useState<string | null>(null);
     const [noteText, setNoteText] = useState("");
+    const [availableTeams, setAvailableTeams] = useState<string[]>([]);
 
     useEffect(() => {
         fetchSavedLists();
+    }, []);
+
+    useEffect(() => {
+        FetchTeams({ setTeams: setAvailableTeams });
     }, []);
 
     const fetchSavedLists = async () => {
@@ -517,7 +522,7 @@ const PicklistPage = () => {
                         <h2 className="text-2xl mb-4">Available Teams</h2>
                         <div className="overflow-y-auto max-h-[70vh]">
                             <ul className="space-y-2">
-                                {teams
+                                {availableTeams
                                     .filter(team => !selectedTeams.includes(team) && !doNotPickTeams.includes(team) && !unavailableTeams.includes(team))
                                     .map((team) => (
                                         <li key={team} 

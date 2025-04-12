@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { db } from "@/app/firebase/firebase"
 import { collection, getDocs } from "firebase/firestore"
 import { MainHeader } from "@/components/MainHeader"
-import { teams } from "@/app/globalVars"
+import { FetchTeams } from "@/app/blueAlliance/fetchTeams"
 import { key, useApi } from "@/app/globalVars"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { markAsUntransferable } from "worker_threads"
@@ -111,6 +111,9 @@ export default function MatchSummary() {
     const [loadingTBAComparison, setLoadingTBAComparison] = useState<boolean>(false);
     const [totalQualMatches, setTotalQualMatches] = useState<number>(0);
 
+    // Add new state for teams
+    const [teams, setTeams] = useState<string[]>([]);
+
     // Load the CSV file from public directory on component mount
     useEffect(() => {
         const loadDefaultCSV = async () => {
@@ -179,6 +182,11 @@ export default function MatchSummary() {
         fetchTBAData();
     }, []);
 
+    // Add new useEffect to fetch teams
+    useEffect(() => {
+        FetchTeams({ setTeams });
+    }, []);
+
     // Function to parse CSV
     const parseCSV = (text: string) => {
         const lines = text.split('\n');
@@ -223,10 +231,13 @@ export default function MatchSummary() {
     // Fetch match data
     useEffect(() => {
         const fetchData = async () => {
+            if (teams.length === 0) return; // Don't fetch if we don't have teams yet
+
             try {
                 console.log("Starting data fetch");
                 const allMatchData: Record<string, string[]> = {};
-                console.log("TEAMMMMSS", teams);
+                console.log("Teams from TBA:", teams);
+
                 // Go through each team
                 for (const team of teams) {
                     try {
@@ -272,7 +283,7 @@ export default function MatchSummary() {
         };
 
         fetchData();
-    }, []);
+    }, [teams]);
 
     // Function to determine missing scouts with exact position mapping
     const getMissingScouts = (matchNum: string): {position: string, scout: string, team: string}[] => {
