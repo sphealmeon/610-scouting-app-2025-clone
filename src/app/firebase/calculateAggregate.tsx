@@ -72,7 +72,7 @@ export const CalculateAggregate = async ({ team }: { team: number }) => {
   let totalBargeScoringTime: number = 0;
   let totalShallowHangTime: number = 0;
   let totalDeepHangTime: number = 0;
-  let weightedBrokePercentage: number = 0;
+  //let weightedBrokePercentage: number = 0;
   let totalBreakScore: number = 0;
 
   const totalData: Data = {
