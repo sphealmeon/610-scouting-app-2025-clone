@@ -12,7 +12,9 @@ export const scoringTableSide = false;
 
 //blue alliance key for comp
 // export const key = "2025onnob"; 
-export const key = "2025cur"; 
+// export const key = "2025oncmp2"; 
+export const key = "2025onham1"; 
+// export const key = "2025cur"; 
 
 //list of all teams at comp, in case BA is broken
 export const teams = [

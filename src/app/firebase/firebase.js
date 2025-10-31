@@ -6,15 +6,45 @@ import { getAuth } from "firebase/auth";
 
 // North Bay Firebase
 
+// const firebaseConfig = {
+//   apiKey: "<GOOGLE_API_KEY_REDACTED>",
+//   authDomain: "dcmpont.firebaseapp.com",
+//   projectId: "dcmpont",
+//   storageBucket: "dcmpont.firebasestorage.app",
+//   messagingSenderId: "477429432148",
+//   appId: "1:477429432148:web:573c3933082ce2d7b412c1",
+//   measurementId: "G-3BMZLTCQ30"
+// };
+
 const firebaseConfig = {
   apiKey: "<GOOGLE_API_KEY_REDACTED>",
-  authDomain: "curie-407af.firebaseapp.com",
-  projectId: "curie-407af",
-  storageBucket: "curie-407af.firebasestorage.app",
-  messagingSenderId: "674408017603",
-  appId: "1:674408017603:web:a17855b3f3be4d542dfc76",
-  measurementId: "G-6MJ8GTDNML"
+  authDomain: "stemley2025.firebaseapp.com",
+  projectId: "stemley2025",
+  storageBucket: "stemley2025.firebasestorage.app",
+  messagingSenderId: "842072036375",
+  appId: "1:842072036375:web:4ddf16b98531496a6ef852",
+  measurementId: "G-57WVJPPDCS"
 };
+
+// const firebaseConfig = {
+//   apiKey: "<GOOGLE_API_KEY_REDACTED>",
+//   authDomain: "scoutingtryouts.firebaseapp.com",
+//   projectId: "scoutingtryouts",
+//   storageBucket: "scoutingtryouts.firebasestorage.app",
+//   messagingSenderId: "580055751530",
+//   appId: "1:580055751530:web:c6b72e81cc9bb659d32313",
+//   measurementId: "G-65XL9PFZ01"
+// };
+
+// const firebaseConfig = {
+//   apiKey: "<GOOGLE_API_KEY_REDACTED>",
+//   authDomain: "curie-407af.firebaseapp.com",
+//   projectId: "curie-407af",
+//   storageBucket: "curie-407af.firebasestorage.app",
+//   messagingSenderId: "674408017603",
+//   appId: "1:674408017603:web:a17855b3f3be4d542dfc76",
+//   measurementId: "G-6MJ8GTDNML"
+// };
 
 
 // const firebaseConfig = {
