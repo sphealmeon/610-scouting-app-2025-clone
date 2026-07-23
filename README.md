@@ -1,3 +1,7 @@
+HACK THE NORTH EDIT:
+2025 scouting app (year I was executive in)
+Not a one-man effort, many amazing teammates helped me with this :)
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
